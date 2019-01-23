@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+
+    <style lang="css">
+       body {
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+    </style>
+
+</head>
+    <body>
+
+    <div id="chartdiv" style="height:600px;"></div>
+
+    <script th:inline="javascript">
+        /**
+ * ---------------------------------------
+ * This demo was created using amCharts 4.
+ *
+ * For more information visit:
+ * https://www.amcharts.com/
+ *
+ * Documentation is available at:
+ * https://www.amcharts.com/docs/v4/
+ * ---------------------------------------
+ */
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+var chart = am4core.create("chartdiv", am4charts.XYChart);
+chart.paddingRight = 20;
+
+// Add data
+chart.data = [[${results}]];
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "timeSinceBurnStartInSecond";
+categoryAxis.renderer.minGridDistance = 50;
+categoryAxis.renderer.grid.template.location = 0.5;
+categoryAxis.startLocation = 0.5;
+categoryAxis.endLocation = 0.5;
+
+
+// Create value axis
+var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.baseValue = 0;
+
+// Create series
+var series = chart.series.push(new am4charts.LineSeries());
+series.dataFields.valueY = "thrustInNewton";
+series.dataFields.categoryX = "timeSinceBurnStartInSecond";
+series.strokeWidth = 2;
+series.tensionX = 0.77;
+
+chart.cursor = new am4charts.XYCursor();
+    </script>
+    </body>
+</html>

@@ -32,7 +32,7 @@ public class MainControler {
         return ResponseEntity.ok(toComputationResponse(result));
     }
 
-    private static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {
+    public static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {
         double grainOuterDiameter = 69d;
         double grainCoreDiameter = 20d;
         double grainSegmentLength = 115d;
