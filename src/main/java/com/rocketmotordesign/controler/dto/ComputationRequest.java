@@ -112,4 +112,16 @@ public class ComputationRequest {
     public void setPropellantType(PropellantType propellantType) {
         this.propellantType = propellantType;
     }
+
+    public void setThroatDiameter(double throatDiameter) {
+        this.throatDiameter = throatDiameter;
+    }
+
+    public void setChamberInnerDiameter(double chamberInnerDiameter) {
+        this.chamberInnerDiameter = chamberInnerDiameter;
+    }
+
+    public void setChamberLength(double chamberLength) {
+        this.chamberLength = chamberLength;
+    }
 }

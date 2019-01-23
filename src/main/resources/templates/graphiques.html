@@ -19,10 +19,45 @@
 
 </head>
     <body>
+    <form th:action="@{/test}" method="post" th:object="${request}">
+        <input th:field="*{throatDiameter}">throatDiameter</input><br>
+        <input th:field="*{outerDiameter}">outerDiameter</input><br>
+        <input th:field="*{coreDiameter}">coreDiameter</input><br>
+        <input th:field="*{segmentLength}">segmentLength</input><br>
+        <input th:field="*{numberOfSegment}">numberOfSegment</input><br>
+
+        <select th:field="*{outerSurface}" name="outerSurface">
+            <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
+            </option>
+        </select>outerSurface<br>
+        <select th:field="*{endsSurface}">
+            <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
+            </option>
+        </select>endsSurface<br>
+        <select th:field="*{coreSurface}">
+            <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
+            </option>
+        </select>coreSurface<br>
+
+        <select th:field="*{propellantType}">
+            <option th:each="i : ${propellants}" th:value="${i.name}" th:text="${i.name}">
+            </option>
+        </select>propellantType<br>
+
+        <input th:field="*{chamberInnerDiameter}">chamberInnerDiameter</input><br>
+        <input th:field="*{chamberLength}">chamberLength</input><br>
+        <input type="submit" name="toto">
+
+    </form>
+
+    <p th:if="${error!=null}" style="color:red; font-size:24px;">Simulation failed</p>
+    <textarea th:if="${error!=null}"th:text="${error}" readonly cols="100" rows="50"></textarea>
+
 
     <div id="chartdiv" style="height:600px;"></div>
 
-    <script th:inline="javascript">
+
+    <script th:if="${error==null}" th:inline="javascript">
         /**
  * ---------------------------------------
  * This demo was created using amCharts 4.
@@ -64,7 +99,7 @@ var series = chart.series.push(new am4charts.LineSeries());
 series.dataFields.valueY = "thrustInNewton";
 series.dataFields.categoryX = "timeSinceBurnStartInSecond";
 series.strokeWidth = 2;
-series.tensionX = 0.77;
+series.tensionX = 12;
 
 chart.cursor = new am4charts.XYCursor();
     </script>
