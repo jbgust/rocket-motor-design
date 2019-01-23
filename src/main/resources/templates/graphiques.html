@@ -19,42 +19,51 @@
 
 </head>
     <body>
-    <form th:action="@{/test}" method="post" th:object="${request}">
-        <input th:field="*{throatDiameter}">throatDiameter</input><br>
-        <input th:field="*{outerDiameter}">outerDiameter</input><br>
-        <input th:field="*{coreDiameter}">coreDiameter</input><br>
-        <input th:field="*{segmentLength}">segmentLength</input><br>
-        <input th:field="*{numberOfSegment}">numberOfSegment</input><br>
 
-        <select th:field="*{outerSurface}" name="outerSurface">
-            <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
-            </option>
-        </select>outerSurface<br>
-        <select th:field="*{endsSurface}">
-            <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
-            </option>
-        </select>endsSurface<br>
-        <select th:field="*{coreSurface}">
-            <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
-            </option>
-        </select>coreSurface<br>
+    <div style="flex-direction:row; display:flex; margin: 10px;">
+        <div style="margin-right: 40px;">
+            <form th:action="@{/test}" method="post" th:object="${request}">
+                <input th:field="*{throatDiameter}">throatDiameter</input><br>
+                <input th:field="*{outerDiameter}">outerDiameter</input><br>
+                <input th:field="*{coreDiameter}">coreDiameter</input><br>
+                <input th:field="*{segmentLength}">segmentLength</input><br>
+                <input th:field="*{numberOfSegment}">numberOfSegment</input><br>
 
-        <select th:field="*{propellantType}">
-            <option th:each="i : ${propellants}" th:value="${i.name}" th:text="${i.name}">
-            </option>
-        </select>propellantType<br>
+                <select th:field="*{outerSurface}" name="outerSurface">
+                    <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
+                    </option>
+                </select>outerSurface<br>
+                <select th:field="*{endsSurface}">
+                    <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
+                    </option>
+                </select>endsSurface<br>
+                <select th:field="*{coreSurface}">
+                    <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
+                    </option>
+                </select>coreSurface<br>
 
-        <input th:field="*{chamberInnerDiameter}">chamberInnerDiameter</input><br>
-        <input th:field="*{chamberLength}">chamberLength</input><br>
-        <input type="submit" name="toto">
+                <select th:field="*{propellantType}">
+                    <option th:each="i : ${propellants}" th:value="${i.name}" th:text="${i.name}">
+                    </option>
+                </select>propellantType<br>
 
-    </form>
+                <input th:field="*{chamberInnerDiameter}">chamberInnerDiameter</input><br>
+                <input th:field="*{chamberLength}">chamberLength</input><br>
+                <input type="submit" name="toto">
 
-    <p th:if="${error!=null}" style="color:red; font-size:24px;">Simulation failed</p>
-    <textarea th:if="${error!=null}"th:text="${error}" readonly cols="100" rows="50"></textarea>
+            </form>
+        </div>
+        <div>
+            <p th:if="${error!=null}" style="color:red; font-size:24px;">Simulation failed</p>
+            <textarea th:if="${error!=null}"th:text="${error}" readonly cols="100" rows="50"></textarea>
 
 
-    <div id="chartdiv" style="height:600px;"></div>
+            <div id="chartdiv" style="height:600px;"></div>
+
+        </div>
+    </div>
+
+
 
 
     <script th:if="${error==null}" th:inline="javascript">
