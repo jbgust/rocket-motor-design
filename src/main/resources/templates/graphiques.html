@@ -23,35 +23,43 @@
     <div style="flex-direction:row; display:flex; margin: 10px;">
         <div style="margin-right: 40px;">
             <form th:action="@{/test}" method="post" th:object="${request}">
-                <input th:field="*{throatDiameter}">throatDiameter</input><br>
-                <input th:field="*{outerDiameter}">outerDiameter</input><br>
-                <input th:field="*{coreDiameter}">coreDiameter</input><br>
-                <input th:field="*{segmentLength}">segmentLength</input><br>
-                <input th:field="*{numberOfSegment}">numberOfSegment</input><br>
+                <input th:field="*{throatDiameter}">Throat diameter</input><br>
+                <input th:field="*{outerDiameter}">Grain outer diameter</input><br>
+                <input th:field="*{coreDiameter}">Grain core diameter</input><br>
+                <input th:field="*{segmentLength}">Grain segment length</input><br>
+                <input th:field="*{numberOfSegment}">Number of segment</input><br>
 
                 <select th:field="*{outerSurface}" name="outerSurface">
                     <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
                     </option>
-                </select>outerSurface<br>
+                </select>Outer surface<br>
                 <select th:field="*{endsSurface}">
                     <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
                     </option>
-                </select>endsSurface<br>
+                </select>Ends surface<br>
                 <select th:field="*{coreSurface}">
                     <option th:each="i : ${surfaces}" th:value="${i.name}" th:text="${i.name}">
                     </option>
-                </select>coreSurface<br>
+                </select>Core surface<br>
 
                 <select th:field="*{propellantType}">
                     <option th:each="i : ${propellants}" th:value="${i.name}" th:text="${i.name}">
                     </option>
-                </select>propellantType<br>
+                </select>Propellant<br>
 
-                <input th:field="*{chamberInnerDiameter}">chamberInnerDiameter</input><br>
-                <input th:field="*{chamberLength}">chamberLength</input><br>
+                <input th:field="*{chamberInnerDiameter}">Chamber inner diameter</input><br>
+                <input th:field="*{chamberLength}">Chamber length</input><br>
                 <input type="submit" name="toto">
 
             </form>
+            <div style="padding:10px; margin-top: 20px; border: 1px solid black;" th:if="${error==null}">
+                <span style="font-weight: bold;">Class : </span><span th:text="${performance.motorDescription}"></span><br>
+                <span style="font-weight: bold;">Thrust time : </span><span th:text="${performance.thrustTime}"></span><br>
+                <span style="font-weight: bold;">Max thrust : </span><span th:text="${performance.maxThrust}"></span><br>
+                <span style="font-weight: bold;">Total impulse : </span><span th:text="${performance.totalImpulse}"></span><br>
+                <span style="font-weight: bold;">Isp : </span><span th:text="${performance.specificImpulse}"></span><br>
+                <span style="font-weight: bold;">Max pressure : </span><span th:text="${performance.maxPressure}"></span><br>
+            </div>
         </div>
         <div>
             <p th:if="${error!=null}" style="color:red; font-size:24px;">Simulation failed</p>

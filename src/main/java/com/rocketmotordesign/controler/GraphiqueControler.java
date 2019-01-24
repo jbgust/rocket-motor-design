@@ -9,6 +9,7 @@ import com.jsrm.application.result.JSRMResult;
 import com.jsrm.application.result.ThrustResult;
 import com.jsrm.infra.propellant.PropellantType;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
+import com.rocketmotordesign.controler.dto.PerformanceResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,14 +41,17 @@ public class GraphiqueControler {
     private ModelAndView getModelAndView(ModelAndView modelAndView, SolidRocketMotor motor) {
         String error=null;
         JSRMResult result = null;
+        PerformanceResult performance = null;
         try {
             result = new JSRMSimulation(motor).run();
+            performance = new PerformanceResult(result);
         } catch (Exception e) {
             error=e.getMessage()+ " => "+e.getCause().getMessage();
         }
 
         modelAndView
-                .addObject("results", result!=null?result.getThrustResults(): null)
+                .addObject("results", result != null ? result.getThrustResults() : null)
+                .addObject("performance", performance)
                 .addObject("error", error)
                 .addObject("request", toComputationRequest(motor) )
                 .addObject("surfaces", Stream.of(GrainSurface.values()).map(grainSurface -> new IdName(grainSurface.name(), grainSurface.name())).collect(Collectors.toList()))
