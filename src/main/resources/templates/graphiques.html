@@ -84,7 +84,11 @@
 
 
 
-    <script th:if="${error==null}" th:inline="javascript">
+    </body>
+</html>
+
+
+<script th:if="${error==null}" th:inline="javascript">
         /**
  * ---------------------------------------
  * This demo was created using amCharts 4.
@@ -107,28 +111,33 @@ chart.paddingRight = 20;
 
 // Add data
 chart.data = [[${results}]];
+chart.numberFormatter.numberFormat = ".##";
 
 // Create axes
 var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
 categoryAxis.dataFields.category = "timeSinceBurnStartInSecond";
 categoryAxis.renderer.minGridDistance = 50;
 categoryAxis.renderer.grid.template.location = 0.5;
-categoryAxis.startLocation = 0.5;
-categoryAxis.endLocation = 0.5;
-
+categoryAxis.startLocation = -5;
+categoryAxis.endLocation = 10;
 
 // Create value axis
 var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 valueAxis.baseValue = 0;
 
+
 // Create series
 var series = chart.series.push(new am4charts.LineSeries());
 series.dataFields.valueY = "thrustInNewton";
 series.dataFields.categoryX = "timeSinceBurnStartInSecond";
+series.tooltipText = "{valueY.value} N :  {categoryX.formatNumber('.##')} s";
 series.strokeWidth = 2;
 series.tensionX = 12;
 
 chart.cursor = new am4charts.XYCursor();
+/*
+categoryAxis.adapter.add("getTooltipText", (text) => {
+ return ".###";
+});
+*/
     </script>
-    </body>
-</html>
