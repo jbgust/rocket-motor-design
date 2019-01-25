@@ -76,7 +76,7 @@
             <textarea th:if="${error!=null}"th:text="${error}" readonly cols="130" rows="50"></textarea>
 
 
-            <div id="chartdiv" style="height:600px;"></div>
+            <div id="chartdiv" style="height:750px;"></div>
 
         </div>
     </div>
@@ -120,17 +120,19 @@ categoryAxis.renderer.minGridDistance = 50;
 categoryAxis.renderer.grid.template.location = 0.5;
 categoryAxis.startLocation = -5;
 categoryAxis.endLocation = 10;
+categoryAxis.title.text = "Thrust time (sec.)";
 
 // Create value axis
 var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 valueAxis.baseValue = 0;
+valueAxis.title.text = "Thrust (N)";
 
 
 // Create series
 var series = chart.series.push(new am4charts.LineSeries());
 series.dataFields.valueY = "thrustInNewton";
 series.dataFields.categoryX = "timeSinceBurnStartInSecond";
-series.tooltipText = "{valueY.value} N :  {categoryX.formatNumber('.##')} s";
+series.tooltipText = "{valueY.value.formatNumber('#.')} N :  {categoryX.formatNumber('.##')} s";
 series.strokeWidth = 2;
 series.tensionX = 12;
 
