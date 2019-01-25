@@ -1,6 +1,7 @@
 package com.rocketmotordesign.controler.dto;
 
 import com.jsrm.application.result.JSRMResult;
+import com.jsrm.application.result.Nozzle;
 
 public class PerformanceResult {
     private final String motorDescription;
@@ -9,6 +10,11 @@ public class PerformanceResult {
     private final String specificImpulse;
     private final String maxPressure;
     private final String thrustTime;
+    private final boolean optimalDesign;
+    private final String nozzleExitDiameter;
+    private final String divergenceLenght;
+    private final String convergenceLenght;
+    private final String exitSpeedInitial;
 
     public PerformanceResult(JSRMResult jsrmResult) {
         motorDescription = jsrmResult.getMotorClassification()+String.valueOf(jsrmResult.getAverageThrustInNewton());
@@ -17,6 +23,14 @@ public class PerformanceResult {
         specificImpulse = format(jsrmResult.getSpecificImpulseInSecond()) +" s";
         maxPressure = format(jsrmResult.getMaxChamberPressureInMPa()*10) + " Bar";
         thrustTime = format(jsrmResult.getThrustTimeInSecond()) + " s";
+
+        Nozzle nozzle = jsrmResult.getNozzle();
+        optimalDesign = nozzle.getOptimalNozzleExitDiameterInMillimeter() == nozzle.getNozzleExitDiameterInMillimeter();
+        nozzleExitDiameter = format(nozzle.getNozzleExitDiameterInMillimeter()) +" mm";
+        divergenceLenght = format(nozzle.getDivergenceLenghtInMillimeter(12))+" mm";
+        convergenceLenght = format(nozzle.getConvergenceLenghtInMillimeter(30))+" mm";
+        exitSpeedInitial = format(nozzle.getInitialNozzleExitSpeedInMach()) + " mach";
+
     }
 
     private String format(Double aDouble) {
@@ -45,5 +59,25 @@ public class PerformanceResult {
 
     public String getMaxThrust() {
         return maxThrust;
+    }
+
+    public boolean isOptimalDesign() {
+        return optimalDesign;
+    }
+
+    public String getNozzleExitDiameter() {
+        return nozzleExitDiameter;
+    }
+
+    public String getDivergenceLenght() {
+        return divergenceLenght;
+    }
+
+    public String getConvergenceLenght() {
+        return convergenceLenght;
+    }
+
+    public String getExitSpeedInitial() {
+        return exitSpeedInitial;
     }
 }

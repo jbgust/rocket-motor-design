@@ -1,5 +1,6 @@
 package com.rocketmotordesign.controler;
 
+import com.jsrm.application.JSRMConfig;
 import com.jsrm.application.JSRMSimulation;
 import com.jsrm.application.motor.MotorChamber;
 import com.jsrm.application.motor.SolidRocketMotor;
@@ -29,21 +30,21 @@ public class GraphiqueControler {
     @GetMapping("/test")
     public ModelAndView graphiques(ModelAndView modelAndView) {
         SolidRocketMotor motor = createMotorAsSRM_2014ExcelFile();
-        return getModelAndView(modelAndView, motor);
+        return getModelAndView(modelAndView, motor, new JSRMConfig.Builder().withNozzleExpansionRatio(8).createJSRMConfig());
     }
 
     @PostMapping
     public ModelAndView post(@ModelAttribute("request") ComputationRequest request, ModelAndView modelAndView){
         SolidRocketMotor motor = toSolidRocketMotor(request);
-        return getModelAndView(modelAndView, motor);
+        return getModelAndView(modelAndView, motor, new JSRMConfig.Builder().createJSRMConfig());
     }
 
-    private ModelAndView getModelAndView(ModelAndView modelAndView, SolidRocketMotor motor) {
+    private ModelAndView getModelAndView(ModelAndView modelAndView, SolidRocketMotor motor, JSRMConfig jsrmConfig) {
         String error=null;
         JSRMResult result = null;
         PerformanceResult performance = null;
         try {
-            result = new JSRMSimulation(motor).run();
+            result = new JSRMSimulation(motor).run(jsrmConfig);
             performance = new PerformanceResult(result);
         } catch (Exception e) {
             error=e.getMessage()+ " => "+e.getCause().getMessage();
