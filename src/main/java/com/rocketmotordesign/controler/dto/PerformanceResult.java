@@ -1,5 +1,6 @@
 package com.rocketmotordesign.controler.dto;
 
+import com.jsrm.application.JSRMConfig;
 import com.jsrm.application.result.JSRMResult;
 import com.jsrm.application.result.Nozzle;
 
@@ -16,7 +17,7 @@ public class PerformanceResult {
     private final String convergenceLenght;
     private final String exitSpeedInitial;
 
-    public PerformanceResult(JSRMResult jsrmResult) {
+    public PerformanceResult(JSRMResult jsrmResult, JSRMConfig jsrmConfig) {
         motorDescription = jsrmResult.getMotorClassification()+String.valueOf(jsrmResult.getAverageThrustInNewton());
         maxThrust = format(jsrmResult.getMaxThrustInNewton()) + " N";
         totalImpulse = format(jsrmResult.getTotalImpulseInNewtonSecond()) + " N.S";
@@ -25,7 +26,7 @@ public class PerformanceResult {
         thrustTime = format(jsrmResult.getThrustTimeInSecond()) + " s";
 
         Nozzle nozzle = jsrmResult.getNozzle();
-        optimalDesign = nozzle.getOptimalNozzleExitDiameterInMillimeter() == nozzle.getNozzleExitDiameterInMillimeter();
+        optimalDesign = jsrmConfig.isOptimalNozzleDesign();
         nozzleExitDiameter = format(nozzle.getNozzleExitDiameterInMillimeter()) +" mm";
         divergenceLenght = format(nozzle.getDivergenceLenghtInMillimeter(12))+" mm";
         convergenceLenght = format(nozzle.getConvergenceLenghtInMillimeter(30))+" mm";

@@ -45,7 +45,7 @@ public class GraphiqueControler {
         PerformanceResult performance = null;
         try {
             result = new JSRMSimulation(motor).run(jsrmConfig);
-            performance = new PerformanceResult(result);
+            performance = new PerformanceResult(result, jsrmConfig);
         } catch (Exception e) {
             error=e.getMessage()+ " => "+e.getCause().getMessage();
         }
