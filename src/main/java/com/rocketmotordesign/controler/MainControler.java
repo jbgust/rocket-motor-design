@@ -1,10 +1,10 @@
 package com.rocketmotordesign.controler;
 
-import com.jsrm.application.JSRMSimulation;
-import com.jsrm.application.motor.MotorChamber;
-import com.jsrm.application.motor.SolidRocketMotor;
-import com.jsrm.application.motor.propellant.PropellantGrain;
-import com.jsrm.application.result.JSRMResult;
+import com.github.jbgust.jsrm.application.JSRMSimulation;
+import com.github.jbgust.jsrm.application.motor.CombustionChamber;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.ComputationResponse;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 
 @RestController
 public class MainControler {
@@ -43,11 +43,11 @@ public class MainControler {
 
         double chamberInnerDiameter = 75d;
         double chamberLength = 470d;
-        MotorChamber motorChamber = new MotorChamber(chamberInnerDiameter, chamberLength);
+        CombustionChamber CombustionChamber = new CombustionChamber(chamberInnerDiameter, chamberLength);
 
         double throatDiameter = 17.3985248919802;
 
-        return new SolidRocketMotor(propellantGrain, motorChamber, throatDiameter);
+        return new SolidRocketMotor(propellantGrain, CombustionChamber, throatDiameter);
     }
 
     private ComputationResponse toComputationResponse(JSRMResult result) {
@@ -58,13 +58,13 @@ public class MainControler {
     private SolidRocketMotor toSolidRocketMotor(ComputationRequest request) {
         return new SolidRocketMotor(
                 toPropellantGrain(request),
-                toMotorChamber(request),
+                toCombustionChamber(request),
                 request.getThroatDiameter()
         );
     }
 
-    private MotorChamber toMotorChamber(ComputationRequest request) {
-        return new MotorChamber(request.getChamberInnerDiameter(), request.getChamberLength());
+    private CombustionChamber toCombustionChamber(ComputationRequest request) {
+        return new CombustionChamber(request.getChamberInnerDiameter(), request.getChamberLength());
     }
 
     private PropellantGrain toPropellantGrain(ComputationRequest request) {

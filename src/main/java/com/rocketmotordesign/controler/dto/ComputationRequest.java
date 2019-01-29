@@ -1,7 +1,7 @@
 package com.rocketmotordesign.controler.dto;
 
-import com.jsrm.application.motor.propellant.GrainSurface;
-import com.jsrm.infra.propellant.PropellantType;
+import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 
 public class ComputationRequest {
     private double throatDiameter;

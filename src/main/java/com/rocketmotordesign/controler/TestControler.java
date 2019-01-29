@@ -1,14 +1,15 @@
 package com.rocketmotordesign.controler;
 
-import com.jsrm.application.JSRMConfig;
-import com.jsrm.application.JSRMSimulation;
-import com.jsrm.application.motor.MotorChamber;
-import com.jsrm.application.motor.SolidRocketMotor;
-import com.jsrm.application.motor.propellant.GrainSurface;
-import com.jsrm.application.motor.propellant.PropellantGrain;
-import com.jsrm.application.result.JSRMResult;
-import com.jsrm.application.result.ThrustResult;
-import com.jsrm.infra.propellant.PropellantType;
+import com.github.jbgust.jsrm.application.JSRMConfig;
+import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
+import com.github.jbgust.jsrm.application.JSRMSimulation;
+import com.github.jbgust.jsrm.application.motor.CombustionChamber;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
+import com.github.jbgust.jsrm.application.result.JSRMResult;
+import com.github.jbgust.jsrm.application.result.ThrustResult;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.PerformanceResult;
 import org.springframework.stereotype.Controller;
@@ -25,18 +26,18 @@ import java.util.stream.Stream;
 import static com.rocketmotordesign.controler.MainControler.createMotorAsSRM_2014ExcelFile;
 
 @Controller
-public class GraphiqueControler {
+public class TestControler {
 
     @GetMapping("/test")
     public ModelAndView graphiques(ModelAndView modelAndView) {
         SolidRocketMotor motor = createMotorAsSRM_2014ExcelFile();
-        return getModelAndView(modelAndView, motor, new JSRMConfig.Builder().withNozzleExpansionRatio(8).createJSRMConfig());
+        return getModelAndView(modelAndView, motor, new JSRMConfigBuilder().withNozzleExpansionRatio(8).createJSRMConfig());
     }
 
     @PostMapping
     public ModelAndView post(@ModelAttribute("request") ComputationRequest request, ModelAndView modelAndView){
         SolidRocketMotor motor = toSolidRocketMotor(request);
-        return getModelAndView(modelAndView, motor, new JSRMConfig.Builder().createJSRMConfig());
+        return getModelAndView(modelAndView, motor, new JSRMConfigBuilder().createJSRMConfig());
     }
 
     private ModelAndView getModelAndView(ModelAndView modelAndView, SolidRocketMotor motor, JSRMConfig jsrmConfig) {
@@ -64,16 +65,17 @@ public class GraphiqueControler {
     private SolidRocketMotor toSolidRocketMotor(ComputationRequest request) {
         PropellantGrain propellantGrain = new PropellantGrain(request.getPropellantType(), request.getOuterDiameter(), request.getCoreDiameter(), request.getSegmentLength()
                 , request.getNumberOfSegment(), request.getOuterSurface(), request.getEndsSurface(), request.getCoreSurface());
-        return new SolidRocketMotor(propellantGrain, new MotorChamber(request.getChamberInnerDiameter(), request.getChamberLength()), request.getThroatDiameter());
+        return new SolidRocketMotor(propellantGrain, new CombustionChamber(request.getChamberInnerDiameter(), request.getChamberLength()), request.getThroatDiameter());
     }
 
     private ComputationRequest toComputationRequest(SolidRocketMotor solidRocketMotor) {
 
         PropellantGrain propellantGrain = solidRocketMotor.getPropellantGrain();
-        return new ComputationRequest(solidRocketMotor.getThroatDiameter(), propellantGrain.getOuterDiameter(), propellantGrain.getCoreDiameter(), propellantGrain.getSegmentLength()
+        return new ComputationRequest(solidRocketMotor.getThroatDiameterInMillimeter(), propellantGrain.getOuterDiameter(), propellantGrain.getCoreDiameter(), propellantGrain.getSegmentLength()
         , propellantGrain.getNumberOfSegment(), propellantGrain.getOuterSurface(), propellantGrain.getEndsSurface(), propellantGrain.getCoreSurface(),
                 (PropellantType) propellantGrain.getPropellant(),
-                solidRocketMotor.getMotorChamber().getChamberInnerDiameter(), solidRocketMotor.getMotorChamber().getChamberLength());
+                solidRocketMotor.getCombustionChamber().getChamberInnerDiameterInMillimeter(),
+                solidRocketMotor.getCombustionChamber().getChamberLengthInMillimeter());
     }
 
     private List<ThrustResult> reduce(JSRMResult result) {

@@ -15,14 +15,11 @@
        body {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         }
-        span {
-            margin-left: 20px;
-        }
         input {
             width: 130px;
         }
         select {
-            width: 146px;
+            width: 130px;
         }
         label {
             display: inline-block;
@@ -33,14 +30,24 @@
             margin-left: 129px;
             margin-top: 10px;
         }
+        .resultat {
+
+        }
+        .label-resultat {
+            display: inline-block;
+            width: 180px;
+            padding-left: 20px;
+            margin: 0 10px;
+            text-align: right;
+        }
 
     </style>
 
 </head>
 <body>
 
-<div style="flex-direction:row; display:flex; margin: 10px;">
-    <div style="margin-right: 40px;">
+<div style="flex-direction:row; display:flex; margin: 10px; width: 100%;">
+    <div style="margin-right: 40px; width:420px;">
 
         <div style="padding:10px; margin-top: 20px; border: 1px solid black;">
             <h3 style="margin-bottom:5px;margin-top:0px;">Motor parameters</h3>
@@ -78,34 +85,24 @@
 
         <div style="padding:10px; margin-top: 20px; border: 1px solid black;" th:if="${error==null}">
             <h3 style="margin-bottom:5px;margin-top:0px;">Performance</h3>
-            <span style="font-weight: bold;">Class : </span><span th:text="${performance.motorDescription}"></span><br>
-            <span style="font-weight: bold;">Thrust time : </span><span th:text="${performance.thrustTime}"></span><br>
-            <span style="font-weight: bold;">Max thrust : </span><span th:text="${performance.maxThrust}"></span><br>
-            <span style="font-weight: bold;">Total impulse : </span><span
-                th:text="${performance.totalImpulse}"></span><br>
-            <span style="font-weight: bold;">Isp : </span><span th:text="${performance.specificImpulse}"></span><br>
-            <span style="font-weight: bold;">Max pressure : </span><span
-                th:text="${performance.maxPressure}"></span><br>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Class : </span><span th:text="${performance.motorDescription}"></span></div>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Thrust time : </span><span th:text="${performance.thrustTime}"></span></div>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Max thrust : </span><span th:text="${performance.maxThrust}"></span></div>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Total impulse : </span><span th:text="${performance.totalImpulse}"></span></div>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Specific impulse : </span><span th:text="${performance.specificImpulse}"></span></div>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Max pressure : </span><span th:text="${performance.maxPressure}"></span></div>
+
             <h3 style="margin-bottom:5px;">Nozzle</h3>
-            <span style="font-weight: bold;color: orange;" th:if="${performance.optimalDesign}">Optimal design</span><br
-                th:if="${performance.optimalDesign}">
-            <span style="font-weight: bold;">Nozzle exit diam. : </span><span
-                th:text="${performance.nozzleExitDiameter}"></span><br>
-            <span style="font-weight: bold;">Longueur divergent : </span><span
-                th:text="${performance.divergenceLenght}"></span><br>
-            <span style="font-weight: bold;">Longueur convergent : </span><span
-                th:text="${performance.convergenceLenght}"></span><br>
-            <span style="font-weight: bold;">Vitesse sortie initiale : </span><span
-                th:text="${performance.exitSpeedInitial}"></span><br>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;color: orange;" th:if="${performance.optimalDesign}">Optimal design</span><br th:if="${performance.optimalDesign}"></div>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Nozzle exit diam. : </span><span th:text="${performance.nozzleExitDiameter}"></span><br></div>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Divergence length : </span><span th:text="${performance.divergenceLenght}"></span><br></div>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Convergence length : </span><span th:text="${performance.convergenceLenght}"></span><br></div>
+            <div class="resultat"><span class="label-resultat" style="font-weight: bold;">Initial exit speed : </span><span th:text="${performance.exitSpeedInitial}"></span><br></div>
         </div>
     </div>
-    <div>
+    <div id="chartdiv" style="height:750px;width: calc(90% - 420px);">
         <p th:if="${error!=null}" style="color:red; font-size:24px;">Simulation failed</p>
         <textarea th:if="${error!=null}" th:text="${error}" readonly cols="130" rows="50"></textarea>
-
-
-        <div id="chartdiv" style="height:750px;"></div>
-
     </div>
 </div>
 

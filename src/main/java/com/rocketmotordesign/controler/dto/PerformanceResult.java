@@ -1,8 +1,8 @@
 package com.rocketmotordesign.controler.dto;
 
-import com.jsrm.application.JSRMConfig;
-import com.jsrm.application.result.JSRMResult;
-import com.jsrm.application.result.Nozzle;
+import com.github.jbgust.jsrm.application.JSRMConfig;
+import com.github.jbgust.jsrm.application.result.JSRMResult;
+import com.github.jbgust.jsrm.application.result.Nozzle;
 
 public class PerformanceResult {
     private final String motorDescription;

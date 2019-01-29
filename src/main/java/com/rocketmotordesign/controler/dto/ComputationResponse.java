@@ -1,8 +1,8 @@
 package com.rocketmotordesign.controler.dto;
 
-import com.jsrm.application.result.MotorClassification;
-import com.jsrm.application.result.Nozzle;
-import com.jsrm.application.result.ThrustResult;
+import com.github.jbgust.jsrm.application.result.MotorClassification;
+import com.github.jbgust.jsrm.application.result.Nozzle;
+import com.github.jbgust.jsrm.application.result.ThrustResult;
 
 import java.util.List;
 
