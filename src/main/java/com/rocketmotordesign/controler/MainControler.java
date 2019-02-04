@@ -8,10 +8,7 @@ import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.ComputationResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
@@ -20,6 +17,7 @@ import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType
 @RestController
 public class MainControler {
 
+//    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/compute")
     public ResponseEntity<ComputationResponse> compute(@RequestBody ComputationRequest request){
         JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run();
