@@ -1,5 +1,7 @@
 package com.rocketmotordesign.controler;
 
+import com.github.jbgust.jsrm.application.JSRMConfig;
+import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.JSRMSimulation;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
@@ -16,18 +18,19 @@ import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType
 
 @RestController
 public class MainControler {
+    private static final JSRMConfig defaultConfig = new JSRMConfigBuilder().createJSRMConfig();
 
 //    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/compute")
     public ResponseEntity<ComputationResponse> compute(@RequestBody ComputationRequest request){
         JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run();
-        return ResponseEntity.ok(toComputationResponse(result));
+        return ResponseEntity.ok(toComputationResponse(result, defaultConfig));
     }
 
     @GetMapping("/")
     public ResponseEntity<ComputationResponse> compute(){
         JSRMResult result = new JSRMSimulation(createMotorAsSRM_2014ExcelFile()).run();
-        return ResponseEntity.ok(toComputationResponse(result));
+        return ResponseEntity.ok(toComputationResponse(result, defaultConfig));
     }
 
     public static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {
@@ -48,9 +51,8 @@ public class MainControler {
         return new SolidRocketMotor(propellantGrain, CombustionChamber, throatDiameter);
     }
 
-    private ComputationResponse toComputationResponse(JSRMResult result) {
-        return new ComputationResponse(result.getMaxThrustInNewton(), result.getTotalImpulseInNewtonSecond(), result.getSpecificImpulseInSecond(), result.getMaxChamberPressureInMPa(),
-                result.getThrustTimeInSecond(), result.getAverageThrustInNewton(), result.getMotorClassification(), result.getThrustResults(), result.getNozzle());
+    private ComputationResponse toComputationResponse(JSRMResult result, JSRMConfig config) {
+        return new ComputationResponse(result, config);
     }
 
     private SolidRocketMotor toSolidRocketMotor(ComputationRequest request) {
