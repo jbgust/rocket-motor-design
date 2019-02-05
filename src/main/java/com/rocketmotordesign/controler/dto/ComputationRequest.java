@@ -20,6 +20,8 @@ public class ComputationRequest {
     private double chamberInnerDiameter;
     private double chamberLength;
 
+    private ExtraConfiguration extraConfig;
+
     public ComputationRequest() {
     }
 
@@ -35,6 +37,14 @@ public class ComputationRequest {
         this.propellantType = propellantType;
         this.chamberInnerDiameter = chamberInnerDiameter;
         this.chamberLength = chamberLength;
+    }
+
+    public ExtraConfiguration getExtraConfig() {
+        return extraConfig;
+    }
+
+    public void setExtraConfig(ExtraConfiguration extraConfig) {
+        this.extraConfig = extraConfig;
     }
 
     public double getThroatDiameter() {

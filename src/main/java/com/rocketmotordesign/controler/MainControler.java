@@ -9,6 +9,7 @@ import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.ComputationResponse;
+import com.rocketmotordesign.controler.dto.ExtraConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,27 @@ public class MainControler {
 //    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/compute")
     public ResponseEntity<ComputationResponse> compute(@RequestBody ComputationRequest request){
-        JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run();
-        return ResponseEntity.ok(toComputationResponse(result, defaultConfig));
+        JSRMConfig config = toJSRMConfig(request.getExtraConfig());
+        JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run(config);
+        return ResponseEntity.ok(toComputationResponse(result, config));
+    }
+
+    private JSRMConfig toJSRMConfig(ExtraConfiguration extraConfig) {
+        JSRMConfigBuilder jsrmConfigBuilder = new JSRMConfigBuilder()
+                .withAmbiantPressureInMPa(extraConfig.getAmbiantPressureInMPa())
+                .withCombustionEfficiencyRatio(extraConfig.getCombustionEfficiencyRatio())
+                .withDensityRatio(extraConfig.getDensityRatio())
+                .withErosiveBurningAreaRatioThreshold(extraConfig.getErosiveBurningAreaRatioThreshold())
+                .withErosiveBurningVelocityCoefficient(extraConfig.getErosiveBurningVelocityCoefficient())
+                .withNozzleEfficiency(extraConfig.getNozzleEfficiency())
+                .withNozzleErosionInMillimeter(extraConfig.getNozzleErosionInMillimeter())
+                .withOptimalNozzleDesign(extraConfig.isOptimalNozzleDesign());
+
+                if(extraConfig.getNozzleExpansionRatio() != null){
+                 jsrmConfigBuilder.withNozzleExpansionRatio(extraConfig.getNozzleExpansionRatio());
+                }
+
+        return jsrmConfigBuilder.createJSRMConfig();
     }
 
     @GetMapping("/")
