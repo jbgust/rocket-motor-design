@@ -3,15 +3,21 @@ package com.rocketmotordesign.controler;
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.JSRMSimulation;
+import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
+import com.github.jbgust.jsrm.application.exception.JSRMException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.ComputationResponse;
+import com.rocketmotordesign.controler.dto.ErrorMessage;
 import com.rocketmotordesign.controler.dto.ExtraConfiguration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
@@ -21,12 +27,23 @@ import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType
 public class MainControler {
     private static final JSRMConfig defaultConfig = new JSRMConfigBuilder().createJSRMConfig();
 
-//    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/compute")
-    public ResponseEntity<ComputationResponse> compute(@RequestBody ComputationRequest request){
-        JSRMConfig config = toJSRMConfig(request.getExtraConfig());
-        JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run(config);
-        return ResponseEntity.ok(toComputationResponse(result, config));
+    public ResponseEntity compute(@RequestBody ComputationRequest request){
+        try {
+            JSRMConfig config = toJSRMConfig(request.getExtraConfig());
+            JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run(config);
+            return ResponseEntity.ok(toComputationResponse(result, config));
+        } catch (InvalidMotorDesignException e){
+            return ResponseEntity.badRequest().body(
+                    new ErrorMessage(e.getMessage()));
+        }
+        catch (JSRMException e) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getMessage()));
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorMessage("Computation failed due to unknow error, please contact us."));
+        }
     }
 
     private JSRMConfig toJSRMConfig(ExtraConfiguration extraConfig) {

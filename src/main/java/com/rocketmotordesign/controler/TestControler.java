@@ -9,7 +9,6 @@ import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.github.jbgust.jsrm.application.result.ThrustResult;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.PerformanceResult;
 import org.springframework.stereotype.Controller;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -77,14 +74,6 @@ public class TestControler {
                 solidRocketMotor.getCombustionChamber().getChamberInnerDiameterInMillimeter(),
                 solidRocketMotor.getCombustionChamber().getChamberLengthInMillimeter());
     }
-
-    private List<ThrustResult> reduce(JSRMResult result) {
-        AtomicInteger i = new AtomicInteger();
-        return result.getThrustResults().stream()
-                .filter(thrustResult -> i.getAndIncrement() % 10 == 0)
-                .collect(Collectors.toList());
-    }
-
     public class IdName {
         public String id;
         public String name;

@@ -5,6 +5,8 @@ import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.ThrustResult;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class ComputationResponse {
 
@@ -13,7 +15,7 @@ public class ComputationResponse {
 
     public ComputationResponse(JSRMResult jsrmResult, JSRMConfig jsrmConfig) {
        this.performanceResult = new PerformanceResult(jsrmResult, jsrmConfig);
-        this.thrustResults = jsrmResult.getThrustResults();
+        this.thrustResults = reduce(jsrmResult);
     }
 
     public PerformanceResult getPerformanceResult() {
@@ -22,5 +24,12 @@ public class ComputationResponse {
 
     public List<ThrustResult> getThrustResults() {
         return thrustResults;
+    }
+
+    private List<ThrustResult> reduce(JSRMResult result) {
+        AtomicInteger i = new AtomicInteger();
+        return result.getThrustResults().stream()
+                .filter(thrustResult -> i.getAndIncrement() % 10 == 0)
+                .collect(Collectors.toList());
     }
 }
