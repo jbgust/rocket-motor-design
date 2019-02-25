@@ -14,7 +14,6 @@ import com.rocketmotordesign.controler.dto.ComputationResponse;
 import com.rocketmotordesign.controler.dto.ErrorMessage;
 import com.rocketmotordesign.controler.dto.ExtraConfiguration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +24,6 @@ import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType
 
 @RestController
 public class MainControler {
-    private static final JSRMConfig defaultConfig = new JSRMConfigBuilder().createJSRMConfig();
 
     @PostMapping("/compute")
     public ResponseEntity compute(@RequestBody ComputationRequest request){
@@ -62,12 +60,6 @@ public class MainControler {
                 }
 
         return jsrmConfigBuilder.createJSRMConfig();
-    }
-
-    @GetMapping("/")
-    public ResponseEntity<ComputationResponse> compute(){
-        JSRMResult result = new JSRMSimulation(createMotorAsSRM_2014ExcelFile()).run();
-        return ResponseEntity.ok(toComputationResponse(result, defaultConfig));
     }
 
     public static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {

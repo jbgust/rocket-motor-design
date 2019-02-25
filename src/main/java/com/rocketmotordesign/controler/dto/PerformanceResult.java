@@ -16,13 +16,15 @@ public class PerformanceResult {
     private final String divergenceLenght;
     private final String convergenceLenght;
     private final String exitSpeedInitial;
+    private final String averagePressure;
 
     public PerformanceResult(JSRMResult jsrmResult, JSRMConfig jsrmConfig) {
         motorDescription = jsrmResult.getMotorClassification()+String.valueOf(jsrmResult.getAverageThrustInNewton());
         maxThrust = format(jsrmResult.getMaxThrustInNewton()) + " N";
         totalImpulse = format(jsrmResult.getTotalImpulseInNewtonSecond()) + " N.S";
         specificImpulse = format(jsrmResult.getSpecificImpulseInSecond()) +" s";
-        maxPressure = format(jsrmResult.getMaxChamberPressureInMPa()*10) + " Bar";
+        maxPressure = format(toBar(jsrmResult.getMaxChamberPressureInMPa())) + " Bar";
+        averagePressure = format(toBar(jsrmResult.getAverageChamberPressure())) + " Bar";
         thrustTime = format(jsrmResult.getThrustTimeInSecond()) + " s";
 
         Nozzle nozzle = jsrmResult.getNozzle();
@@ -32,6 +34,10 @@ public class PerformanceResult {
         convergenceLenght = format(nozzle.getConvergenceLenghtInMillimeter(30))+" mm";
         exitSpeedInitial = format(nozzle.getInitialNozzleExitSpeedInMach()) + " mach";
 
+    }
+
+    private double toBar(double averageChamberPressure) {
+        return averageChamberPressure * 10;
     }
 
     private String format(Double aDouble) {
@@ -80,5 +86,9 @@ public class PerformanceResult {
 
     public String getExitSpeedInitial() {
         return exitSpeedInitial;
+    }
+
+    public String getAveragePressure() {
+        return averagePressure;
     }
 }
