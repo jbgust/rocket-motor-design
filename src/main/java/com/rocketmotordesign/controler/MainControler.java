@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
-
 @RestController
 public class MainControler {
 
@@ -31,13 +27,14 @@ public class MainControler {
             JSRMConfig config = toJSRMConfig(request.getExtraConfig());
             JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run(config);
             return ResponseEntity.ok(toComputationResponse(result, config));
-        } catch (InvalidMotorDesignException e){
-            return ResponseEntity.badRequest().body(
-                    new ErrorMessage(e.getMessage()));
-        }
-        catch (JSRMException e) {
-            return ResponseEntity.badRequest().body(
-                    new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getMessage()));
+        } catch (JSRMException e) {
+            if(e instanceof InvalidMotorDesignException){
+                return ResponseEntity.badRequest().body(
+                        new ErrorMessage(e.getMessage()));
+            } else {
+                return ResponseEntity.badRequest().body(
+                        new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getMessage()));
+            }
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(
                     new ErrorMessage("Computation failed due to unknow error, please contact us."));
@@ -60,24 +57,6 @@ public class MainControler {
                 }
 
         return jsrmConfigBuilder.createJSRMConfig();
-    }
-
-    public static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {
-        double grainOuterDiameter = 69d;
-        double grainCoreDiameter = 20d;
-        double grainSegmentLength = 115d;
-        double numberOfSegment = 4d;
-        PropellantGrain propellantGrain = new PropellantGrain(KNDX, grainOuterDiameter, grainCoreDiameter,
-                grainSegmentLength, numberOfSegment,
-                INHIBITED, EXPOSED, EXPOSED);
-
-        double chamberInnerDiameter = 75d;
-        double chamberLength = 470d;
-        CombustionChamber CombustionChamber = new CombustionChamber(chamberInnerDiameter, chamberLength);
-
-        double throatDiameter = 17.3985248919802;
-
-        return new SolidRocketMotor(propellantGrain, CombustionChamber, throatDiameter);
     }
 
     private ComputationResponse toComputationResponse(JSRMResult result, JSRMConfig config) {

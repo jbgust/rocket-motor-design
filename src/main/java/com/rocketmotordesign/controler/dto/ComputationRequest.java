@@ -25,20 +25,6 @@ public class ComputationRequest {
     public ComputationRequest() {
     }
 
-    public ComputationRequest(double throatDiameter, double outerDiameter, double coreDiameter, double segmentLength, double numberOfSegment, GrainSurface outerSurface, GrainSurface endsSurface, GrainSurface coreSurface, PropellantType propellantType, double chamberInnerDiameter, double chamberLength) {
-        this.throatDiameter = throatDiameter;
-        this.outerDiameter = outerDiameter;
-        this.coreDiameter = coreDiameter;
-        this.segmentLength = segmentLength;
-        this.numberOfSegment = numberOfSegment;
-        this.outerSurface = outerSurface;
-        this.endsSurface = endsSurface;
-        this.coreSurface = coreSurface;
-        this.propellantType = propellantType;
-        this.chamberInnerDiameter = chamberInnerDiameter;
-        this.chamberLength = chamberLength;
-    }
-
     public ExtraConfiguration getExtraConfig() {
         return extraConfig;
     }
