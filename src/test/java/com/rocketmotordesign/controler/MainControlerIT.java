@@ -62,6 +62,8 @@ public class MainControlerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)))
+                .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
+                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", is(36.63558888655025)))
                 .andExpect(jsonPath("$.thrustResults", hasSize(45)));
     }
 

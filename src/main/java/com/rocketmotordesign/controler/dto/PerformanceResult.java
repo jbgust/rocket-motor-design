@@ -13,10 +13,10 @@ public class PerformanceResult {
     private final String thrustTime;
     private final boolean optimalDesign;
     private final String nozzleExitDiameter;
-    private final String divergenceLenght;
-    private final String convergenceLenght;
     private final String exitSpeedInitial;
     private final String averagePressure;
+    private final Double convergenceCrossSectionDiameter;
+    private final Double divergenceCrossSectionDiameter;
 
     public PerformanceResult(JSRMResult jsrmResult, JSRMConfig jsrmConfig) {
         motorDescription = jsrmResult.getMotorClassification()+String.valueOf(jsrmResult.getAverageThrustInNewton());
@@ -30,8 +30,8 @@ public class PerformanceResult {
         Nozzle nozzle = jsrmResult.getNozzle();
         optimalDesign = jsrmConfig.isOptimalNozzleDesign();
         nozzleExitDiameter = format(nozzle.getNozzleExitDiameterInMillimeter()) +" mm";
-        divergenceLenght = format(nozzle.getDivergenceLenghtInMillimeter(12))+" mm";
-        convergenceLenght = format(nozzle.getConvergenceLenghtInMillimeter(30))+" mm";
+        convergenceCrossSectionDiameter = nozzle.getChamberInsideDiameterInMillimeter() - nozzle.getNozzleThroatDiameterInMillimeter();
+        divergenceCrossSectionDiameter = nozzle.getNozzleExitDiameterInMillimeter() - nozzle.getNozzleThroatDiameterInMillimeter();
         exitSpeedInitial = format(nozzle.getInitialNozzleExitSpeedInMach()) + " mach";
 
     }
@@ -76,19 +76,19 @@ public class PerformanceResult {
         return nozzleExitDiameter;
     }
 
-    public String getDivergenceLenght() {
-        return divergenceLenght;
-    }
-
-    public String getConvergenceLenght() {
-        return convergenceLenght;
-    }
-
     public String getExitSpeedInitial() {
         return exitSpeedInitial;
     }
 
     public String getAveragePressure() {
         return averagePressure;
+    }
+
+    public Double getConvergenceCrossSectionDiameter() {
+        return convergenceCrossSectionDiameter;
+    }
+
+    public Double getDivergenceCrossSectionDiameter() {
+        return divergenceCrossSectionDiameter;
     }
 }
