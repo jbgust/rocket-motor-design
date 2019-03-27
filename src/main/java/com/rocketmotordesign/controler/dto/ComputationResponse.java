@@ -29,7 +29,7 @@ public class ComputationResponse {
     private List<ThrustResult> reduce(JSRMResult result) {
         AtomicInteger i = new AtomicInteger();
         return result.getThrustResults().stream()
-                .filter(thrustResult -> i.getAndIncrement() % 20 == 0)
+                .filter(thrustResult -> i.getAndIncrement() % 10 == 0)
                 .collect(Collectors.toList());
     }
 }

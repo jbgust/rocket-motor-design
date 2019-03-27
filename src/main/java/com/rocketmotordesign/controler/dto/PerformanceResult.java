@@ -4,6 +4,8 @@ import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.Nozzle;
 
+import java.util.Locale;
+
 public class PerformanceResult {
     private final String motorDescription;
     private final String maxThrust;
@@ -17,6 +19,7 @@ public class PerformanceResult {
     private final String averagePressure;
     private final Double convergenceCrossSectionDiameter;
     private final Double divergenceCrossSectionDiameter;
+    private final String optimalNozzleExpansionRatio;
 
     public PerformanceResult(JSRMResult jsrmResult, JSRMConfig jsrmConfig) {
         motorDescription = jsrmResult.getMotorClassification()+String.valueOf(jsrmResult.getAverageThrustInNewton());
@@ -33,6 +36,7 @@ public class PerformanceResult {
         convergenceCrossSectionDiameter = nozzle.getChamberInsideDiameterInMillimeter() - nozzle.getNozzleThroatDiameterInMillimeter();
         divergenceCrossSectionDiameter = nozzle.getNozzleExitDiameterInMillimeter() - nozzle.getNozzleThroatDiameterInMillimeter();
         exitSpeedInitial = format(nozzle.getInitialNozzleExitSpeedInMach()) + " mach";
+        optimalNozzleExpansionRatio = format(nozzle.getOptimalNozzleExpansionRatio());
 
     }
 
@@ -41,7 +45,7 @@ public class PerformanceResult {
     }
 
     private String format(Double aDouble) {
-        return String.format("%.2f", aDouble);
+        return String.format(Locale.ENGLISH, "%.2f", aDouble);
     }
 
     public String getMotorDescription() {
@@ -90,5 +94,9 @@ public class PerformanceResult {
 
     public Double getDivergenceCrossSectionDiameter() {
         return divergenceCrossSectionDiameter;
+    }
+
+    public String getOptimalNozzleExpansionRatio() {
+        return optimalNozzleExpansionRatio;
     }
 }
