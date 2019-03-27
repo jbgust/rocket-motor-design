@@ -14,6 +14,7 @@ import com.rocketmotordesign.controler.dto.ComputationResponse;
 import com.rocketmotordesign.controler.dto.ErrorMessage;
 import com.rocketmotordesign.controler.dto.ExtraConfiguration;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,11 @@ public class MainControler {
             return ResponseEntity.badRequest().body(
                     new ErrorMessage("Computation failed due to unknow error, please contact us."));
         }
+    }
+
+    @GetMapping("/hello")
+    public String hello(){
+        return "world";
     }
 
     private JSRMConfig toJSRMConfig(ExtraConfiguration extraConfig) {

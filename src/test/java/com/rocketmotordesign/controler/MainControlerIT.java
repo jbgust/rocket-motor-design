@@ -64,7 +64,18 @@ public class MainControlerIT {
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)))
                 .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
                 .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", is(36.63558888655025)))
-                .andExpect(jsonPath("$.thrustResults", hasSize(45)));
+
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("2060.35 N")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("3603.07 N.S")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("130.65 s")))
+                .andExpect(jsonPath("$.performanceResult.maxPressure", is("59.36 Bar")))
+                .andExpect(jsonPath("$.performanceResult.thrustTime", is("2.15 s")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("54.03 mm")))
+                .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07 mach")))
+                .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06 Bar")))
+                .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
+
+                .andExpect(jsonPath("$.thrustResults", hasSize(89)));
     }
 
     @Test
