@@ -2,12 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.1.2.RELEASE</version>
 		<relativePath/>
 	</parent>
+
 	<groupId>com.rocketmotordesign</groupId>
 	<artifactId>RocketMotorDesign</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -31,19 +33,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-
-        <!-- TODO: a virer -> JSRM dependency-->
-        <dependency>
-            <groupId>net.objecthunter</groupId>
-            <artifactId>exp4j</artifactId>
-            <version>0.4.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>27.0-jre</version>
-        </dependency>
-        <!-- TODO: fin a virer -> JSRM dependency-->
+		<dependency>
+			<groupId>com.github.jbgust</groupId>
+			<artifactId>Java-Solid-Rocket-Motor</artifactId>
+			<version>1.0</version>
+		</dependency>
 
         <dependency>
 			<groupId>org.springframework.boot</groupId>

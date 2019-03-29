@@ -120,4 +120,22 @@ public class ComputationRequest {
     public void setChamberLength(double chamberLength) {
         this.chamberLength = chamberLength;
     }
+
+    @Override
+    public String toString() {
+        return "ComputationRequest{" +
+                "throatDiameter=" + throatDiameter +
+                ", outerDiameter=" + outerDiameter +
+                ", coreDiameter=" + coreDiameter +
+                ", segmentLength=" + segmentLength +
+                ", numberOfSegment=" + numberOfSegment +
+                ", outerSurface=" + outerSurface +
+                ", endsSurface=" + endsSurface +
+                ", coreSurface=" + coreSurface +
+                ", propellantType=" + propellantType +
+                ", chamberInnerDiameter=" + chamberInnerDiameter +
+                ", chamberLength=" + chamberLength +
+                ", extraConfig=" + extraConfig +
+                '}';
+    }
 }

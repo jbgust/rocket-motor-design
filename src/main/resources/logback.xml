@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Active la mise à jour à chaud du fichier de config toutes les 30 secondes (par défaut 1 minute)
+    <configuration scan="true" scanPeriod="30 seconds" >
+-->
+<configuration>
+
+    <appender name="CONSOLE-APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} [%X{carstRunId}] %highlight(%-5level) %-30logger{0} : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE-APPENDER" />
+    </root>
+
+</configuration>
+
