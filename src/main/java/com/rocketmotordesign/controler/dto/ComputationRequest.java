@@ -3,6 +3,8 @@ package com.rocketmotordesign.controler.dto;
 import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 
+import java.util.Objects;
+
 public class ComputationRequest {
     private double throatDiameter;
 
@@ -137,5 +139,41 @@ public class ComputationRequest {
                 ", chamberLength=" + chamberLength +
                 ", extraConfig=" + extraConfig +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ComputationRequest that = (ComputationRequest) o;
+        return Double.compare(that.throatDiameter, throatDiameter) == 0 &&
+                Double.compare(that.outerDiameter, outerDiameter) == 0 &&
+                Double.compare(that.coreDiameter, coreDiameter) == 0 &&
+                Double.compare(that.segmentLength, segmentLength) == 0 &&
+                Double.compare(that.numberOfSegment, numberOfSegment) == 0 &&
+                Double.compare(that.chamberInnerDiameter, chamberInnerDiameter) == 0 &&
+                Double.compare(that.chamberLength, chamberLength) == 0 &&
+                outerSurface == that.outerSurface &&
+                endsSurface == that.endsSurface &&
+                coreSurface == that.coreSurface &&
+                propellantType == that.propellantType &&
+                Objects.equals(extraConfig, that.extraConfig);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects
+                .hash(throatDiameter,
+                        outerDiameter,
+                        coreDiameter,
+                        segmentLength,
+                        numberOfSegment,
+                        outerSurface,
+                        endsSurface,
+                        coreSurface,
+                        propellantType,
+                        chamberInnerDiameter,
+                        chamberLength,
+                        extraConfig);
     }
 }

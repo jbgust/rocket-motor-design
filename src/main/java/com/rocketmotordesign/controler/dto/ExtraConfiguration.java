@@ -1,6 +1,8 @@
 package com.rocketmotordesign.controler.dto;
 
 
+import java.util.Objects;
+
 public class ExtraConfiguration {
     private double densityRatio;
     private double nozzleErosionInMillimeter;
@@ -85,5 +87,26 @@ public class ExtraConfiguration {
 
     public Double getNozzleExpansionRatio() {
         return nozzleExpansionRatio;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExtraConfiguration that = (ExtraConfiguration) o;
+        return Double.compare(that.densityRatio, densityRatio) == 0 &&
+                Double.compare(that.nozzleErosionInMillimeter, nozzleErosionInMillimeter) == 0 &&
+                Double.compare(that.combustionEfficiencyRatio, combustionEfficiencyRatio) == 0 &&
+                Double.compare(that.ambiantPressureInMPa, ambiantPressureInMPa) == 0 &&
+                Double.compare(that.erosiveBurningAreaRatioThreshold, erosiveBurningAreaRatioThreshold) == 0 &&
+                Double.compare(that.erosiveBurningVelocityCoefficient, erosiveBurningVelocityCoefficient) == 0 &&
+                Double.compare(that.nozzleEfficiency, nozzleEfficiency) == 0 &&
+                optimalNozzleDesign == that.optimalNozzleDesign &&
+                Objects.equals(nozzleExpansionRatio, that.nozzleExpansionRatio);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(densityRatio, nozzleErosionInMillimeter, combustionEfficiencyRatio, ambiantPressureInMPa, erosiveBurningAreaRatioThreshold, erosiveBurningVelocityCoefficient, nozzleEfficiency, optimalNozzleDesign, nozzleExpansionRatio);
     }
 }

@@ -30,6 +30,7 @@ public class MainControler {
         try {
             JSRMConfig config = toJSRMConfig(request.getExtraConfig());
             JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run(config);
+            LOGGER.info("METEOR[REQUEST|{}]", request.hashCode());
             return ResponseEntity.ok(toComputationResponse(result, config));
         } catch (JSRMException e) {
             if(e instanceof InvalidMotorDesignException){
