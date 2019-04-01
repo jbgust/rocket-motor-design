@@ -28,11 +28,12 @@ public class MainControler {
     @PostMapping("/compute")
     public ResponseEntity compute(@RequestBody ComputationRequest request){
         try {
+            LOGGER.info("METEOR[REQUEST|{}]", request.hashCode());
             JSRMConfig config = toJSRMConfig(request.getExtraConfig());
             JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run(config);
-            LOGGER.info("METEOR[REQUEST|{}]", request.hashCode());
             return ResponseEntity.ok(toComputationResponse(result, config));
         } catch (JSRMException e) {
+            LOGGER.warn("METEOR[FAILED|{}]", e.getClass().getSimpleName());
             if(e instanceof InvalidMotorDesignException){
                 LOGGER.warn("InvalidMotorDesignException : {}", e.getMessage());
                 LOGGER.debug("InvalidMotorDesignException suite : {}", e.getMessage());
