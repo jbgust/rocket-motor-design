@@ -12,7 +12,7 @@
 
 	<groupId>com.rocketmotordesign</groupId>
 	<artifactId>RocketMotorDesign</artifactId>
-	<version>1.1</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>RocketMotorDesign</name>
 	<description>REST API for METEOR based on JSRM library</description>
 
