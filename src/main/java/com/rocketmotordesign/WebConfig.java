@@ -17,12 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${cors.allowed.domains}")
     private String[] allowedCORSDomains;
 
-    @Value("${build.version}")
-    private String buildVersion;
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        logger.info("RocketMotorDesign - Version : {}", buildVersion);
         registry
                 .addMapping("/compute")
                 .allowedOrigins(allowedCORSDomains);
