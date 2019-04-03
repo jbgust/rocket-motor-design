@@ -11,9 +11,11 @@ public class ComputationResponse {
 
     private final PerformanceResult performanceResult;
     private final List<GraphResult> thrustResults;
+    private Integer moduloLimitSize;
 
-    public ComputationResponse(JSRMResult jsrmResult, JSRMConfig jsrmConfig) {
-       this.performanceResult = new PerformanceResult(jsrmResult, jsrmConfig);
+    public ComputationResponse(JSRMResult jsrmResult, JSRMConfig jsrmConfig, Integer moduloLimitSize) {
+        this.moduloLimitSize = moduloLimitSize;
+        this.performanceResult = new PerformanceResult(jsrmResult, jsrmConfig);
         this.thrustResults = reduce(jsrmResult);
     }
 
@@ -28,7 +30,7 @@ public class ComputationResponse {
     private List<GraphResult> reduce(JSRMResult result) {
         AtomicInteger i = new AtomicInteger();
         return result.getThrustResults().stream()
-//                .filter(thrustResult -> i.getAndIncrement() % 10 == 0)
+                .filter(thrustResult -> moduloLimitSize ==1 || i.getAndIncrement() % moduloLimitSize == 0)
                 .map(GraphResult::new)
                 .collect(Collectors.toList());
     }
