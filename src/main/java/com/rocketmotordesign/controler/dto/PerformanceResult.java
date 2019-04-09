@@ -23,19 +23,19 @@ public class PerformanceResult {
 
     public PerformanceResult(JSRMResult jsrmResult, JSRMConfig jsrmConfig) {
         motorDescription = jsrmResult.getMotorClassification()+String.valueOf(jsrmResult.getAverageThrustInNewton());
-        maxThrust = format(jsrmResult.getMaxThrustInNewton()) + " N";
-        totalImpulse = format(jsrmResult.getTotalImpulseInNewtonSecond()) + " Ns";
-        specificImpulse = format(jsrmResult.getSpecificImpulseInSecond()) +" s";
-        maxPressure = format(toBar(jsrmResult.getMaxChamberPressureInMPa())) + " bar";
-        averagePressure = format(toBar(jsrmResult.getAverageChamberPressure())) + " bar";
-        thrustTime = format(jsrmResult.getThrustTimeInSecond()) + " s";
+        maxThrust = format(jsrmResult.getMaxThrustInNewton());
+        totalImpulse = format(jsrmResult.getTotalImpulseInNewtonSecond());
+        specificImpulse = format(jsrmResult.getSpecificImpulseInSecond());
+        maxPressure = format(toBar(jsrmResult.getMaxChamberPressureInMPa()));
+        averagePressure = format(toBar(jsrmResult.getAverageChamberPressure()));
+        thrustTime = format(jsrmResult.getThrustTimeInSecond());
 
         Nozzle nozzle = jsrmResult.getNozzle();
         optimalDesign = jsrmConfig.isOptimalNozzleDesign();
         nozzleExitDiameter = format(nozzle.getNozzleExitDiameterInMillimeter()) +" mm";
         convergenceCrossSectionDiameter = nozzle.getChamberInsideDiameterInMillimeter() - nozzle.getNozzleThroatDiameterInMillimeter();
         divergenceCrossSectionDiameter = nozzle.getNozzleExitDiameterInMillimeter() - nozzle.getNozzleThroatDiameterInMillimeter();
-        exitSpeedInitial = "Mach "+format(nozzle.getInitialNozzleExitSpeedInMach());
+        exitSpeedInitial = format(nozzle.getInitialNozzleExitSpeedInMach());
         optimalNozzleExpansionRatio = format(nozzle.getOptimalNozzleExpansionRatio());
 
     }
