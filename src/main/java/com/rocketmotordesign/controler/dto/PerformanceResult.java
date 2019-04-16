@@ -6,6 +6,8 @@ import com.github.jbgust.jsrm.application.result.Nozzle;
 
 import java.util.Locale;
 
+import static com.rocketmotordesign.controler.dto.ComputationResponse.toBar;
+
 public class PerformanceResult {
     private final String motorDescription;
     private final String maxThrust;
@@ -27,7 +29,7 @@ public class PerformanceResult {
         totalImpulse = format(jsrmResult.getTotalImpulseInNewtonSecond());
         specificImpulse = format(jsrmResult.getSpecificImpulseInSecond());
         maxPressure = format(toBar(jsrmResult.getMaxChamberPressureInMPa()));
-        averagePressure = format(toBar(jsrmResult.getAverageChamberPressure()));
+        averagePressure = format(toBar(jsrmResult.getAverageChamberPressureInMPa()));
         thrustTime = format(jsrmResult.getThrustTimeInSecond());
 
         Nozzle nozzle = jsrmResult.getNozzle();
@@ -38,10 +40,6 @@ public class PerformanceResult {
         exitSpeedInitial = format(nozzle.getInitialNozzleExitSpeedInMach());
         optimalNozzleExpansionRatio = format(nozzle.getOptimalNozzleExpansionRatio());
 
-    }
-
-    private double toBar(double averageChamberPressure) {
-        return averageChamberPressure * 10;
     }
 
     private String format(Double aDouble) {

@@ -75,7 +75,7 @@ public class MainControlerIT {
                 .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
 
-                .andExpect(jsonPath("$.thrustResults", hasSize(883)));
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)));
     }
 
     @Test
