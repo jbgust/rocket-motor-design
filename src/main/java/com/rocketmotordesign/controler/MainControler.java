@@ -35,6 +35,7 @@ public class MainControler {
             LOGGER.info("METEOR[REQUEST|{}]", request.hashCode());
             JSRMConfig config = toJSRMConfig(request.getExtraConfig());
             JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run(config);
+            LOGGER.info("METEOR[MOTORCLASS|{}]", result.getMotorClassification());
             return ResponseEntity.ok(toComputationResponse(result, config));
         } catch (JSRMException e) {
             LOGGER.warn("METEOR[FAILED|{}]", e.getClass().getSimpleName());
