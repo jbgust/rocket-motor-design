@@ -28,7 +28,7 @@ public class PerformanceResult {
         maxThrust = format(jsrmResult.getMaxThrustInNewton());
         totalImpulse = format(jsrmResult.getTotalImpulseInNewtonSecond());
         specificImpulse = format(jsrmResult.getSpecificImpulseInSecond());
-        maxPressure = format(toBar(jsrmResult.getMaxChamberPressureInMPa()));
+        maxPressure = format(jsrmResult.getMaxChamberPressureInMPa());
         averagePressure = format(toBar(jsrmResult.getAverageChamberPressureInMPa()));
         thrustTime = format(jsrmResult.getThrustTimeInSecond());
 

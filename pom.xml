@@ -38,7 +38,11 @@
 			<artifactId>Java-Solid-Rocket-Motor</artifactId>
 			<version>1.2</version>
 		</dependency>
-
+		<dependency>
+			<groupId>tec.units</groupId>
+			<artifactId>unit-ri</artifactId>
+			<version>1.0.3</version>
+		</dependency>
 		<!-- UNIQUEMENT POUR tester JSRM quand on importe le JAR -->
 <!--		<dependency>-->
 <!--			<groupId>net.objecthunter</groupId>-->

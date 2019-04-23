@@ -9,10 +9,7 @@ import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.rocketmotordesign.controler.dto.ComputationRequest;
-import com.rocketmotordesign.controler.dto.ComputationResponse;
-import com.rocketmotordesign.controler.dto.ErrorMessage;
-import com.rocketmotordesign.controler.dto.ExtraConfiguration;
+import com.rocketmotordesign.controler.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +31,7 @@ public class MainControler {
         try {
             LOGGER.info("METEOR[REQUEST|{}]", request.hashCode());
             JSRMConfig config = toJSRMConfig(request.getExtraConfig());
-            JSRMResult result = new JSRMSimulation(toSolidRocketMotor(request)).run(config);
+            JSRMResult result = new JSRMResultConverter(new JSRMSimulation(toSolidRocketMotor(request)).run(config), request.getMeasureUnit());
             LOGGER.info("METEOR[MOTORCLASS|{}]", result.getMotorClassification());
             return ResponseEntity.ok(toComputationResponse(result, config));
         } catch (JSRMException e) {

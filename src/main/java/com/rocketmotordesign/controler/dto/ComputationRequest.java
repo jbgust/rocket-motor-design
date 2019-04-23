@@ -4,6 +4,7 @@ import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class ComputationRequest {
     private double throatDiameter;
@@ -24,7 +25,18 @@ public class ComputationRequest {
 
     private ExtraConfiguration extraConfig;
 
+    private MeasureUnit measureUnit;
+
     public ComputationRequest() {
+    }
+
+    public MeasureUnit getMeasureUnit() {
+        //TODO : traiter ce cas
+        return Optional.ofNullable(measureUnit).orElse(MeasureUnit.SI);
+    }
+
+    public void setMeasureUnit(MeasureUnit measureUnit) {
+        this.measureUnit = measureUnit;
     }
 
     public ExtraConfiguration getExtraConfig() {

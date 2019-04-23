@@ -3,7 +3,6 @@ package com.rocketmotordesign.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.ExtraConfiguration;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.E
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
+import static com.rocketmotordesign.controler.dto.MeasureUnit.IMPERIAL;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,11 +28,9 @@ public class MainControlerIT {
 
     @Autowired
     private MockMvc mvc;
-    private ComputationRequest computationRequest;
 
-    @Before
-    public void setUp() throws Exception {
-        computationRequest = new ComputationRequest();
+    private ComputationRequest getDefaultRequest() {
+        ComputationRequest computationRequest = new ComputationRequest();
         computationRequest.setThroatDiameter(17.39);
         computationRequest.setOuterDiameter(69);
         computationRequest.setCoreDiameter(20);
@@ -45,12 +43,14 @@ public class MainControlerIT {
         computationRequest.setChamberInnerDiameter(75);
         computationRequest.setChamberLength(470);
         computationRequest.setExtraConfig(getDefaultExtraConfiguration());
+
+        return computationRequest;
     }
 
     @Test
     public void shouldRunComputation() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(computationRequest);
+        String request = new ObjectMapper().writeValueAsString(getDefaultRequest());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -69,6 +69,40 @@ public class MainControlerIT {
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("3603.07")))
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("130.65")))
                 .andExpect(jsonPath("$.performanceResult.maxPressure", is("59.36")))
+                .andExpect(jsonPath("$.performanceResult.thrustTime", is("2.15")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("54.03 mm")))
+                .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
+                .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
+                .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
+
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)));
+    }
+
+    @Test
+    public void shouldConvertToImperialUnits() throws Exception {
+        // GIVEN
+        ComputationRequest defaultRequest = getDefaultRequest();
+        defaultRequest.setMeasureUnit(IMPERIAL);
+
+        String request = new ObjectMapper().writeValueAsString(defaultRequest);
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)))
+                .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
+                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", is(36.63558888655025)))
+
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("2060.35")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("3603.07")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("130.65")))
+                .andExpect(jsonPath("$.performanceResult.maxPressure", is("860.88")))
                 .andExpect(jsonPath("$.performanceResult.thrustTime", is("2.15")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("54.03 mm")))
                 .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
