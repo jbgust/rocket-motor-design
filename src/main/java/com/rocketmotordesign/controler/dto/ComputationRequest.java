@@ -1,7 +1,6 @@
 package com.rocketmotordesign.controler.dto;
 
 import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -17,7 +16,7 @@ public class ComputationRequest {
     private GrainSurface outerSurface;
     private GrainSurface endsSurface;
     private GrainSurface coreSurface;
-    private PropellantType propellantType;
+    private String propellantType;
 
     //Motor chamber
     private double chamberInnerDiameter;
@@ -79,7 +78,7 @@ public class ComputationRequest {
         return coreSurface;
     }
 
-    public PropellantType getPropellantType() {
+    public String getPropellantType() {
         return propellantType;
     }
 
@@ -119,7 +118,7 @@ public class ComputationRequest {
         this.coreSurface = coreSurface;
     }
 
-    public void setPropellantType(PropellantType propellantType) {
+    public void setPropellantType(String propellantType) {
         this.propellantType = propellantType;
     }
 

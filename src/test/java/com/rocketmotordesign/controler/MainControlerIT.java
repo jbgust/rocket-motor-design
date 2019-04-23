@@ -119,7 +119,7 @@ public class MainControlerIT {
         invalidMotorDesignRequest.setOuterSurface(INHIBITED);
         invalidMotorDesignRequest.setEndsSurface(EXPOSED);
         invalidMotorDesignRequest.setCoreSurface(EXPOSED);
-        invalidMotorDesignRequest.setPropellantType(KNDX);
+        invalidMotorDesignRequest.setPropellantType(KNDX.name());
         invalidMotorDesignRequest.setChamberInnerDiameter(75);
         invalidMotorDesignRequest.setChamberLength(47);
         invalidMotorDesignRequest.setExtraConfig(getDefaultExtraConfiguration());
@@ -149,7 +149,7 @@ public class MainControlerIT {
         request.setOuterSurface(INHIBITED);
         request.setEndsSurface(INHIBITED);
         request.setCoreSurface(EXPOSED);
-        request.setPropellantType(KNSB_FINE);
+        request.setPropellantType(KNSB_FINE.name());
         request.setChamberInnerDiameter(21.2);
         request.setChamberLength(60);
         request.setExtraConfig(getDefaultExtraConfiguration());

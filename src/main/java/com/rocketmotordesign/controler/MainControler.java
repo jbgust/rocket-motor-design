@@ -1,9 +1,20 @@
 package com.rocketmotordesign.controler;
 
+import static java.util.stream.Collectors.toMap;
+
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.exception.JSRMException;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
+import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.ErrorMessage;
+import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
+import com.rocketmotordesign.propellant.CustomPropellant;
 import com.rocketmotordesign.service.JSRMService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +57,5 @@ public class MainControler {
                     new ErrorMessage("Computation failed due to unknown error, please contact us."));
         }
     }
-
 
 }

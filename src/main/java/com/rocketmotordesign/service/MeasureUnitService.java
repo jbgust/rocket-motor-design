@@ -5,9 +5,14 @@ import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
+import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorParameters;
 import com.rocketmotordesign.controler.dto.*;
+import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
+import com.rocketmotordesign.propellant.CustomPropellant;
+
 import org.springframework.stereotype.Service;
 import tec.units.ri.quantity.Quantities;
 
@@ -17,6 +22,11 @@ import javax.measure.quantity.Mass;
 import javax.measure.quantity.Pressure;
 
 import static com.rocketmotordesign.controler.dto.MeasureUnit.JSRM_UNITS;
+import static java.util.stream.Collectors.toMap;
+
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @Service
 public class MeasureUnitService {
@@ -85,7 +95,7 @@ public class MeasureUnitService {
 
     private PropellantGrain toPropellantGrain(ComputationRequest request) {
         Unit<Length> userLengthUnit = request.getMeasureUnit().getLenghtUnit();
-        return new PropellantGrain(request.getPropellantType(),
+        return new PropellantGrain(getPropellant(request),
                 convertLengthToJSRM(userLengthUnit, request.getOuterDiameter()),
                 convertLengthToJSRM(userLengthUnit, request.getCoreDiameter()),
                 convertLengthToJSRM(userLengthUnit, request.getSegmentLength()),
@@ -93,6 +103,22 @@ public class MeasureUnitService {
                 request.getOuterSurface(),
                 request.getEndsSurface(),
                 request.getCoreSurface());
+    }
+
+    private SolidPropellant getPropellant(ComputationRequest request) {
+        Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
+                .collect(toMap(o -> o.name(), Function.identity()));
+
+        double a = 0.0174;
+        double n = 0.4285;
+        double aMetrique = BurnRateCoefficientConverter.toMetrique(a, n);
+        double densite = 0.06 * 453.6 / Math.pow(2.54,3);
+        double cstar = 5468.4 * 0.3048;
+        double isp = 150d;
+        double k = 1.2768;
+        double molarMass = 56;
+        propellants.put("WIMPY_RED", new CustomPropellant(cstar, isp,aMetrique, n, densite, k, molarMass));
+        return propellants.get(request.getPropellantType());
     }
 
     private double convertLengthToJSRM(Unit<Length> lenghtUnit, double length) {

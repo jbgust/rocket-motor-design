@@ -21,7 +21,7 @@ public class TestHelper {
         computationRequest.setOuterSurface(INHIBITED);
         computationRequest.setEndsSurface(EXPOSED);
         computationRequest.setCoreSurface(EXPOSED);
-        computationRequest.setPropellantType(KNDX);
+        computationRequest.setPropellantType(KNDX.name());
         computationRequest.setChamberInnerDiameter(75);
         computationRequest.setChamberLength(470);
         computationRequest.setExtraConfig(getDefaultExtraConfiguration());
@@ -40,7 +40,7 @@ public class TestHelper {
         computationRequest.setOuterSurface(INHIBITED);
         computationRequest.setEndsSurface(EXPOSED);
         computationRequest.setCoreSurface(EXPOSED);
-        computationRequest.setPropellantType(KNDX);
+        computationRequest.setPropellantType(KNDX.name());
         computationRequest.setChamberInnerDiameter(75/25.4);
         computationRequest.setChamberLength(470/25.4);
         computationRequest.setExtraConfig(getDefaultImperialExtraConfiguration());

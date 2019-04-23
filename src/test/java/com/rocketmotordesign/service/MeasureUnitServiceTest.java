@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Locale;
 
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.rocketmotordesign.controler.dto.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.controler.dto.MeasureUnit.SI;
 import static com.rocketmotordesign.utils.TestHelper.*;
@@ -56,7 +57,7 @@ public class MeasureUnitServiceTest {
         assertThat(solidRocketMotor.getPropellantGrain().getOuterSurface()).isEqualTo(defaultRequestSIUnit.getOuterSurface());
         assertThat(solidRocketMotor.getPropellantGrain().getEndsSurface()).isEqualTo(defaultRequestSIUnit.getEndsSurface());
         assertThat(solidRocketMotor.getPropellantGrain().getCoreSurface()).isEqualTo(defaultRequestSIUnit.getCoreSurface());
-        assertThat(solidRocketMotor.getPropellantGrain().getPropellant()).isEqualTo(defaultRequestSIUnit.getPropellantType());
+        assertThat(solidRocketMotor.getPropellantGrain().getPropellant()).isEqualTo(KNDX);
     }
 
     @Test
