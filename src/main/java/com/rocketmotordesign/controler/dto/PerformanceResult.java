@@ -1,12 +1,6 @@
 package com.rocketmotordesign.controler.dto;
 
-import com.github.jbgust.jsrm.application.JSRMConfig;
-import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.github.jbgust.jsrm.application.result.Nozzle;
-
 import java.util.Locale;
-
-import static com.rocketmotordesign.controler.dto.ComputationResponse.toBar;
 
 public class PerformanceResult {
     private final String motorDescription;
@@ -23,23 +17,33 @@ public class PerformanceResult {
     private final Double divergenceCrossSectionDiameter;
     private final String optimalNozzleExpansionRatio;
 
-    public PerformanceResult(JSRMResult jsrmResult, JSRMConfig jsrmConfig) {
-        motorDescription = jsrmResult.getMotorClassification()+String.valueOf(jsrmResult.getAverageThrustInNewton());
-        maxThrust = format(jsrmResult.getMaxThrustInNewton());
-        totalImpulse = format(jsrmResult.getTotalImpulseInNewtonSecond());
-        specificImpulse = format(jsrmResult.getSpecificImpulseInSecond());
-        maxPressure = format(jsrmResult.getMaxChamberPressureInMPa());
-        averagePressure = format(toBar(jsrmResult.getAverageChamberPressureInMPa()));
-        thrustTime = format(jsrmResult.getThrustTimeInSecond());
-
-        Nozzle nozzle = jsrmResult.getNozzle();
-        optimalDesign = jsrmConfig.isOptimalNozzleDesign();
-        nozzleExitDiameter = format(nozzle.getNozzleExitDiameterInMillimeter()) +" mm";
-        convergenceCrossSectionDiameter = nozzle.getChamberInsideDiameterInMillimeter() - nozzle.getNozzleThroatDiameterInMillimeter();
-        divergenceCrossSectionDiameter = nozzle.getNozzleExitDiameterInMillimeter() - nozzle.getNozzleThroatDiameterInMillimeter();
-        exitSpeedInitial = format(nozzle.getInitialNozzleExitSpeedInMach());
-        optimalNozzleExpansionRatio = format(nozzle.getOptimalNozzleExpansionRatio());
-
+    public PerformanceResult(String motorDescription,
+                             double maxThrust,
+                             double totalImpulse,
+                             double specificImpulse,
+                             double maxPressure,
+                             double thrustTime,
+                             boolean optimalDesign,
+                             double nozzleExitDiameter,
+                             double exitSpeedInitial,
+                             double averagePressure,
+                             Double convergenceCrossSectionDiameter,
+                             Double divergenceCrossSectionDiameter,
+                             double optimalNozzleExpansionRatio) {
+        this.motorDescription = motorDescription;
+        this.maxThrust = format(maxThrust);
+        this.totalImpulse = format(totalImpulse);
+        this.specificImpulse = format(specificImpulse);
+        this.maxPressure = format(maxPressure);
+        this.thrustTime = format(thrustTime);
+        this.optimalDesign = optimalDesign;
+        //TODO : retirer millimetre
+        this.nozzleExitDiameter = format(nozzleExitDiameter)  +" mm";
+        this.exitSpeedInitial = format(exitSpeedInitial);
+        this.averagePressure = format(averagePressure);
+        this.convergenceCrossSectionDiameter = convergenceCrossSectionDiameter;
+        this.divergenceCrossSectionDiameter = divergenceCrossSectionDiameter;
+        this.optimalNozzleExpansionRatio = format(optimalNozzleExpansionRatio);
     }
 
     private String format(Double aDouble) {

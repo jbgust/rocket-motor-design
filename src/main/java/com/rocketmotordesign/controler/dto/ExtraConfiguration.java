@@ -21,7 +21,7 @@ public class ExtraConfiguration {
         this.densityRatio = densityRatio;
     }
 
-    public void setNozzleErosionInMillimeter(double nozzleErosionInMillimeter) {
+    public void setNozzleErosion(double nozzleErosionInMillimeter) {
         this.nozzleErosionInMillimeter = nozzleErosionInMillimeter;
     }
 
@@ -29,7 +29,7 @@ public class ExtraConfiguration {
         this.combustionEfficiencyRatio = combustionEfficiencyRatio;
     }
 
-    public void setAmbiantPressureInMPa(double ambiantPressureInMPa) {
+    public void setAmbiantPressure(double ambiantPressureInMPa) {
         this.ambiantPressureInMPa = ambiantPressureInMPa;
     }
 

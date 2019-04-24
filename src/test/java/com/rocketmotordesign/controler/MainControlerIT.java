@@ -2,11 +2,13 @@ package com.rocketmotordesign.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
-import com.rocketmotordesign.controler.dto.ExtraConfiguration;
+import com.rocketmotordesign.service.JSRMService;
+import com.rocketmotordesign.service.MeasureUnitService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,7 +18,7 @@ import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.E
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
-import static com.rocketmotordesign.controler.dto.MeasureUnit.IMPERIAL;
+import static com.rocketmotordesign.utils.TestHelper.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,28 +26,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MainControler.class)
+@Import({JSRMService.class, MeasureUnitService.class})
 public class MainControlerIT {
 
     @Autowired
     private MockMvc mvc;
-
-    private ComputationRequest getDefaultRequest() {
-        ComputationRequest computationRequest = new ComputationRequest();
-        computationRequest.setThroatDiameter(17.39);
-        computationRequest.setOuterDiameter(69);
-        computationRequest.setCoreDiameter(20);
-        computationRequest.setSegmentLength(115);
-        computationRequest.setNumberOfSegment(4);
-        computationRequest.setOuterSurface(INHIBITED);
-        computationRequest.setEndsSurface(EXPOSED);
-        computationRequest.setCoreSurface(EXPOSED);
-        computationRequest.setPropellantType(KNDX);
-        computationRequest.setChamberInnerDiameter(75);
-        computationRequest.setChamberLength(470);
-        computationRequest.setExtraConfig(getDefaultExtraConfiguration());
-
-        return computationRequest;
-    }
 
     @Test
     public void shouldRunComputation() throws Exception {
@@ -75,14 +60,14 @@ public class MainControlerIT {
                 .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
 
-                .andExpect(jsonPath("$.motorParameters", hasSize(883)));
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+                .andExpect(jsonPath("$.motorParameters[400].p", is(closeTo(59.3117, 0.01d))));
     }
 
     @Test
     public void shouldConvertToImperialUnits() throws Exception {
         // GIVEN
-        ComputationRequest defaultRequest = getDefaultRequest();
-        defaultRequest.setMeasureUnit(IMPERIAL);
+        ComputationRequest defaultRequest = getDefaultRequestImperial();
 
         String request = new ObjectMapper().writeValueAsString(defaultRequest);
 
@@ -106,10 +91,11 @@ public class MainControlerIT {
                 .andExpect(jsonPath("$.performanceResult.thrustTime", is("2.15")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("54.03 mm")))
                 .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
-                .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
+                .andExpect(jsonPath("$.performanceResult.averagePressure", is("711.47")))
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
 
-                .andExpect(jsonPath("$.motorParameters", hasSize(883)));
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+                .andExpect(jsonPath("$.motorParameters[400].p", is(closeTo(860.2126, 0.0001d))));
     }
 
     @Test
@@ -170,20 +156,6 @@ public class MainControlerIT {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("METEOR can't run this computation due to the following error:")))
                 .andExpect(jsonPath("$.detail", startsWith("Failed to compute PROPELLANT_BURN_RATE in line 3:\nformula :")));
-    }
-
-    private ExtraConfiguration getDefaultExtraConfiguration() {
-        ExtraConfiguration extraConfig = new ExtraConfiguration();
-        extraConfig.setDensityRatio(0.95);
-        extraConfig.setAmbiantPressureInMPa(0.101);
-        extraConfig.setCombustionEfficiencyRatio(0.95);
-        extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
-        extraConfig.setNozzleEfficiency(0.85);
-        extraConfig.setNozzleErosionInMillimeter(0);
-        extraConfig.setErosiveBurningVelocityCoefficient(0);
-        extraConfig.setNozzleExpansionRatio(null);
-        extraConfig.setOptimalNozzleDesign(true);
-        return extraConfig;
     }
 
 }

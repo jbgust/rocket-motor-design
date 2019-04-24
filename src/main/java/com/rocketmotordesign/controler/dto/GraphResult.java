@@ -1,10 +1,6 @@
 package com.rocketmotordesign.controler.dto;
 
-import com.github.jbgust.jsrm.application.result.MotorParameters;
-
 import java.math.BigDecimal;
-
-import static com.rocketmotordesign.controler.dto.ComputationResponse.toBar;
 
 public class GraphResult {
 
@@ -14,12 +10,12 @@ public class GraphResult {
     private final double p;
     private final double m;
 
-    public GraphResult(MotorParameters motorParameters) {
-        this.x = toFrontendPrecision(motorParameters.getTimeSinceBurnStartInSecond());
-        this.y = toFrontendPrecision(motorParameters.getThrustInNewton());
-        this.kn = toFrontendPrecision(motorParameters.getKn());
-        this.p = toFrontendPrecision(toBar(motorParameters.getChamberPressureInMPa()));
-        this.m = toFrontendPrecision(motorParameters.getMassFlowRateInKgPerSec());
+    public GraphResult(double x, double y, double kn, double p, double m) {
+        this.x = toFrontendPrecision(x);
+        this.y = toFrontendPrecision(y);
+        this.kn = toFrontendPrecision(kn);
+        this.p = toFrontendPrecision(p);
+        this.m = toFrontendPrecision(m);
     }
 
     public double getX() {
