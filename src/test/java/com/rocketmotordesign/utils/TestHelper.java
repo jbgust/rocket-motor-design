@@ -11,35 +11,6 @@ import static com.rocketmotordesign.controler.dto.MeasureUnit.SI;
 
 public class TestHelper {
 
-    public static ExtraConfiguration getDefaultExtraConfiguration() {
-        ExtraConfiguration extraConfig = new ExtraConfiguration();
-        extraConfig.setDensityRatio(0.95);
-        extraConfig.setAmbiantPressure(0.101);
-        extraConfig.setCombustionEfficiencyRatio(0.95);
-        extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
-        extraConfig.setNozzleEfficiency(0.85);
-        extraConfig.setNozzleErosion(0);
-        extraConfig.setErosiveBurningVelocityCoefficient(0);
-        extraConfig.setNozzleExpansionRatio(null);
-        extraConfig.setOptimalNozzleDesign(true);
-        return extraConfig;
-    }
-
-    private static ExtraConfiguration getDefaultImperialExtraConfiguration() {
-        double ratioPsi = 1000000 / 6895;
-        ExtraConfiguration extraConfig = new ExtraConfiguration();
-        extraConfig.setDensityRatio(0.95);
-        extraConfig.setAmbiantPressure(0.101 * ratioPsi);
-        extraConfig.setCombustionEfficiencyRatio(0.95);
-        extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
-        extraConfig.setNozzleEfficiency(0.85);
-        extraConfig.setNozzleErosion(0);
-        extraConfig.setErosiveBurningVelocityCoefficient(0);
-        extraConfig.setNozzleExpansionRatio(null);
-        extraConfig.setOptimalNozzleDesign(true);
-        return extraConfig;
-    }
-
     public static ComputationRequest getDefaultRequest() {
         ComputationRequest computationRequest = new ComputationRequest();
         computationRequest.setThroatDiameter(17.39);
@@ -76,5 +47,34 @@ public class TestHelper {
         computationRequest.setMeasureUnit(IMPERIAL);
 
         return computationRequest;
+    }
+
+    public static ExtraConfiguration getDefaultExtraConfiguration() {
+        ExtraConfiguration extraConfig = new ExtraConfiguration();
+        extraConfig.setDensityRatio(0.95);
+        extraConfig.setAmbiantPressure(0.101);
+        extraConfig.setCombustionEfficiencyRatio(0.95);
+        extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
+        extraConfig.setNozzleEfficiency(0.85);
+        extraConfig.setNozzleErosion(0);
+        extraConfig.setErosiveBurningVelocityCoefficient(0);
+        extraConfig.setNozzleExpansionRatio(null);
+        extraConfig.setOptimalNozzleDesign(true);
+        return extraConfig;
+    }
+
+    public static ExtraConfiguration getDefaultImperialExtraConfiguration() {
+        double ratioPsi = 1000000 / 6895;
+        ExtraConfiguration extraConfig = new ExtraConfiguration();
+        extraConfig.setDensityRatio(0.95);
+        extraConfig.setAmbiantPressure(0.101 * ratioPsi);
+        extraConfig.setCombustionEfficiencyRatio(0.95);
+        extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
+        extraConfig.setNozzleEfficiency(0.85);
+        extraConfig.setNozzleErosion(0);
+        extraConfig.setErosiveBurningVelocityCoefficient(0);
+        extraConfig.setNozzleExpansionRatio(null);
+        extraConfig.setOptimalNozzleDesign(true);
+        return extraConfig;
     }
 }

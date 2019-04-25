@@ -37,8 +37,7 @@ public class PerformanceResult {
         this.maxPressure = format(maxPressure);
         this.thrustTime = format(thrustTime);
         this.optimalDesign = optimalDesign;
-        //TODO : retirer millimetre
-        this.nozzleExitDiameter = format(nozzleExitDiameter)  +" mm";
+        this.nozzleExitDiameter = format(nozzleExitDiameter);
         this.exitSpeedInitial = format(exitSpeedInitial);
         this.averagePressure = format(averagePressure);
         this.convergenceCrossSectionDiameter = convergenceCrossSectionDiameter;

@@ -1,0 +1,33 @@
+package com.rocketmotordesign.controler.dto;
+
+import org.junit.Test;
+
+import static com.rocketmotordesign.controler.dto.MeasureUnit.Constants.*;
+import static com.rocketmotordesign.controler.dto.MeasureUnit.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static tec.units.ri.unit.Units.KILOGRAM;
+
+public class MeasureUnitTest {
+
+    @Test
+    public void checkJSRMUnits() {
+        assertThat(JSRM_UNITS.getLenghtUnit()).isEqualTo(MILLI_METER);
+        assertThat(JSRM_UNITS.getPressureUnit()).isEqualTo(MPa);
+        assertThat(JSRM_UNITS.getMassUnit()).isEqualTo(KILOGRAM);
+    }
+
+    @Test
+    public void checkSIUnits() {
+        assertThat(SI.getLenghtUnit()).isEqualTo(MILLI_METER);
+        assertThat(SI.getPressureUnit()).isEqualTo(BAR);
+        assertThat(SI.getMassUnit()).isEqualTo(KILOGRAM);
+    }
+
+    @Test
+    public void checkImperialUnits() {
+        assertThat(IMPERIAL.getLenghtUnit()).isEqualTo(INCH);
+        assertThat(IMPERIAL.getPressureUnit()).isEqualTo(PSI);
+        assertThat(IMPERIAL.getMassUnit()).isEqualTo(POUND);
+    }
+
+}

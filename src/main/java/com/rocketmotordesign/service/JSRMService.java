@@ -1,10 +1,12 @@
 package com.rocketmotordesign.service;
 
 import com.github.jbgust.jsrm.application.JSRMConfig;
-import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.JSRMSimulation;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.rocketmotordesign.controler.dto.*;
+import com.rocketmotordesign.controler.dto.ComputationRequest;
+import com.rocketmotordesign.controler.dto.ComputationResponse;
+import com.rocketmotordesign.controler.dto.GraphResult;
+import com.rocketmotordesign.controler.dto.MeasureUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,33 +31,15 @@ public class JSRMService {
     }
 
     public ComputationResponse runComputation(ComputationRequest request) {
-        JSRMConfig customConfig = toJSRMConfig(request.getExtraConfig());
-        JSRMResult jsrmResult = new JSRMSimulation(measureUnitService.toSolidRocketMotor(request)).run(customConfig);
-
         MeasureUnit userUnits = request.getMeasureUnit();
+
+        JSRMConfig customConfig = measureUnitService.toJSRMConfig(request.getExtraConfig(), userUnits);
+        JSRMResult jsrmResult = new JSRMSimulation(measureUnitService.toSolidRocketMotor(request)).run(customConfig);
 
         LOGGER.info("METEOR[MOTORCLASS|{}]", jsrmResult.getMotorClassification());
         return new ComputationResponse(
                 measureUnitService.toPerformanceResult(jsrmResult, customConfig, userUnits),
                 reduceGraphResults(jsrmResult, userUnits));
-    }
-
-    private JSRMConfig toJSRMConfig(ExtraConfiguration extraConfig) {
-        JSRMConfigBuilder jsrmConfigBuilder = new JSRMConfigBuilder()
-                .withAmbiantPressureInMPa(extraConfig.getAmbiantPressureInMPa())
-                .withCombustionEfficiencyRatio(extraConfig.getCombustionEfficiencyRatio())
-                .withDensityRatio(extraConfig.getDensityRatio())
-                .withErosiveBurningAreaRatioThreshold(extraConfig.getErosiveBurningAreaRatioThreshold())
-                .withErosiveBurningVelocityCoefficient(extraConfig.getErosiveBurningVelocityCoefficient())
-                .withNozzleEfficiency(extraConfig.getNozzleEfficiency())
-                .withNozzleErosionInMillimeter(extraConfig.getNozzleErosionInMillimeter())
-                .withOptimalNozzleDesign(extraConfig.isOptimalNozzleDesign());
-
-        if(extraConfig.getNozzleExpansionRatio() != null){
-            jsrmConfigBuilder.withNozzleExpansionRatio(extraConfig.getNozzleExpansionRatio());
-        }
-
-        return jsrmConfigBuilder.createJSRMConfig();
     }
 
     private List<GraphResult> reduceGraphResults(JSRMResult result, MeasureUnit userUnits) {
