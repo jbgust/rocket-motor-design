@@ -109,4 +109,19 @@ public class ExtraConfiguration {
     public int hashCode() {
         return Objects.hash(densityRatio, nozzleErosion, combustionEfficiencyRatio, ambiantPressure, erosiveBurningAreaRatioThreshold, erosiveBurningVelocityCoefficient, nozzleEfficiency, optimalNozzleDesign, nozzleExpansionRatio);
     }
+
+    @Override
+    public String toString() {
+        return "ExtraConfiguration{" +
+                "densityRatio=" + densityRatio +
+                ", nozzleErosion=" + nozzleErosion +
+                ", combustionEfficiencyRatio=" + combustionEfficiencyRatio +
+                ", ambiantPressure=" + ambiantPressure +
+                ", erosiveBurningAreaRatioThreshold=" + erosiveBurningAreaRatioThreshold +
+                ", erosiveBurningVelocityCoefficient=" + erosiveBurningVelocityCoefficient +
+                ", nozzleEfficiency=" + nozzleEfficiency +
+                ", optimalNozzleDesign=" + optimalNozzleDesign +
+                ", nozzleExpansionRatio=" + nozzleExpansionRatio +
+                '}';
+    }
 }

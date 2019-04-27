@@ -47,12 +47,13 @@ public class MainControler {
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage(e.getMessage()));
             } else {
-                LOGGER.error("Computation failed : \n\t{} \n\tCAUSE : {}", request.toString(), e.getCause().getMessage());
+                LOGGER.error("Computation failed :\n\trequest : {}", request.toString());
+                LOGGER.warn("Computation failed :\n\tCAUSE : {}", e.getCause().getMessage());
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getMessage()));
             }
         }catch (Exception e) {
-            LOGGER.error("Unknown computation error", e);
+            LOGGER.error("Unknown computation error with request : "+request.toString(), e);
             return ResponseEntity.badRequest().body(
                     new ErrorMessage("Computation failed due to unknown error, please contact us."));
         }

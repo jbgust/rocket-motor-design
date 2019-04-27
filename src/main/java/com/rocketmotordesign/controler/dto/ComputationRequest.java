@@ -148,7 +148,7 @@ public class ComputationRequest {
                 ", propellantType=" + propellantType +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
                 ", chamberLength=" + chamberLength +
-                ", extraConfig=" + extraConfig +
+                ", extraConfig=" + extraConfig.toString() +
                 '}';
     }
 
