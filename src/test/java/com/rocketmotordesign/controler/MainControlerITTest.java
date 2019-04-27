@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(MainControler.class)
 @Import({JSRMService.class, MeasureUnitService.class})
-public class MainControlerIT {
+public class MainControlerITTest {
 
     @Autowired
     private MockMvc mvc;
