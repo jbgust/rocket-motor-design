@@ -42,6 +42,14 @@ public class JSRMServiceTest {
     @Test
     public void shouldUseCustomPropellantViper() {
         // GIVEN
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
+        customPropellant.setCstar(5468.4);
+        customPropellant.setBurnRateCoefficient(0.0174);
+        customPropellant.setPressureExponent(0.4285);
+        customPropellant.setDensity(0.06);
+        customPropellant.setK(1.2768);
+        customPropellant.setMolarMass(45.0);
+
         ComputationRequest defaultRequest = getDefaultRequestImperial();
         //defaultRequest.setChamberLength(defaultRequest.getSegmentLength()*defaultRequest.getNumberOfSegment());
         //TODO voir la valeur ci-dessous
@@ -51,12 +59,7 @@ public class JSRMServiceTest {
         defaultRequest.getExtraConfig().setOptimalNozzleDesign(false);
         defaultRequest.getExtraConfig().setCombustionEfficiencyRatio(1);
         defaultRequest.getExtraConfig().setDensityRatio(1);
-
-
-        //TODO : a convertir en SI, valeur en imperial pour le moment
-        defaultRequest.setCustomPropellant(new CustomPropellantRequest(
-                5468.4, 0.0174, 0.4285, 0.06, 1.2768, 45.0
-        ));
+        defaultRequest.setCustomPropellant(customPropellant);
 
         MeasureUnit userUnits = defaultRequest.getMeasureUnit();
 

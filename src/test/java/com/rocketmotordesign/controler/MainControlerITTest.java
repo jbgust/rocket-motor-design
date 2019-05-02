@@ -127,9 +127,14 @@ public class MainControlerITTest {
         request.getExtraConfig().setCombustionEfficiencyRatio(1);
         request.getExtraConfig().setDensityRatio(1);
 
-        request.setCustomPropellant(new CustomPropellantRequest(
-                5468.4, 0.0174, 0.4285, 0.06, 1.2768, 45.0
-        ));
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
+        customPropellant.setCstar(5468.4);
+        customPropellant.setBurnRateCoefficient(0.0174);
+        customPropellant.setPressureExponent(0.4285);
+        customPropellant.setDensity(0.06);
+        customPropellant.setK(1.2768);
+        customPropellant.setMolarMass(45.0);
+        request.setCustomPropellant(customPropellant);
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -151,7 +156,16 @@ public class MainControlerITTest {
         // GIVEN
         ComputationRequest request = getDefaultRequest();
         request.setPropellantType("To be defined");
-        request.setCustomPropellant(new CustomPropellantRequest(KNSU, emptySet()));
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
+        customPropellant.setDensity(KNSU.getIdealMassDensity());
+        customPropellant.setChamberTemperature(KNSU.getChamberTemperature());
+        customPropellant.setK(KNSU.getK());
+        customPropellant.setK2ph(KNSU.getK2Ph());
+        customPropellant.setMolarMass(KNSU.getEffectiveMolecularWeight());
+        customPropellant.setBurnRateCoefficient(KNSU.getBurnRateCoefficient(1));
+        customPropellant.setPressureExponent(KNSU.getPressureExponent(1));
+
+        request.setCustomPropellant(customPropellant);
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -170,15 +184,22 @@ public class MainControlerITTest {
         // GIVEN
         ComputationRequest request = getDefaultRequest();
         request.setPropellantType("To be defined");
-        request.setCustomPropellant(new CustomPropellantRequest(
-                KNDX, Sets.newHashSet(
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
+        customPropellant.setDensity(KNDX.getIdealMassDensity());
+        customPropellant.setChamberTemperature(KNDX.getChamberTemperature());
+        customPropellant.setK(KNDX.getK());
+        customPropellant.setK2ph(KNDX.getK2Ph());
+        customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
+        customPropellant.setBurnRateDataSet(Sets.newHashSet(
                 //data taken from SRM_2014
                 new BurnRatePressureData(8.87544496778536, 0.6193, toBar(0.1), toBar(0.779135)),
                 new BurnRatePressureData(7.55278442387944, -0.0087, toBar(0.779135), toBar(2.571835)),
                 new BurnRatePressureData(3.84087990499602, 0.6882, toBar(2.571835), toBar(5.9297)),
                 new BurnRatePressureData(17.2041864098062, -0.1481, toBar(5.9297), toBar(8.501535)),
                 new BurnRatePressureData(4.77524086347659, 0.4417, toBar(8.501535), toBar(11.20))
-        )));
+        ));
+
+        request.setCustomPropellant(customPropellant);
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -218,15 +239,22 @@ public class MainControlerITTest {
         request.setPropellantType("To be defined");
 
         // TODO mettre les valeur de KNDX au format IMPERIAL (densité, ...)
-        CustomPropellantRequest customPropellant = new CustomPropellantRequest(
-                KNDX, Sets.newHashSet(
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
+        customPropellant.setBurnRateDataSet(Sets.newHashSet(
                 //data taken from SRM_2014
-                new BurnRatePressureData(0.0160236, 0.6193000, 15, 113),
+                new BurnRatePressureData(0.0160236, 0.6193000, 14.63, 113),
                 new BurnRatePressureData(0.3105118, -0.0087000, 113, 373),
                 new BurnRatePressureData(0.0049213, 0.6882000, 373, 860),
                 new BurnRatePressureData(1.4155118, -0.1481000, 860, 1233),
                 new BurnRatePressureData(0.0208661, 0.4417000, 1233, 1625)
         ));
+        customPropellant.setDensity(KNDX.getIdealMassDensity()/453.6*Math.pow(2.54, 3));
+        customPropellant.setChamberTemperature(KNDX.getChamberTemperature());
+        customPropellant.setK(KNDX.getK());
+        customPropellant.setK2ph(KNDX.getK2Ph());
+        customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
+
+
         request.setCustomPropellant(customPropellant);
 
         // WHEN

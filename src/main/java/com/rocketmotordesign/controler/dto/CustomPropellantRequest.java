@@ -23,34 +23,47 @@ public class CustomPropellantRequest {
     private Double k2ph;
     private Double chamberTemperature;
     private Double molarMass;
-    // TODO : mettre t0? et le tableau de pression pour a et n
     private Set<BurnRatePressureData> burnRateDataSet;
 
     public CustomPropellantRequest() {
     }
 
-    public CustomPropellantRequest(Double cstar, Double burnRateCoefficient, Double pressureExponent, Double density, Double k, Double molarMass) {
+
+    public void setBurnRateCoefficient(Double burnRateCoefficient) {
         this.burnRateCoefficient = burnRateCoefficient;
+    }
+
+    public void setPressureExponent(Double pressureExponent) {
         this.pressureExponent = pressureExponent;
+    }
+
+    public void setCstar(Double cstar) {
         this.cstar = cstar;
+    }
+
+    public void setDensity(Double density) {
         this.density = density;
+    }
+
+    public void setK(Double k) {
         this.k = k;
+    }
+
+    public void setK2ph(Double k2ph) {
+        this.k2ph = k2ph;
+    }
+
+    public void setChamberTemperature(Double chamberTemperature) {
+        this.chamberTemperature = chamberTemperature;
+    }
+
+    public void setMolarMass(Double molarMass) {
         this.molarMass = molarMass;
     }
-    public CustomPropellantRequest(PropellantType propellantType, Set<BurnRatePressureData> burnRateDataSet) {
-        this.burnRateCoefficient = propellantType.getBurnRateCoefficient(1);
-        this.pressureExponent = propellantType.getPressureExponent(1);
-        this.cstar = null;
-        this.density = propellantType.getIdealMassDensity();
-        // TODO : IMPERIAL => this.density = propellantType.getIdealMassDensity()/453.6*Math.pow(2.54, 3);
-        this.k = propellantType.getK();
-        this.k2ph = propellantType.getK2Ph();
-        this.molarMass = propellantType.getEffectiveMolecularWeight();
-        this.chamberTemperature = propellantType.getChamberTemperature();
 
+    public void setBurnRateDataSet(Set<BurnRatePressureData> burnRateDataSet) {
         this.burnRateDataSet = burnRateDataSet;
     }
-
 
     public Double getBurnRateCoefficient() {
         return burnRateCoefficient;

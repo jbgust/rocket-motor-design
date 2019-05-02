@@ -124,7 +124,7 @@ public class MeasureUnitService {
 
         CustomPropellant customPropellant = new CustomPropellant(
                 si? customPropellantRequest.getCstar() : customPropellantRequest.getCstar()!=null? customPropellantRequest.getCstar() * 0.3048: null,
-                si? customPropellantRequest.getBurnRateCoefficient() : BurnRateCoefficientConverter.toMetrique(customPropellantRequest.getBurnRateCoefficient(), customPropellantRequest.getPressureExponent()),
+                si? customPropellantRequest.getBurnRateCoefficient() : customPropellantRequest.getBurnRateCoefficient()!=null ? BurnRateCoefficientConverter.toMetrique(customPropellantRequest.getBurnRateCoefficient(), customPropellantRequest.getPressureExponent()): null,
                 customPropellantRequest.getPressureExponent(),
                 si? customPropellantRequest.getDensity() : convertDensityToJSRM(customPropellantRequest.getDensity()),
                 customPropellantRequest.getK(),
