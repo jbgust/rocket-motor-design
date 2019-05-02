@@ -42,6 +42,7 @@ public class CustomPropellantRequest {
         this.pressureExponent = propellantType.getPressureExponent(1);
         this.cstar = null;
         this.density = propellantType.getIdealMassDensity();
+        // TODO : IMPERIAL => this.density = propellantType.getIdealMassDensity()/453.6*Math.pow(2.54, 3);
         this.k = propellantType.getK();
         this.k2ph = propellantType.getK2Ph();
         this.molarMass = propellantType.getEffectiveMolecularWeight();

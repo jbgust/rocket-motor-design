@@ -173,11 +173,11 @@ public class MainControlerITTest {
         request.setCustomPropellant(new CustomPropellantRequest(
                 KNDX, Sets.newHashSet(
                 //data taken from SRM_2014
-                new BurnRatePressureData(8.87544496778536, 0.6193, 0.1, 0.779135),
-                new BurnRatePressureData(7.55278442387944, -0.0087, 0.779135, 2.571835),
-                new BurnRatePressureData(3.84087990499602, 0.6882, 2.571835, 5.9297),
-                new BurnRatePressureData(17.2041864098062, -0.1481, 5.9297, 8.501535),
-                new BurnRatePressureData(4.77524086347659, 0.4417, 8.501535, 11.20)
+                new BurnRatePressureData(8.87544496778536, 0.6193, toBar(0.1), toBar(0.779135)),
+                new BurnRatePressureData(7.55278442387944, -0.0087, toBar(0.779135), toBar(2.571835)),
+                new BurnRatePressureData(3.84087990499602, 0.6882, toBar(2.571835), toBar(5.9297)),
+                new BurnRatePressureData(17.2041864098062, -0.1481, toBar(5.9297), toBar(8.501535)),
+                new BurnRatePressureData(4.77524086347659, 0.4417, toBar(8.501535), toBar(11.20))
         )));
 
         // WHEN
@@ -209,6 +209,39 @@ public class MainControlerITTest {
                 .andExpect(jsonPath("$.motorParameters[400].y", is(closeTo(2058.5999, 0.0001d))))
                 .andExpect(jsonPath("$.motorParameters[400].p", is(closeTo(59.3117, 0.0001d))))
                 .andExpect(jsonPath("$.motorParameters[400].m", is(closeTo(1.584, 0.0001d))));
+    }
+
+    @Test
+    public void shouldUseCustomPropellantInImperialUnitsWithMultipleBurnRateData() throws Exception {
+        // GIVEN
+        ComputationRequest request = getDefaultRequestImperial();
+        request.setPropellantType("To be defined");
+
+        // TODO mettre les valeur de KNDX au format IMPERIAL (densité, ...)
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest(
+                KNDX, Sets.newHashSet(
+                //data taken from SRM_2014
+                new BurnRatePressureData(0.0160236, 0.6193000, 15, 113),
+                new BurnRatePressureData(0.3105118, -0.0087000, 113, 373),
+                new BurnRatePressureData(0.0049213, 0.6882000, 373, 860),
+                new BurnRatePressureData(1.4155118, -0.1481000, 860, 1233),
+                new BurnRatePressureData(0.0208661, 0.4417000, 1233, 1625)
+        ));
+        request.setCustomPropellant(customPropellant);
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")));
+    }
+
+    private double toBar(double pressure) {
+        return 10*pressure;
     }
 
     @Test

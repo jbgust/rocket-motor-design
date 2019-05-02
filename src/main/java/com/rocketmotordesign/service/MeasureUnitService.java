@@ -23,10 +23,15 @@ import javax.measure.quantity.Pressure;
 
 import static com.rocketmotordesign.controler.dto.MeasureUnit.JSRM_UNITS;
 import static com.rocketmotordesign.controler.dto.MeasureUnit.SI;
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -126,8 +131,26 @@ public class MeasureUnitService {
                 customPropellantRequest.getK2ph(),
                 customPropellantRequest.getMolarMass(),
                 customPropellantRequest.getChamberTemperature(),
-                customPropellantRequest.getBurnRateDataSet());
+                convertBurnRateDataToJSRM(request));
         return customPropellant;
+    }
+
+    private Set<BurnRatePressureData> convertBurnRateDataToJSRM(ComputationRequest request) {
+        boolean si = request.getMeasureUnit() == SI;
+
+        Set<BurnRatePressureData> burnRateDataSet = request.getCustomPropellant().getBurnRateDataSet();
+        if(burnRateDataSet != null){
+            return burnRateDataSet.stream()
+                    .map(burnRatePressureData -> new BurnRatePressureData(
+                            si? burnRatePressureData.getBurnRateCoefficient() : BurnRateCoefficientConverter.toMetrique(burnRatePressureData.getBurnRateCoefficient(), burnRatePressureData.getPressureExponent()),
+                            burnRatePressureData.getPressureExponent(),
+                            convertPressureToJSRM(request.getMeasureUnit().getPressureUnit(), burnRatePressureData.getFromPressureIncluded()),
+                            convertPressureToJSRM(request.getMeasureUnit().getPressureUnit(), burnRatePressureData.getToPressureExcluded())
+                    ))
+                    .collect(toSet());
+            } else {
+            return emptySet();
+        }
     }
 
     private Double convertDensityToJSRM(double idealMassDensity) {
