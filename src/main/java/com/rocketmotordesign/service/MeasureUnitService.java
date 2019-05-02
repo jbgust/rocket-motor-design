@@ -11,7 +11,6 @@ import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorParameters;
 import com.rocketmotordesign.controler.dto.*;
 import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
-import com.rocketmotordesign.propellant.CustomPropellant;
 
 import org.springframework.stereotype.Service;
 import tec.units.ri.quantity.Quantities;
@@ -27,11 +26,9 @@ import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service

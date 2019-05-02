@@ -51,8 +51,7 @@ public class JSRMServiceTest {
         customPropellant.setMolarMass(45.0);
 
         ComputationRequest defaultRequest = getDefaultRequestImperial();
-        //defaultRequest.setChamberLength(defaultRequest.getSegmentLength()*defaultRequest.getNumberOfSegment());
-        //TODO voir la valeur ci-dessous
+
         defaultRequest.setPropellantType("To be defined");
         defaultRequest.getExtraConfig().setNozzleExpansionRatio(8.0);
         defaultRequest.getExtraConfig().setNozzleEfficiency(0.85);
@@ -65,6 +64,8 @@ public class JSRMServiceTest {
 
         JSRMConfig customConfig = measureUnitService.toJSRMConfig(defaultRequest.getExtraConfig(), userUnits);
         JSRMResult jsrmResult = new JSRMSimulation(measureUnitService.toSolidRocketMotor(defaultRequest)).run(customConfig);
-        assertThat(100*1878/jsrmResult.getAverageThrustInNewton()).isGreaterThan(95);
+        assertThat(100*1878/jsrmResult.getAverageThrustInNewton())
+                .describedAs("At least 98% matching burnsim result for viper propellant")
+                .isGreaterThanOrEqualTo(98);
     }
 }

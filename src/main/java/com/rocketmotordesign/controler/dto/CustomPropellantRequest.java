@@ -1,6 +1,9 @@
 package com.rocketmotordesign.controler.dto;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.infra.propellant.BurnRateData;
@@ -99,5 +102,20 @@ public class CustomPropellantRequest {
 
     public Set<BurnRatePressureData> getBurnRateDataSet() {
         return burnRateDataSet;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomPropellantRequest{" +
+                "burnRateCoefficient=" + burnRateCoefficient +
+                ", pressureExponent=" + pressureExponent +
+                ", cstar=" + cstar +
+                ", density=" + density +
+                ", k=" + k +
+                ", k2ph=" + k2ph +
+                ", chamberTemperature=" + chamberTemperature +
+                ", molarMass=" + molarMass +
+                ", burnRateDataSet=" + (burnRateDataSet != null ? "["+burnRateDataSet.stream().map(BurnRatePressureData::toString).collect(joining(","))+"]" : "null") +
+                '}';
     }
 }

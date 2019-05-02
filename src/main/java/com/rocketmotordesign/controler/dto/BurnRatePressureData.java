@@ -48,4 +48,14 @@ public class BurnRatePressureData {
     public void setToPressureExcluded(double toPressureExcluded) {
         this.toPressureExcluded = toPressureExcluded;
     }
+
+    @Override
+    public String toString() {
+        return "BurnRatePressureData{" +
+                "a=" + burnRateCoefficient +
+                ", n=" + pressureExponent +
+                ", from=" + fromPressureIncluded +
+                ", to=" + toPressureExcluded +
+                '}';
+    }
 }

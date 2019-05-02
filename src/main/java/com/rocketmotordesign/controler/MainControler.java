@@ -2,19 +2,12 @@ package com.rocketmotordesign.controler;
 
 import static java.util.stream.Collectors.toMap;
 
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.exception.JSRMException;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
-import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.ErrorMessage;
-import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
-import com.rocketmotordesign.propellant.CustomPropellant;
+import com.rocketmotordesign.service.BurnRateDataException;
+import com.rocketmotordesign.service.CustomPropellantChamberPressureOutOfBoundException;
 import com.rocketmotordesign.service.JSRMService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,13 +39,20 @@ public class MainControler {
                 LOGGER.debug("InvalidMotorDesignException suite : {}", e.getMessage());
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage(e.getMessage()));
+            } else if (e.getCause() != null && e.getCause().getCause() instanceof CustomPropellantChamberPressureOutOfBoundException) {
+                LOGGER.error("CustomPropellantChamberPressureOutOfBoundException : "+request.toString(), e);
+                return ResponseEntity.badRequest().body(
+                        new ErrorMessage("METEOR can't run this computation due to the following error:",e.getCause().getCause().getMessage()));
             } else {
                 LOGGER.error("Computation failed :\n\trequest : {}", request.toString());
                 LOGGER.warn("Computation failed :\n\tCAUSE : {}", e.getCause().getMessage());
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getMessage()));
             }
-        }catch (Exception e) {
+        } catch (BurnRateDataException e) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorMessage("METEOR can't run this computation due to the following error:", "Your burn rate data are invalid. "+e.getMessage()));
+        } catch (Exception e) {
             LOGGER.error("Unknown computation error with request : "+request.toString(), e);
             return ResponseEntity.badRequest().body(
                     new ErrorMessage("Computation failed due to unknown error, please contact us."));

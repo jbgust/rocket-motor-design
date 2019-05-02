@@ -1,7 +1,6 @@
 package com.rocketmotordesign.controler.dto;
 
 import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
-import com.rocketmotordesign.propellant.CustomPropellant;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -33,7 +32,6 @@ public class ComputationRequest {
     }
 
     public MeasureUnit getMeasureUnit() {
-        //TODO : traiter ce cas
         return Optional.ofNullable(measureUnit).orElse(MeasureUnit.SI);
     }
 
@@ -146,24 +144,6 @@ public class ComputationRequest {
     }
 
     @Override
-    public String toString() {
-        return "ComputationRequest{" +
-                "throatDiameter=" + throatDiameter +
-                ", outerDiameter=" + outerDiameter +
-                ", coreDiameter=" + coreDiameter +
-                ", segmentLength=" + segmentLength +
-                ", numberOfSegment=" + numberOfSegment +
-                ", outerSurface=" + outerSurface +
-                ", endsSurface=" + endsSurface +
-                ", coreSurface=" + coreSurface +
-                ", propellantType=" + propellantType +
-                ", chamberInnerDiameter=" + chamberInnerDiameter +
-                ", chamberLength=" + chamberLength +
-                ", extraConfig=" + extraConfig.toString() +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -178,24 +158,34 @@ public class ComputationRequest {
                 outerSurface == that.outerSurface &&
                 endsSurface == that.endsSurface &&
                 coreSurface == that.coreSurface &&
-                propellantType == that.propellantType &&
-                Objects.equals(extraConfig, that.extraConfig);
+                Objects.equals(propellantType, that.propellantType) &&
+                Objects.equals(extraConfig, that.extraConfig) &&
+                measureUnit == that.measureUnit &&
+                Objects.equals(customPropellant, that.customPropellant);
     }
 
     @Override
     public int hashCode() {
-        return Objects
-                .hash(throatDiameter,
-                        outerDiameter,
-                        coreDiameter,
-                        segmentLength,
-                        numberOfSegment,
-                        outerSurface,
-                        endsSurface,
-                        coreSurface,
-                        propellantType,
-                        chamberInnerDiameter,
-                        chamberLength,
-                        extraConfig);
+        return Objects.hash(throatDiameter, outerDiameter, coreDiameter, segmentLength, numberOfSegment, outerSurface, endsSurface, coreSurface, propellantType, chamberInnerDiameter, chamberLength, extraConfig, measureUnit, customPropellant);
+    }
+
+    @Override
+    public String toString() {
+        return "ComputationRequest{" +
+                "throatDiameter=" + throatDiameter +
+                ", outerDiameter=" + outerDiameter +
+                ", coreDiameter=" + coreDiameter +
+                ", segmentLength=" + segmentLength +
+                ", numberOfSegment=" + numberOfSegment +
+                ", outerSurface=" + outerSurface +
+                ", endsSurface=" + endsSurface +
+                ", coreSurface=" + coreSurface +
+                ", propellantType='" + propellantType + '\'' +
+                ", chamberInnerDiameter=" + chamberInnerDiameter +
+                ", chamberLength=" + chamberLength +
+                ", extraConfig=" + extraConfig.toString() +
+                ", measureUnit=" + measureUnit +
+                ", customPropellant=" + (customPropellant != null ? customPropellant.toString() : "null") +
+                '}';
     }
 }

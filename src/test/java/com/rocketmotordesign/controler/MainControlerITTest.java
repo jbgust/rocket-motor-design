@@ -268,6 +268,77 @@ public class MainControlerITTest {
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")));
     }
 
+    @Test
+    public void shouldSendErrorIfBurnRateDataAreOverlaping() throws Exception {
+        // GIVEN
+        ComputationRequest request = getDefaultRequestImperial();
+        request.setPropellantType("To be defined");
+
+        // TODO mettre les valeur de KNDX au format IMPERIAL (densité, ...)
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
+        customPropellant.setBurnRateDataSet(Sets.newHashSet(
+                //data taken from SRM_2014
+                new BurnRatePressureData(0.0160236, 0.6193000, 14.63, 113),
+                new BurnRatePressureData(0.3105118, -0.0087000, 110, 373)
+        ));
+        customPropellant.setDensity(KNDX.getIdealMassDensity()/453.6*Math.pow(2.54, 3));
+        customPropellant.setChamberTemperature(KNDX.getChamberTemperature());
+        customPropellant.setK(KNDX.getK());
+        customPropellant.setK2ph(KNDX.getK2Ph());
+        customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
+
+
+        request.setCustomPropellant(customPropellant);
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("METEOR can't run this computation due to the following error:")))
+                .andExpect(jsonPath("$.detail", is(
+                        "Your burn rate data are invalid. " +
+                                "Overlapping ranges: range [0.10087385..0.779135) overlaps with entry [0.75845..2.571835)")));
+    }
+
+    @Test
+    public void shouldSendErrorWhenPressureIsOutOfBound() throws Exception {
+        // GIVEN
+        ComputationRequest request = getDefaultRequestImperial();
+        request.setPropellantType("To be defined");
+
+        // TODO mettre les valeur de KNDX au format IMPERIAL (densité, ...)
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
+        customPropellant.setBurnRateDataSet(Sets.newHashSet(
+                new BurnRatePressureData(0.0160236, 0.6193000, 15, 113),
+                new BurnRatePressureData(0.3105118, -0.0087000, 113, 373)
+        ));
+        customPropellant.setDensity(KNDX.getIdealMassDensity()/453.6*Math.pow(2.54, 3));
+        customPropellant.setChamberTemperature(KNDX.getChamberTemperature());
+        customPropellant.setK(KNDX.getK());
+        customPropellant.setK2ph(KNDX.getK2Ph());
+        customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
+
+
+        request.setCustomPropellant(customPropellant);
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("METEOR can't run this computation due to the following error:")))
+                .andExpect(jsonPath("$.detail", is(
+                        "Your custom propellant has no burn rate coefficient for this pressure (0.101 MPa). " +
+                                "The pressure should be in the range you defined [0.103425..2.571835)")));
+    }
+
     private double toBar(double pressure) {
         return 10*pressure;
     }
