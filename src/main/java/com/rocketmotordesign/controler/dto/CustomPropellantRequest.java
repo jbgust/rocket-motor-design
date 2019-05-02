@@ -1,6 +1,9 @@
 package com.rocketmotordesign.controler.dto;
 
+import java.util.Set;
+
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
+import com.github.jbgust.jsrm.infra.propellant.BurnRateData;
 
 public class CustomPropellantRequest {
 
@@ -21,7 +24,7 @@ public class CustomPropellantRequest {
     private Double chamberTemperature;
     private Double molarMass;
     // TODO : mettre t0? et le tableau de pression pour a et n
-
+    private Set<BurnRatePressureData> burnRateDataSet;
 
     public CustomPropellantRequest() {
     }
@@ -34,7 +37,7 @@ public class CustomPropellantRequest {
         this.k = k;
         this.molarMass = molarMass;
     }
-    public CustomPropellantRequest(PropellantType propellantType) {
+    public CustomPropellantRequest(PropellantType propellantType, Set<BurnRatePressureData> burnRateDataSet) {
         this.burnRateCoefficient = propellantType.getBurnRateCoefficient(1);
         this.pressureExponent = propellantType.getPressureExponent(1);
         this.cstar = null;
@@ -43,6 +46,8 @@ public class CustomPropellantRequest {
         this.k2ph = propellantType.getK2Ph();
         this.molarMass = propellantType.getEffectiveMolecularWeight();
         this.chamberTemperature = propellantType.getChamberTemperature();
+
+        this.burnRateDataSet = burnRateDataSet;
     }
 
 
@@ -76,5 +81,9 @@ public class CustomPropellantRequest {
 
     public Double getChamberTemperature() {
         return chamberTemperature;
+    }
+
+    public Set<BurnRatePressureData> getBurnRateDataSet() {
+        return burnRateDataSet;
     }
 }

@@ -125,7 +125,8 @@ public class MeasureUnitService {
                 customPropellantRequest.getK(),
                 customPropellantRequest.getK2ph(),
                 customPropellantRequest.getMolarMass(),
-                customPropellantRequest.getChamberTemperature());
+                customPropellantRequest.getChamberTemperature(),
+                customPropellantRequest.getBurnRateDataSet());
         return customPropellant;
     }
 

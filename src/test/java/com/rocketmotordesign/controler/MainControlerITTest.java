@@ -1,6 +1,8 @@
 package com.rocketmotordesign.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
+import com.rocketmotordesign.controler.dto.BurnRatePressureData;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
 import com.rocketmotordesign.controler.dto.CustomPropellantRequest;
 import com.rocketmotordesign.controler.dto.MeasureUnit;
@@ -22,10 +24,14 @@ import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.rocketmotordesign.utils.TestHelper.*;
+import static java.util.Collections.emptySet;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Collections;
+import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MainControler.class)
@@ -145,7 +151,7 @@ public class MainControlerITTest {
         // GIVEN
         ComputationRequest request = getDefaultRequest();
         request.setPropellantType("To be defined");
-        request.setCustomPropellant(new CustomPropellantRequest(KNSU));
+        request.setCustomPropellant(new CustomPropellantRequest(KNSU, emptySet()));
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -164,7 +170,15 @@ public class MainControlerITTest {
         // GIVEN
         ComputationRequest request = getDefaultRequest();
         request.setPropellantType("To be defined");
-        request.setCustomPropellant(new CustomPropellantRequest(KNSU));
+        request.setCustomPropellant(new CustomPropellantRequest(
+                KNDX, Sets.newHashSet(
+                //data taken from SRM_2014
+                new BurnRatePressureData(8.87544496778536, 0.6193, 0.1, 0.779135),
+                new BurnRatePressureData(7.55278442387944, -0.0087, 0.779135, 2.571835),
+                new BurnRatePressureData(3.84087990499602, 0.6882, 2.571835, 5.9297),
+                new BurnRatePressureData(17.2041864098062, -0.1481, 5.9297, 8.501535),
+                new BurnRatePressureData(4.77524086347659, 0.4417, 8.501535, 11.20)
+        )));
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -174,8 +188,27 @@ public class MainControlerITTest {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.performanceResult.motorDescription", is("L2174")))
-                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)));
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)))
+                .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
+                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", is(36.63558888655025)))
+
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("2060.35")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("3603.07")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("130.65")))
+                .andExpect(jsonPath("$.performanceResult.maxPressure", is("59.36")))
+                .andExpect(jsonPath("$.performanceResult.thrustTime", is("2.15")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("54.03")))
+                .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
+                .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
+                .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
+
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+
+                .andExpect(jsonPath("$.motorParameters[400].x", is(closeTo(1.0343, 0.01d))))
+                .andExpect(jsonPath("$.motorParameters[400].y", is(closeTo(2058.5999, 0.0001d))))
+                .andExpect(jsonPath("$.motorParameters[400].p", is(closeTo(59.3117, 0.0001d))))
+                .andExpect(jsonPath("$.motorParameters[400].m", is(closeTo(1.584, 0.0001d))));
     }
 
     @Test

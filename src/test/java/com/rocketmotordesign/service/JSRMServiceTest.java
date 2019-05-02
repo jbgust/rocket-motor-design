@@ -16,6 +16,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static com.rocketmotordesign.utils.TestHelper.getDefaultRequest;
+import static com.rocketmotordesign.utils.TestHelper.getDefaultRequestImperial;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,7 +42,7 @@ public class JSRMServiceTest {
     @Test
     public void shouldUseCustomPropellantViper() {
         // GIVEN
-        ComputationRequest defaultRequest = getDefaultRequest();
+        ComputationRequest defaultRequest = getDefaultRequestImperial();
         //defaultRequest.setChamberLength(defaultRequest.getSegmentLength()*defaultRequest.getNumberOfSegment());
         //TODO voir la valeur ci-dessous
         defaultRequest.setPropellantType("To be defined");

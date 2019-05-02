@@ -8,6 +8,7 @@ import org.junit.Test;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.infra.JSRMConstant.UNIVERSAL_GAS_CONSTANT;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class CustomPropellantTest {
 
@@ -21,6 +22,7 @@ public class CustomPropellantTest {
                 6d,
                 null,
                 7d,
+                null,
                 null);
 
         assertThat(customPropellant.getDescription()).isEqualTo("CUSTOM");
@@ -43,7 +45,8 @@ public class CustomPropellantTest {
                 6d,
                 8d,
                 7d,
-                9d);
+                9d,
+                null);
 
         assertThat(customPropellant.getDescription()).isEqualTo("CUSTOM");
         assertThat(customPropellant.getBurnRateCoefficient(92)).isEqualTo(3d);
@@ -68,7 +71,7 @@ public class CustomPropellantTest {
                 3d,
                 propellant.getIdealMassDensity(),
                 k,
-                null, propellant.getEffectiveMolecularWeight(), null);
+                null, propellant.getEffectiveMolecularWeight(), null, null);
 
         ImmutableMap<String, Double> variables = ImmutableMap.of(
                 "rat", customPropellant.getRat(), "to", propellant.getChamberTemperature(), "k", k
@@ -76,6 +79,13 @@ public class CustomPropellantTest {
 
         assertThat(customPropellant.getRat()).isCloseTo(UNIVERSAL_GAS_CONSTANT/KNDX.getEffectiveMolecularWeight(), Offset.offset(0.0001d));
         assertThat(customPropellant.getChamberTemperature()).isCloseTo(propellant.getChamberTemperature(), Offset.offset(0.0001d));
+
+    }
+
+    @Test
+    public void assertBurnRateDatas() {
+
+        fail("TODO");
 
     }
 
