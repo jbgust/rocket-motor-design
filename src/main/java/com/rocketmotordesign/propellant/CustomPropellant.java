@@ -7,8 +7,6 @@ import static com.github.jbgust.jsrm.infra.JSRMConstant.UNIVERSAL_GAS_CONSTANT;
 
 public class CustomPropellant implements SolidPropellant {
 
-    private final Double cstar;
-    private final Double isp;
     /**
      * Refer to a
      */
@@ -18,18 +16,21 @@ public class CustomPropellant implements SolidPropellant {
      * refer to n
     */
     private final Double pressureExponent;
+
     private final Double density;
     private final Double k;
+    private final Double k2ph;
     private final Double molarMass;
+    private final Double chamberTemperature;
 
-    public CustomPropellant(Double cstar, Double isp, Double burnRateCoefficient, Double pressureExponent, Double density, Double k, Double molarMass) {
-        this.cstar = cstar;
-        this.isp = isp;
+    public CustomPropellant(Double cstar, Double burnRateCoefficient, Double pressureExponent, Double density, Double k, Double k2ph, Double molarMass, Double chamberTemperature) {
         this.burnRateCoefficient = burnRateCoefficient;
         this.pressureExponent = pressureExponent;
         this.density = density;
         this.k = k;
+        this.k2ph = k2ph != null ? k2ph : k;
         this.molarMass = molarMass;
+        this.chamberTemperature = chamberTemperature != null ? chamberTemperature : resolveChamberTemperature(cstar) ;
     }
 
 
@@ -45,7 +46,7 @@ public class CustomPropellant implements SolidPropellant {
 
     @Override
     public double getK2Ph() {
-        return k;
+        return k2ph;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class CustomPropellant implements SolidPropellant {
 
     @Override
     public double getChamberTemperature() {
-        return resolveChamberTemperature();
+        return chamberTemperature;
     }
 
     @Override
@@ -73,16 +74,12 @@ public class CustomPropellant implements SolidPropellant {
         return pressureExponent;
     }
 
-    public Double getIsp() {
-        return isp;
-    }
-
-    private double resolveChamberTemperature() {
-        return Math.pow(cstar, 2) * getX() / getRat();
-    }
-
     double getRat() {
         return UNIVERSAL_GAS_CONSTANT/molarMass;
+    }
+
+    private double resolveChamberTemperature(Double cstar) {
+        return Math.pow(cstar, 2) * getX() / getRat();
     }
 
     private double getX() {

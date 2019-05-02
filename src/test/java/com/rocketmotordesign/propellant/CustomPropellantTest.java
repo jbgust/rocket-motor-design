@@ -15,15 +15,15 @@ public class CustomPropellantTest {
     public void shouldCreateCustomPropellant() {
         CustomPropellant customPropellant = new CustomPropellant(
                 1d,
-                2d,
                 3d,
                 4d,
                 5d,
                 6d,
-                7d);
+                null,
+                7d,
+                null);
 
         assertThat(customPropellant.getDescription()).isEqualTo("CUSTOM");
-        assertThat(customPropellant.getIsp()).isEqualTo(2d);
         assertThat(customPropellant.getBurnRateCoefficient(92)).isEqualTo(3d);
         assertThat(customPropellant.getPressureExponent(45)).isEqualTo(4d);
         assertThat(customPropellant.getIdealMassDensity()).isEqualTo(5d);
@@ -34,6 +34,29 @@ public class CustomPropellantTest {
     }
 
     @Test
+    public void shouldCreateCustomPropellantWithAllValueWithoutCstar() {
+        CustomPropellant customPropellant = new CustomPropellant(
+                null,
+                3d,
+                4d,
+                5d,
+                6d,
+                8d,
+                7d,
+                9d);
+
+        assertThat(customPropellant.getDescription()).isEqualTo("CUSTOM");
+        assertThat(customPropellant.getBurnRateCoefficient(92)).isEqualTo(3d);
+        assertThat(customPropellant.getPressureExponent(45)).isEqualTo(4d);
+        assertThat(customPropellant.getIdealMassDensity()).isEqualTo(5d);
+        assertThat(customPropellant.getK()).isEqualTo(6d);
+        assertThat(customPropellant.getEffectiveMolecularWeight()).isEqualTo(7d);
+
+        assertThat(customPropellant.getK2Ph()).isEqualTo(8d);
+        assertThat(customPropellant.getChamberTemperature()).isEqualTo(9d);
+    }
+
+    @Test
     public void shouldResolveChamberTemperature() {
 
         PropellantType propellant = KNDX;
@@ -41,12 +64,11 @@ public class CustomPropellantTest {
 
         CustomPropellant customPropellant = new CustomPropellant(
                 912.38154,
-                546d,
                 2d,
                 3d,
                 propellant.getIdealMassDensity(),
                 k,
-                propellant.getEffectiveMolecularWeight());
+                null, propellant.getEffectiveMolecularWeight(), null);
 
         ImmutableMap<String, Double> variables = ImmutableMap.of(
                 "rat", customPropellant.getRat(), "to", propellant.getChamberTemperature(), "k", k

@@ -22,6 +22,7 @@ import javax.measure.quantity.Mass;
 import javax.measure.quantity.Pressure;
 
 import static com.rocketmotordesign.controler.dto.MeasureUnit.JSRM_UNITS;
+import static com.rocketmotordesign.controler.dto.MeasureUnit.SI;
 import static java.util.stream.Collectors.toMap;
 
 import java.util.Map;
@@ -107,18 +108,29 @@ public class MeasureUnitService {
 
     private SolidPropellant getPropellant(ComputationRequest request) {
         Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
-                .collect(toMap(o -> o.name(), Function.identity()));
+                .collect(toMap(Enum::name, Function.identity()));
 
-        double a = 0.0174;
-        double n = 0.4285;
-        double aMetrique = BurnRateCoefficientConverter.toMetrique(a, n);
-        double densite = 0.06 * 453.6 / Math.pow(2.54,3);
-        double cstar = 5468.4 * 0.3048;
-        double isp = 150d;
-        double k = 1.2768;
-        double molarMass = 56;
-        propellants.put("WIMPY_RED", new CustomPropellant(cstar, isp,aMetrique, n, densite, k, molarMass));
-        return propellants.get(request.getPropellantType());
+        return propellants.computeIfAbsent(request.getPropellantType(), propellantType -> propellantToSIUnits(request));
+    }
+
+    private SolidPropellant propellantToSIUnits(ComputationRequest request) {
+        CustomPropellantRequest customPropellantRequest = request.getCustomPropellant();
+        boolean si = request.getMeasureUnit() == SI;
+
+        CustomPropellant customPropellant = new CustomPropellant(
+                si? customPropellantRequest.getCstar() : customPropellantRequest.getCstar()!=null? customPropellantRequest.getCstar() * 0.3048: null,
+                si? customPropellantRequest.getBurnRateCoefficient() : BurnRateCoefficientConverter.toMetrique(customPropellantRequest.getBurnRateCoefficient(), customPropellantRequest.getPressureExponent()),
+                customPropellantRequest.getPressureExponent(),
+                si? customPropellantRequest.getDensity() : convertDensityToJSRM(customPropellantRequest.getDensity()),
+                customPropellantRequest.getK(),
+                customPropellantRequest.getK2ph(),
+                customPropellantRequest.getMolarMass(),
+                customPropellantRequest.getChamberTemperature());
+        return customPropellant;
+    }
+
+    private Double convertDensityToJSRM(double idealMassDensity) {
+        return idealMassDensity*453.6/Math.pow(2.54, 3);
     }
 
     private double convertLengthToJSRM(Unit<Length> lenghtUnit, double length) {

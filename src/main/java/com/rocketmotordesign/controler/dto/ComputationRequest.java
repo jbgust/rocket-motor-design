@@ -1,6 +1,7 @@
 package com.rocketmotordesign.controler.dto;
 
 import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
+import com.rocketmotordesign.propellant.CustomPropellant;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -25,6 +26,8 @@ public class ComputationRequest {
     private ExtraConfiguration extraConfig;
 
     private MeasureUnit measureUnit;
+
+    private CustomPropellantRequest customPropellant;
 
     public ComputationRequest() {
     }
@@ -128,6 +131,14 @@ public class ComputationRequest {
 
     public void setChamberInnerDiameter(double chamberInnerDiameter) {
         this.chamberInnerDiameter = chamberInnerDiameter;
+    }
+
+    public CustomPropellantRequest getCustomPropellant() {
+        return customPropellant;
+    }
+
+    public void setCustomPropellant(CustomPropellantRequest customPropellant) {
+        this.customPropellant = customPropellant;
     }
 
     public void setChamberLength(double chamberLength) {

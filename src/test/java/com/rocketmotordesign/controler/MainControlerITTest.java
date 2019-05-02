@@ -2,6 +2,8 @@ package com.rocketmotordesign.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocketmotordesign.controler.dto.ComputationRequest;
+import com.rocketmotordesign.controler.dto.CustomPropellantRequest;
+import com.rocketmotordesign.controler.dto.MeasureUnit;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
 import org.junit.Test;
@@ -18,6 +20,7 @@ import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.E
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.rocketmotordesign.utils.TestHelper.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -104,6 +107,75 @@ public class MainControlerITTest {
                 .andExpect(jsonPath("$.motorParameters[400].y", is(closeTo(2058.5999, 0.0001d))))
                 .andExpect(jsonPath("$.motorParameters[400].p", is(closeTo(860.2126, 0.0001d))))
                 .andExpect(jsonPath("$.motorParameters[400].m", is(closeTo(3.4921, 0.0001d))));
+    }
+
+    @Test
+    public void shouldUseCustomPropellantInImperialUnits() throws Exception {
+        // GIVEN
+        ComputationRequest request = getDefaultRequestImperial();
+        //TODO voir la valeur ci-dessous
+        request.setPropellantType("To be defined");
+        request.getExtraConfig().setNozzleExpansionRatio(8.0);
+        request.getExtraConfig().setNozzleEfficiency(0.85);
+        request.getExtraConfig().setOptimalNozzleDesign(false);
+        request.getExtraConfig().setCombustionEfficiencyRatio(1);
+        request.getExtraConfig().setDensityRatio(1);
+
+        request.setCustomPropellant(new CustomPropellantRequest(
+                5468.4, 0.0174, 0.4285, 0.06, 1.2768, 45.0
+        ));
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("M1907")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("2142.54")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("5850.73")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("228.01")));
+    }
+
+    @Test
+    public void shouldUseCustomPropellantInSIUnits() throws Exception {
+        // GIVEN
+        ComputationRequest request = getDefaultRequest();
+        request.setPropellantType("To be defined");
+        request.setCustomPropellant(new CustomPropellantRequest(KNSU));
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("L2174")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)));
+    }
+
+    @Test
+    public void shouldUseCustomPropellantInSIUnitsWithMultipleBurnRateData() throws Exception {
+        // GIVEN
+        ComputationRequest request = getDefaultRequest();
+        request.setPropellantType("To be defined");
+        request.setCustomPropellant(new CustomPropellantRequest(KNSU));
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("L2174")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)));
     }
 
     @Test
