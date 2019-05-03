@@ -5,7 +5,7 @@ import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.infra.propellant.BurnRateData;
 import com.google.common.collect.ImmutableRangeMap;
 import com.google.common.collect.RangeMap;
-import com.rocketmotordesign.controler.dto.BurnRatePressureData;
+import com.rocketmotordesign.controler.request.BurnRatePressureData;
 
 import static com.github.jbgust.jsrm.infra.JSRMConstant.UNIVERSAL_GAS_CONSTANT;
 import static com.google.common.collect.Range.all;

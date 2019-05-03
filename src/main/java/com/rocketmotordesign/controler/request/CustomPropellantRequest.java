@@ -1,12 +1,8 @@
-package com.rocketmotordesign.controler.dto;
+package com.rocketmotordesign.controler.request;
 
 import static java.util.stream.Collectors.joining;
 
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
-import com.github.jbgust.jsrm.infra.propellant.BurnRateData;
 
 public class CustomPropellantRequest {
 

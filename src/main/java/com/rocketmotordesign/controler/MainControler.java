@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toMap;
 
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.exception.JSRMException;
-import com.rocketmotordesign.controler.dto.ComputationRequest;
-import com.rocketmotordesign.controler.dto.ErrorMessage;
+import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.response.ErrorMessage;
 import com.rocketmotordesign.service.BurnRateDataException;
 import com.rocketmotordesign.service.CustomPropellantChamberPressureOutOfBoundException;
 import com.rocketmotordesign.service.JSRMService;

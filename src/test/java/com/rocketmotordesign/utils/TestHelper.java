@@ -1,13 +1,13 @@
 package com.rocketmotordesign.utils;
 
-import com.rocketmotordesign.controler.dto.ComputationRequest;
-import com.rocketmotordesign.controler.dto.ExtraConfiguration;
+import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.ExtraConfiguration;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
-import static com.rocketmotordesign.controler.dto.MeasureUnit.IMPERIAL;
-import static com.rocketmotordesign.controler.dto.MeasureUnit.SI;
+import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
+import static com.rocketmotordesign.service.MeasureUnit.SI;
 
 public class TestHelper {
 

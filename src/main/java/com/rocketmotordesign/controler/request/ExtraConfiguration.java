@@ -1,4 +1,4 @@
-package com.rocketmotordesign.controler.dto;
+package com.rocketmotordesign.controler.request;
 
 
 import java.util.Objects;

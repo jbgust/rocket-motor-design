@@ -2,10 +2,9 @@ package com.rocketmotordesign.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
-import com.rocketmotordesign.controler.dto.BurnRatePressureData;
-import com.rocketmotordesign.controler.dto.ComputationRequest;
-import com.rocketmotordesign.controler.dto.CustomPropellantRequest;
-import com.rocketmotordesign.controler.dto.MeasureUnit;
+import com.rocketmotordesign.controler.request.BurnRatePressureData;
+import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
 import org.junit.Test;
@@ -24,14 +23,10 @@ import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.rocketmotordesign.utils.TestHelper.*;
-import static java.util.Collections.emptySet;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Collections;
-import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MainControler.class)

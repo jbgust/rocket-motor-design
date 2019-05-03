@@ -1,10 +1,8 @@
 package com.rocketmotordesign.service;
 
-import com.github.jbgust.jsrm.application.exception.ChamberPressureOutOfBoundException;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.google.common.collect.Sets;
-import com.rocketmotordesign.controler.dto.BurnRatePressureData;
-import com.rocketmotordesign.service.CustomPropellant;
+import com.rocketmotordesign.controler.request.BurnRatePressureData;
 
 import org.assertj.core.data.Offset;
 import org.junit.Test;

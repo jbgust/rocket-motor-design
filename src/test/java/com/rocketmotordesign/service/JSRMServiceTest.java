@@ -3,10 +3,9 @@ package com.rocketmotordesign.service;
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.JSRMSimulation;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.rocketmotordesign.controler.dto.ComputationRequest;
-import com.rocketmotordesign.controler.dto.ComputationResponse;
-import com.rocketmotordesign.controler.dto.CustomPropellantRequest;
-import com.rocketmotordesign.controler.dto.MeasureUnit;
+import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.response.ComputationResponse;
+import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.utils.TestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +14,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static com.rocketmotordesign.utils.TestHelper.getDefaultRequest;
 import static com.rocketmotordesign.utils.TestHelper.getDefaultRequestImperial;
 import static org.assertj.core.api.Assertions.assertThat;
 

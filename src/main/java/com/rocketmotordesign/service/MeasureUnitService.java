@@ -9,7 +9,12 @@ import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorParameters;
-import com.rocketmotordesign.controler.dto.*;
+import com.rocketmotordesign.controler.request.BurnRatePressureData;
+import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.CustomPropellantRequest;
+import com.rocketmotordesign.controler.request.ExtraConfiguration;
+import com.rocketmotordesign.controler.response.GraphResult;
+import com.rocketmotordesign.controler.response.PerformanceResult;
 import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
 
 import org.springframework.stereotype.Service;
@@ -20,8 +25,8 @@ import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.quantity.Pressure;
 
-import static com.rocketmotordesign.controler.dto.MeasureUnit.JSRM_UNITS;
-import static com.rocketmotordesign.controler.dto.MeasureUnit.SI;
+import static com.rocketmotordesign.service.MeasureUnit.JSRM_UNITS;
+import static com.rocketmotordesign.service.MeasureUnit.SI;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;

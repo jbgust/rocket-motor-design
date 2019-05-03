@@ -1,9 +1,9 @@
-package com.rocketmotordesign.controler.dto;
+package com.rocketmotordesign.service;
 
 import org.junit.Test;
 
-import static com.rocketmotordesign.controler.dto.MeasureUnit.Constants.*;
-import static com.rocketmotordesign.controler.dto.MeasureUnit.*;
+import static com.rocketmotordesign.service.MeasureUnit.Constants.*;
+import static com.rocketmotordesign.service.MeasureUnit.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static tec.units.ri.unit.Units.KILOGRAM;
 
