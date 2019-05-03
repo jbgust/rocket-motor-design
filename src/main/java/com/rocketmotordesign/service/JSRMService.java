@@ -32,6 +32,7 @@ public class JSRMService {
 
     public ComputationResponse runComputation(ComputationRequest request) {
         MeasureUnit userUnits = request.getMeasureUnit();
+        LOGGER.info("METEOR[UNITS|{}]",userUnits);
 
         JSRMConfig customConfig = measureUnitService.toJSRMConfig(request.getExtraConfig(), userUnits);
         JSRMResult jsrmResult = new JSRMSimulation(measureUnitService.toSolidRocketMotor(request)).run(customConfig);

@@ -17,6 +17,8 @@ import com.rocketmotordesign.controler.response.GraphResult;
 import com.rocketmotordesign.controler.response.PerformanceResult;
 import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tec.units.ri.quantity.Quantities;
 
@@ -38,6 +40,8 @@ import java.util.stream.Stream;
 
 @Service
 public class MeasureUnitService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MeasureUnitService.class);
 
     public SolidRocketMotor toSolidRocketMotor(ComputationRequest request) {
         return new SolidRocketMotor(
@@ -116,6 +120,8 @@ public class MeasureUnitService {
     private SolidPropellant getPropellant(ComputationRequest request) {
         Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
                 .collect(toMap(Enum::name, Function.identity()));
+
+        LOGGER.info("METEOR[PROPELLANT|{}]",propellants.containsKey(request.getPropellantType()) ? request.getPropellantType() : "CUSTOM");
 
         return propellants.computeIfAbsent(request.getPropellantType(), propellantType -> propellantToSIUnits(request));
     }
