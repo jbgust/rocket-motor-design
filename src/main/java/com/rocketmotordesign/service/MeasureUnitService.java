@@ -5,9 +5,20 @@ import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
+import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorParameters;
-import com.rocketmotordesign.controler.dto.*;
+import com.rocketmotordesign.controler.request.BurnRatePressureData;
+import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.CustomPropellantRequest;
+import com.rocketmotordesign.controler.request.ExtraConfiguration;
+import com.rocketmotordesign.controler.response.GraphResult;
+import com.rocketmotordesign.controler.response.PerformanceResult;
+import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tec.units.ri.quantity.Quantities;
 
@@ -16,10 +27,21 @@ import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.quantity.Pressure;
 
-import static com.rocketmotordesign.controler.dto.MeasureUnit.JSRM_UNITS;
+import static com.rocketmotordesign.service.MeasureUnit.JSRM_UNITS;
+import static com.rocketmotordesign.service.MeasureUnit.SI;
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @Service
 public class MeasureUnitService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MeasureUnitService.class);
 
     public SolidRocketMotor toSolidRocketMotor(ComputationRequest request) {
         return new SolidRocketMotor(
@@ -85,7 +107,7 @@ public class MeasureUnitService {
 
     private PropellantGrain toPropellantGrain(ComputationRequest request) {
         Unit<Length> userLengthUnit = request.getMeasureUnit().getLenghtUnit();
-        return new PropellantGrain(request.getPropellantType(),
+        return new PropellantGrain(getPropellant(request),
                 convertLengthToJSRM(userLengthUnit, request.getOuterDiameter()),
                 convertLengthToJSRM(userLengthUnit, request.getCoreDiameter()),
                 convertLengthToJSRM(userLengthUnit, request.getSegmentLength()),
@@ -93,6 +115,54 @@ public class MeasureUnitService {
                 request.getOuterSurface(),
                 request.getEndsSurface(),
                 request.getCoreSurface());
+    }
+
+    private SolidPropellant getPropellant(ComputationRequest request) {
+        Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
+                .collect(toMap(Enum::name, Function.identity()));
+
+        LOGGER.info("METEOR[PROPELLANT|{}]",propellants.containsKey(request.getPropellantType()) ? request.getPropellantType() : "CUSTOM");
+
+        return propellants.computeIfAbsent(request.getPropellantType(), propellantType -> propellantToSIUnits(request));
+    }
+
+    private SolidPropellant propellantToSIUnits(ComputationRequest request) {
+        CustomPropellantRequest customPropellantRequest = request.getCustomPropellant();
+        boolean si = request.getMeasureUnit() == SI;
+
+        CustomPropellant customPropellant = new CustomPropellant(
+                si? customPropellantRequest.getCstar() : customPropellantRequest.getCstar()!=null? customPropellantRequest.getCstar() * 0.3048: null,
+                si? customPropellantRequest.getBurnRateCoefficient() : customPropellantRequest.getBurnRateCoefficient()!=null ? BurnRateCoefficientConverter.toMetrique(customPropellantRequest.getBurnRateCoefficient(), customPropellantRequest.getPressureExponent()): null,
+                customPropellantRequest.getPressureExponent(),
+                si? customPropellantRequest.getDensity() : convertDensityToJSRM(customPropellantRequest.getDensity()),
+                customPropellantRequest.getK(),
+                customPropellantRequest.getK2ph(),
+                customPropellantRequest.getMolarMass(),
+                customPropellantRequest.getChamberTemperature(),
+                convertBurnRateDataToJSRM(request));
+        return customPropellant;
+    }
+
+    private Set<BurnRatePressureData> convertBurnRateDataToJSRM(ComputationRequest request) {
+        boolean si = request.getMeasureUnit() == SI;
+
+        Set<BurnRatePressureData> burnRateDataSet = request.getCustomPropellant().getBurnRateDataSet();
+        if(burnRateDataSet != null){
+            return burnRateDataSet.stream()
+                    .map(burnRatePressureData -> new BurnRatePressureData(
+                            si? burnRatePressureData.getBurnRateCoefficient() : BurnRateCoefficientConverter.toMetrique(burnRatePressureData.getBurnRateCoefficient(), burnRatePressureData.getPressureExponent()),
+                            burnRatePressureData.getPressureExponent(),
+                            convertPressureToJSRM(request.getMeasureUnit().getPressureUnit(), burnRatePressureData.getFromPressureIncluded()),
+                            convertPressureToJSRM(request.getMeasureUnit().getPressureUnit(), burnRatePressureData.getToPressureExcluded())
+                    ))
+                    .collect(toSet());
+            } else {
+            return emptySet();
+        }
+    }
+
+    private Double convertDensityToJSRM(double idealMassDensity) {
+        return idealMassDensity*453.6/Math.pow(2.54, 3);
     }
 
     private double convertLengthToJSRM(Unit<Length> lenghtUnit, double length) {

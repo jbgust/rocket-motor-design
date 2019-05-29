@@ -3,10 +3,10 @@ package com.rocketmotordesign.service;
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.JSRMSimulation;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.rocketmotordesign.controler.dto.ComputationRequest;
-import com.rocketmotordesign.controler.dto.ComputationResponse;
-import com.rocketmotordesign.controler.dto.GraphResult;
-import com.rocketmotordesign.controler.dto.MeasureUnit;
+import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.response.ComputationResponse;
+import com.rocketmotordesign.controler.response.GraphResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +32,7 @@ public class JSRMService {
 
     public ComputationResponse runComputation(ComputationRequest request) {
         MeasureUnit userUnits = request.getMeasureUnit();
+        LOGGER.info("METEOR[UNITS|{}]",userUnits);
 
         JSRMConfig customConfig = measureUnitService.toJSRMConfig(request.getExtraConfig(), userUnits);
         JSRMResult jsrmResult = new JSRMSimulation(measureUnitService.toSolidRocketMotor(request)).run(customConfig);

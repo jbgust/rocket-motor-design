@@ -6,10 +6,10 @@ import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorClassification;
 import com.github.jbgust.jsrm.application.result.MotorParameters;
 import com.github.jbgust.jsrm.application.result.Nozzle;
-import com.rocketmotordesign.controler.dto.ComputationRequest;
-import com.rocketmotordesign.controler.dto.ExtraConfiguration;
-import com.rocketmotordesign.controler.dto.GraphResult;
-import com.rocketmotordesign.controler.dto.PerformanceResult;
+import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.ExtraConfiguration;
+import com.rocketmotordesign.controler.response.GraphResult;
+import com.rocketmotordesign.controler.response.PerformanceResult;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +19,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Locale;
 
-import static com.rocketmotordesign.controler.dto.MeasureUnit.IMPERIAL;
-import static com.rocketmotordesign.controler.dto.MeasureUnit.SI;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
+import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
+import static com.rocketmotordesign.service.MeasureUnit.SI;
 import static com.rocketmotordesign.utils.TestHelper.*;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,7 +57,7 @@ public class MeasureUnitServiceTest {
         assertThat(solidRocketMotor.getPropellantGrain().getOuterSurface()).isEqualTo(defaultRequestSIUnit.getOuterSurface());
         assertThat(solidRocketMotor.getPropellantGrain().getEndsSurface()).isEqualTo(defaultRequestSIUnit.getEndsSurface());
         assertThat(solidRocketMotor.getPropellantGrain().getCoreSurface()).isEqualTo(defaultRequestSIUnit.getCoreSurface());
-        assertThat(solidRocketMotor.getPropellantGrain().getPropellant()).isEqualTo(defaultRequestSIUnit.getPropellantType());
+        assertThat(solidRocketMotor.getPropellantGrain().getPropellant()).isEqualTo(KNDX);
     }
 
     @Test

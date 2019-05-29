@@ -1,4 +1,4 @@
-package com.rocketmotordesign.controler.dto;
+package com.rocketmotordesign.controler.request;
 
 
 import java.util.Objects;
@@ -108,5 +108,20 @@ public class ExtraConfiguration {
     @Override
     public int hashCode() {
         return Objects.hash(densityRatio, nozzleErosion, combustionEfficiencyRatio, ambiantPressure, erosiveBurningAreaRatioThreshold, erosiveBurningVelocityCoefficient, nozzleEfficiency, optimalNozzleDesign, nozzleExpansionRatio);
+    }
+
+    @Override
+    public String toString() {
+        return "ExtraConfiguration{" +
+                "densityRatio=" + densityRatio +
+                ", nozzleErosion=" + nozzleErosion +
+                ", combustionEfficiencyRatio=" + combustionEfficiencyRatio +
+                ", ambiantPressure=" + ambiantPressure +
+                ", erosiveBurningAreaRatioThreshold=" + erosiveBurningAreaRatioThreshold +
+                ", erosiveBurningVelocityCoefficient=" + erosiveBurningVelocityCoefficient +
+                ", nozzleEfficiency=" + nozzleEfficiency +
+                ", optimalNozzleDesign=" + optimalNozzleDesign +
+                ", nozzleExpansionRatio=" + nozzleExpansionRatio +
+                '}';
     }
 }

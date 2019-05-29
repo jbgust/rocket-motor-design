@@ -1,4 +1,4 @@
-package com.rocketmotordesign.controler.dto;
+package com.rocketmotordesign.controler.response;
 
 public class ErrorMessage {
     private final String message;

@@ -1,4 +1,4 @@
-package com.rocketmotordesign.controler.dto;
+package com.rocketmotordesign.service;
 
 import tec.units.ri.unit.MetricPrefix;
 import tec.units.ri.unit.Units;
