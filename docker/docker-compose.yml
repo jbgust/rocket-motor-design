@@ -1,0 +1,17 @@
+#commande pour demarrer tous les services: docker-compose up
+version: "2.1"
+
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  gafana:
+    image: grafana/grafana
+    ports:
+      - "4000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
