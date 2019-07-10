@@ -5,6 +5,7 @@ services:
   prometheus:
     image: prom/prometheus
     volumes:
+      - ./prometheus-data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
@@ -12,6 +13,6 @@ services:
   gafana:
     image: grafana/grafana
     ports:
-      - "4000:3000"
+      - "5000:3000"
     volumes:
       - ./grafana:/var/lib/grafana
