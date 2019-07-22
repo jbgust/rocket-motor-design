@@ -52,7 +52,7 @@ public class TestHelper {
     public static ExtraConfiguration getDefaultExtraConfiguration() {
         ExtraConfiguration extraConfig = new ExtraConfiguration();
         extraConfig.setDensityRatio(0.95);
-        extraConfig.setAmbiantPressure(0.101);
+        extraConfig.setAmbiantPressureInMPa(0.101);
         extraConfig.setCombustionEfficiencyRatio(0.95);
         extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
         extraConfig.setNozzleEfficiency(0.85);
@@ -64,10 +64,9 @@ public class TestHelper {
     }
 
     public static ExtraConfiguration getDefaultImperialExtraConfiguration() {
-        double ratioPsi = 1000000 / 6895;
         ExtraConfiguration extraConfig = new ExtraConfiguration();
         extraConfig.setDensityRatio(0.95);
-        extraConfig.setAmbiantPressure(0.101 * ratioPsi);
+        extraConfig.setAmbiantPressureInMPa(0.101);
         extraConfig.setCombustionEfficiencyRatio(0.95);
         extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
         extraConfig.setNozzleEfficiency(0.85);

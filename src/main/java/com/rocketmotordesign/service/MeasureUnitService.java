@@ -16,7 +16,6 @@ import com.rocketmotordesign.controler.request.ExtraConfiguration;
 import com.rocketmotordesign.controler.response.GraphResult;
 import com.rocketmotordesign.controler.response.PerformanceResult;
 import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,17 +25,16 @@ import javax.measure.Unit;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.quantity.Pressure;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static com.rocketmotordesign.service.MeasureUnit.JSRM_UNITS;
 import static com.rocketmotordesign.service.MeasureUnit.SI;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 @Service
 public class MeasureUnitService {
@@ -53,8 +51,7 @@ public class MeasureUnitService {
 
     public JSRMConfig toJSRMConfig(ExtraConfiguration extraConfig, MeasureUnit userUnits) {
         JSRMConfigBuilder jsrmConfigBuilder = new JSRMConfigBuilder()
-                //TODO: champs non pris en compte car masqué dans IHM Meteor
-                //.withAmbiantPressureInMPa(convertPressureToJSRM(userUnits.getPressureUnit(), extraConfig.getAmbiantPressure()))
+                .withAmbiantPressureInMPa(extraConfig.getAmbiantPressureInMPa())
                 .withCombustionEfficiencyRatio(extraConfig.getCombustionEfficiencyRatio())
                 .withDensityRatio(extraConfig.getDensityRatio())
                 .withErosiveBurningAreaRatioThreshold(extraConfig.getErosiveBurningAreaRatioThreshold())

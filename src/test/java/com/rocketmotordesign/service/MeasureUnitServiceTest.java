@@ -73,7 +73,7 @@ public class MeasureUnitServiceTest {
         assertThat(jsrmConfig.getDensityRatio()).isEqualTo(defaultExtraConfigSIUnit.getDensityRatio());
         assertThat(jsrmConfig.getNozzleErosionInMillimeter()).isEqualTo(5*25.4);
         assertThat(jsrmConfig.getCombustionEfficiencyRatio()).isEqualTo(defaultExtraConfigSIUnit.getCombustionEfficiencyRatio());
-        assertThat(jsrmConfig.getAmbiantPressureInMPa()).isEqualTo(defaultExtraConfigSIUnit.getAmbiantPressure());
+        assertThat(jsrmConfig.getAmbiantPressureInMPa()).isEqualTo(defaultExtraConfigSIUnit.getAmbiantPressureInMPa());
         assertThat(jsrmConfig.getErosiveBurningAreaRatioThreshold()).isEqualTo(defaultExtraConfigSIUnit.getErosiveBurningAreaRatioThreshold());
         assertThat(jsrmConfig.getErosiveBurningVelocityCoefficient()).isEqualTo(defaultExtraConfigSIUnit.getErosiveBurningVelocityCoefficient());
         assertThat(jsrmConfig.getNozzleEfficiency()).isEqualTo(defaultExtraConfigSIUnit.getNozzleEfficiency());

@@ -114,8 +114,7 @@ public class MainControlerITTest {
     public void shouldUseCustomPropellantInImperialUnits() throws Exception {
         // GIVEN
         ComputationRequest request = getDefaultRequestImperial();
-        //TODO voir la valeur ci-dessous
-        request.setPropellantType("To be defined");
+        request.setPropellantType("My propellant");
         request.getExtraConfig().setNozzleExpansionRatio(8.0);
         request.getExtraConfig().setNozzleEfficiency(0.85);
         request.getExtraConfig().setOptimalNozzleDesign(false);
@@ -233,7 +232,7 @@ public class MainControlerITTest {
         ComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("To be defined");
 
-        // TODO mettre les valeur de KNDX au format IMPERIAL (densité, ...)
+
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setBurnRateDataSet(Sets.newHashSet(
                 //data taken from SRM_2014
@@ -269,7 +268,6 @@ public class MainControlerITTest {
         ComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("To be defined");
 
-        // TODO mettre les valeur de KNDX au format IMPERIAL (densité, ...)
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setBurnRateDataSet(Sets.newHashSet(
                 //data taken from SRM_2014
@@ -305,7 +303,6 @@ public class MainControlerITTest {
         ComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("To be defined");
 
-        // TODO mettre les valeur de KNDX au format IMPERIAL (densité, ...)
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setBurnRateDataSet(Sets.newHashSet(
                 new BurnRatePressureData(0.0160236, 0.6193000, 15, 113),
