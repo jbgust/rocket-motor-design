@@ -186,11 +186,11 @@ public class MainControlerITTest {
         customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
         customPropellant.setBurnRateDataSet(Sets.newHashSet(
                 //data taken from SRM_2014
-                new BurnRatePressureData(8.87544496778536, 0.6193, toBar(0.1), toBar(0.779135)),
-                new BurnRatePressureData(7.55278442387944, -0.0087, toBar(0.779135), toBar(2.571835)),
-                new BurnRatePressureData(3.84087990499602, 0.6882, toBar(2.571835), toBar(5.9297)),
-                new BurnRatePressureData(17.2041864098062, -0.1481, toBar(5.9297), toBar(8.501535)),
-                new BurnRatePressureData(4.77524086347659, 0.4417, toBar(8.501535), toBar(11.20))
+                new BurnRatePressureData(8.87544496778536, 0.6193, 0.1, 0.779135),
+                new BurnRatePressureData(7.55278442387944, -0.0087, 0.779135, 2.571835),
+                new BurnRatePressureData(3.84087990499602, 0.6882, 2.571835, 5.9297),
+                new BurnRatePressureData(17.2041864098062, -0.1481, 5.9297, 8.501535),
+                new BurnRatePressureData(4.77524086347659, 0.4417, 8.501535, 11.20)
         ));
 
         request.setCustomPropellant(customPropellant);
@@ -392,7 +392,7 @@ public class MainControlerITTest {
         resultActions
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("METEOR can't run this computation due to the following error:")))
-                .andExpect(jsonPath("$.detail", startsWith("Failed to compute PROPELLANT_BURN_RATE in line 3:\nformula :")));
+                .andExpect(jsonPath("$.detail", is("This often occurs when the ratio between the burning area and the throat area is too low. Try to increase your grain core diameter and/or decrease the throat diameter.")));
     }
 
 }
