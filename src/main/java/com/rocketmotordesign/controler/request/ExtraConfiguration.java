@@ -7,7 +7,7 @@ public class ExtraConfiguration {
     private double densityRatio;
     private double nozzleErosion;
     private double combustionEfficiencyRatio;
-    private double ambiantPressure;
+    private double ambiantPressureInMPa;
     private double erosiveBurningAreaRatioThreshold;
     private double erosiveBurningVelocityCoefficient;
     private double nozzleEfficiency;
@@ -29,8 +29,8 @@ public class ExtraConfiguration {
         this.combustionEfficiencyRatio = combustionEfficiencyRatio;
     }
 
-    public void setAmbiantPressure(double ambiantPressureInMPa) {
-        this.ambiantPressure = ambiantPressureInMPa;
+    public void setAmbiantPressureInMPa(double ambiantPressureInMPa) {
+        this.ambiantPressureInMPa = ambiantPressureInMPa;
     }
 
     public void setErosiveBurningAreaRatioThreshold(double erosiveBurningAreaRatioThreshold) {
@@ -65,8 +65,8 @@ public class ExtraConfiguration {
         return combustionEfficiencyRatio;
     }
 
-    public double getAmbiantPressure() {
-        return ambiantPressure;
+    public double getAmbiantPressureInMPa() {
+        return ambiantPressureInMPa;
     }
 
     public double getErosiveBurningAreaRatioThreshold() {
@@ -97,7 +97,7 @@ public class ExtraConfiguration {
         return Double.compare(that.densityRatio, densityRatio) == 0 &&
                 Double.compare(that.nozzleErosion, nozzleErosion) == 0 &&
                 Double.compare(that.combustionEfficiencyRatio, combustionEfficiencyRatio) == 0 &&
-                Double.compare(that.ambiantPressure, ambiantPressure) == 0 &&
+                Double.compare(that.ambiantPressureInMPa, ambiantPressureInMPa) == 0 &&
                 Double.compare(that.erosiveBurningAreaRatioThreshold, erosiveBurningAreaRatioThreshold) == 0 &&
                 Double.compare(that.erosiveBurningVelocityCoefficient, erosiveBurningVelocityCoefficient) == 0 &&
                 Double.compare(that.nozzleEfficiency, nozzleEfficiency) == 0 &&
@@ -107,7 +107,7 @@ public class ExtraConfiguration {
 
     @Override
     public int hashCode() {
-        return Objects.hash(densityRatio, nozzleErosion, combustionEfficiencyRatio, ambiantPressure, erosiveBurningAreaRatioThreshold, erosiveBurningVelocityCoefficient, nozzleEfficiency, optimalNozzleDesign, nozzleExpansionRatio);
+        return Objects.hash(densityRatio, nozzleErosion, combustionEfficiencyRatio, ambiantPressureInMPa, erosiveBurningAreaRatioThreshold, erosiveBurningVelocityCoefficient, nozzleEfficiency, optimalNozzleDesign, nozzleExpansionRatio);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class ExtraConfiguration {
                 "densityRatio=" + densityRatio +
                 ", nozzleErosion=" + nozzleErosion +
                 ", combustionEfficiencyRatio=" + combustionEfficiencyRatio +
-                ", ambiantPressure=" + ambiantPressure +
+                ", ambiantPressureInMPa=" + ambiantPressureInMPa +
                 ", erosiveBurningAreaRatioThreshold=" + erosiveBurningAreaRatioThreshold +
                 ", erosiveBurningVelocityCoefficient=" + erosiveBurningVelocityCoefficient +
                 ", nozzleEfficiency=" + nozzleEfficiency +

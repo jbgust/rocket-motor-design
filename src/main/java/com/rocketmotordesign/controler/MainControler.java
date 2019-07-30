@@ -1,7 +1,5 @@
 package com.rocketmotordesign.controler;
 
-import static java.util.stream.Collectors.toMap;
-
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.exception.JSRMException;
 import com.rocketmotordesign.controler.request.ComputationRequest;
@@ -47,7 +45,7 @@ public class MainControler {
                 LOGGER.error("Computation failed :\n\trequest : {}", request.toString());
                 LOGGER.warn("Computation failed :\n\tCAUSE : {}", e.getCause().getMessage());
                 return ResponseEntity.badRequest().body(
-                        new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getMessage()));
+                        new ErrorMessage("METEOR can't run this computation due to the following error:", "This often occurs when the ratio between the burning area and the throat area is too low. Try to increase your grain core diameter and/or decrease the throat diameter."));
             }
         } catch (BurnRateDataException e) {
             return ResponseEntity.badRequest().body(

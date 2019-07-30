@@ -2,14 +2,19 @@ package com.rocketmotordesign.service;
 
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorClassification;
 import com.github.jbgust.jsrm.application.result.MotorParameters;
 import com.github.jbgust.jsrm.application.result.Nozzle;
+import com.google.common.collect.Sets;
+import com.rocketmotordesign.controler.request.BurnRatePressureData;
 import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.controler.request.ExtraConfiguration;
 import com.rocketmotordesign.controler.response.GraphResult;
 import com.rocketmotordesign.controler.response.PerformanceResult;
+import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Locale;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.service.MeasureUnit.SI;
 import static com.rocketmotordesign.utils.TestHelper.*;
@@ -61,6 +67,164 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
+    public void shouldConvertPropellantFromSIUnitToJSRMUnit() {
+        // GIVEN
+        ComputationRequest request = getDefaultRequest();
+        CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNSU);
+        request.setCustomPropellant(propellantRequest);
+        request.setPropellantType("CUSTOM_PROPELLANT");
+
+        // WHEN
+        SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
+
+        // THEN
+        SolidPropellant propellant = solidRocketMotor.getPropellantGrain().getPropellant();
+        assertThat(propellant.getBurnRateCoefficient(0)).isEqualTo(propellantRequest.getBurnRateCoefficient());
+        assertThat(propellant.getPressureExponent(0)).isEqualTo(propellantRequest.getPressureExponent());
+        assertThat(propellant.getIdealMassDensity()).isEqualTo(propellantRequest.getDensity());
+        assertThat(propellant.getK()).isEqualTo(propellantRequest.getK());
+        assertThat(propellant.getK2Ph()).isEqualTo(propellantRequest.getK2ph());
+        assertThat(propellant.getChamberTemperature()).isEqualTo(propellantRequest.getChamberTemperature());
+        assertThat(propellant.getEffectiveMolecularWeight()).isEqualTo(propellantRequest.getMolarMass());
+    }
+
+    @Test
+    public void shouldConvertPropellantWithComplexBurnRateFromSIUnitToJSRMUnit() {
+        // GIVEN
+        CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNSU);
+        propellantRequest.setBurnRateDataSet(Sets.newHashSet(
+                new BurnRatePressureData(1, 2, 12, 24),
+                new BurnRatePressureData(3, 4, 24, 30)
+        ));
+
+        ComputationRequest request = getDefaultRequest();
+        request.setCustomPropellant(propellantRequest);
+        request.setPropellantType("CUSTOM_PROPELLANT");
+
+        // THEN
+        SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
+
+        // WHEN
+        SolidPropellant propellant = solidRocketMotor.getPropellantGrain().getPropellant();
+        assertThat(propellant.getIdealMassDensity()).isEqualTo(propellantRequest.getDensity());
+        assertThat(propellant.getK()).isEqualTo(propellantRequest.getK());
+        assertThat(propellant.getK2Ph()).isEqualTo(propellantRequest.getK2ph());
+        assertThat(propellant.getChamberTemperature()).isEqualTo(propellantRequest.getChamberTemperature());
+        assertThat(propellant.getEffectiveMolecularWeight()).isEqualTo(propellantRequest.getMolarMass());
+
+        assertThat(propellant.getBurnRateCoefficient(12.1)).isEqualTo(1);
+        assertThat(propellant.getBurnRateCoefficient(23.)).isEqualTo(1);
+        assertThat(propellant.getBurnRateCoefficient(24.1)).isEqualTo(3);
+        assertThat(propellant.getBurnRateCoefficient(29.)).isEqualTo(3);
+    }
+
+    @Test
+    public void shouldConvertPropellantWithCstarFromSIUnitToJSRMUnit() {
+        // GIVEN
+        CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNDX);
+        propellantRequest.setCstar(912.38154);
+        propellantRequest.setChamberTemperature(null);
+
+        ComputationRequest request = getDefaultRequest();
+        request.setCustomPropellant(propellantRequest);
+        request.setPropellantType("CUSTOM_PROPELLANT");
+
+        // WHEN
+        SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
+
+        // THEN
+        SolidPropellant propellant = solidRocketMotor.getPropellantGrain().getPropellant();
+
+        assertThat(propellant.getBurnRateCoefficient(0)).isCloseTo(KNDX.getBurnRateCoefficient(0), offset(0.01));
+        assertThat(propellant.getPressureExponent(0)).isCloseTo(KNDX.getPressureExponent(0), offset(0.01));
+        assertThat(propellant.getIdealMassDensity()).isCloseTo(KNDX.getIdealMassDensity(), offset(0.01));
+        assertThat(propellant.getChamberTemperature()).isCloseTo(KNDX.getChamberTemperature(), offset(0.01));
+    }
+
+    @Test
+    public void shouldConvertPropellantFromImperialUnitToJSRMUnit() {
+        // GIVEN
+        CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNSU);
+        propellantRequest.setBurnRateCoefficient(0.0665);
+        propellantRequest.setPressureExponent(0.319);
+        propellantRequest.setDensity(0.06824);
+
+        ComputationRequest request = getDefaultRequestImperial();
+        request.setCustomPropellant(propellantRequest);
+        request.setPropellantType("CUSTOM_PROPELLANT");
+
+        // WHEN
+        SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
+
+        // THEN
+        SolidPropellant propellant = solidRocketMotor.getPropellantGrain().getPropellant();
+
+        assertThat(propellant.getBurnRateCoefficient(0)).isCloseTo(KNSU.getBurnRateCoefficient(0), offset(0.01));
+        assertThat(propellant.getPressureExponent(0)).isCloseTo(KNSU.getPressureExponent(0), offset(0.01));
+        assertThat(propellant.getIdealMassDensity()).isCloseTo(KNSU.getIdealMassDensity(), offset(0.01));
+        assertThat(propellant.getChamberTemperature()).isCloseTo(KNSU.getChamberTemperature(), offset(0.01));
+    }
+
+    @Test
+    public void shouldConvertPropellantWithComplexBurnRateFromIMPERIALUnitToJSRMUnit() {
+        // GIVEN
+        CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNDX);
+        propellantRequest.setDensity(0.06824);
+        propellantRequest.setBurnRateDataSet(Sets.newHashSet(
+                new BurnRatePressureData(1, 2, 1200, 2400), //PSI
+                new BurnRatePressureData(3, 4, 2400, 3000)  //PSI
+        ));
+        double burnRateCoeff1Metrique = BurnRateCoefficientConverter.toMetrique(1, 2);
+        double burnRateCoeff2Metrique = BurnRateCoefficientConverter.toMetrique(3, 4);
+
+        ComputationRequest request = getDefaultRequestImperial();
+        request.setCustomPropellant(propellantRequest);
+        request.setPropellantType("CUSTOM_PROPELLANT");
+
+        // THEN
+        SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
+
+        // WHEN
+        SolidPropellant propellant = solidRocketMotor.getPropellantGrain().getPropellant();
+        assertThat(propellant.getIdealMassDensity()).isCloseTo(KNDX.getIdealMassDensity(), offset(0.01));
+        assertThat(propellant.getK()).isEqualTo(KNDX.getK());
+        assertThat(propellant.getK2Ph()).isEqualTo(KNDX.getK2Ph());
+        assertThat(propellant.getChamberTemperature()).isEqualTo(KNDX.getChamberTemperature());
+        assertThat(propellant.getEffectiveMolecularWeight()).isEqualTo(KNDX.getEffectiveMolecularWeight());
+
+        assertThat(propellant.getBurnRateCoefficient(8.3)).isEqualTo(burnRateCoeff1Metrique);
+        assertThat(propellant.getBurnRateCoefficient(16.54)).isEqualTo(burnRateCoeff1Metrique);
+        assertThat(propellant.getBurnRateCoefficient(16.55)).isEqualTo(burnRateCoeff2Metrique);
+        assertThat(propellant.getBurnRateCoefficient(20.67)).isEqualTo(burnRateCoeff2Metrique);
+    }
+
+    @Test
+    public void shouldConvertPropellantWithCstarFromIMPERIALUnitToJSRMUnit() {
+        // GIVEN
+        CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNDX);
+        propellantRequest.setBurnRateCoefficient(0.0665);    //converti de KNSU
+        propellantRequest.setPressureExponent(0.319);        //converti de KNSU
+        propellantRequest.setDensity(0.06824);
+        propellantRequest.setCstar(912.38154 / 0.3048);      //converti de KNDX
+        propellantRequest.setChamberTemperature(null);
+
+        ComputationRequest request = getDefaultRequestImperial();
+        request.setCustomPropellant(propellantRequest);
+        request.setPropellantType("CUSTOM_PROPELLANT");
+
+        // WHEN
+        SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
+
+        // THEN
+        SolidPropellant propellant = solidRocketMotor.getPropellantGrain().getPropellant();
+
+        assertThat(propellant.getBurnRateCoefficient(0)).isCloseTo(KNSU.getBurnRateCoefficient(0), offset(0.01));
+        assertThat(propellant.getPressureExponent(0)).isCloseTo(KNSU.getPressureExponent(0), offset(0.01));
+        assertThat(propellant.getIdealMassDensity()).isCloseTo(KNDX.getIdealMassDensity(), offset(0.01));
+        assertThat(propellant.getChamberTemperature()).isCloseTo(KNDX.getChamberTemperature(), offset(0.01));
+    }
+
+    @Test
     public void shouldConvertConfigFromImperialUnitToJSRMUnit() {
 
         ExtraConfiguration defaultExtraConfigSIUnit = getDefaultExtraConfiguration();
@@ -73,7 +237,7 @@ public class MeasureUnitServiceTest {
         assertThat(jsrmConfig.getDensityRatio()).isEqualTo(defaultExtraConfigSIUnit.getDensityRatio());
         assertThat(jsrmConfig.getNozzleErosionInMillimeter()).isEqualTo(5*25.4);
         assertThat(jsrmConfig.getCombustionEfficiencyRatio()).isEqualTo(defaultExtraConfigSIUnit.getCombustionEfficiencyRatio());
-        assertThat(jsrmConfig.getAmbiantPressureInMPa()).isEqualTo(defaultExtraConfigSIUnit.getAmbiantPressure());
+        assertThat(jsrmConfig.getAmbiantPressureInMPa()).isEqualTo(defaultExtraConfigSIUnit.getAmbiantPressureInMPa());
         assertThat(jsrmConfig.getErosiveBurningAreaRatioThreshold()).isEqualTo(defaultExtraConfigSIUnit.getErosiveBurningAreaRatioThreshold());
         assertThat(jsrmConfig.getErosiveBurningVelocityCoefficient()).isEqualTo(defaultExtraConfigSIUnit.getErosiveBurningVelocityCoefficient());
         assertThat(jsrmConfig.getNozzleEfficiency()).isEqualTo(defaultExtraConfigSIUnit.getNozzleEfficiency());
@@ -142,4 +306,16 @@ public class MeasureUnitServiceTest {
         return String.format(Locale.ENGLISH, "%.2f", aDouble);
     }
 
+
+    private CustomPropellantRequest createPropellantWithBasicInfo(SolidPropellant solidPropellant) {
+        CustomPropellantRequest propellantRequest = new CustomPropellantRequest();
+        propellantRequest.setBurnRateCoefficient(solidPropellant.getBurnRateCoefficient(0));
+        propellantRequest.setPressureExponent(solidPropellant.getPressureExponent(0));
+        propellantRequest.setDensity(solidPropellant.getIdealMassDensity());
+        propellantRequest.setK(solidPropellant.getK());
+        propellantRequest.setK2ph(solidPropellant.getK2Ph());
+        propellantRequest.setMolarMass(solidPropellant.getEffectiveMolecularWeight());
+        propellantRequest.setChamberTemperature(solidPropellant.getChamberTemperature());
+        return propellantRequest;
+    }
 }

@@ -16,7 +16,6 @@ import com.rocketmotordesign.controler.request.ExtraConfiguration;
 import com.rocketmotordesign.controler.response.GraphResult;
 import com.rocketmotordesign.controler.response.PerformanceResult;
 import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,17 +25,16 @@ import javax.measure.Unit;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.quantity.Pressure;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static com.rocketmotordesign.service.MeasureUnit.JSRM_UNITS;
 import static com.rocketmotordesign.service.MeasureUnit.SI;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 @Service
 public class MeasureUnitService {
@@ -53,8 +51,7 @@ public class MeasureUnitService {
 
     public JSRMConfig toJSRMConfig(ExtraConfiguration extraConfig, MeasureUnit userUnits) {
         JSRMConfigBuilder jsrmConfigBuilder = new JSRMConfigBuilder()
-                //TODO: champs non pris en compte car masqué dans IHM Meteor
-                //.withAmbiantPressureInMPa(convertPressureToJSRM(userUnits.getPressureUnit(), extraConfig.getAmbiantPressure()))
+                .withAmbiantPressureInMPa(extraConfig.getAmbiantPressureInMPa())
                 .withCombustionEfficiencyRatio(extraConfig.getCombustionEfficiencyRatio())
                 .withDensityRatio(extraConfig.getDensityRatio())
                 .withErosiveBurningAreaRatioThreshold(extraConfig.getErosiveBurningAreaRatioThreshold())
@@ -76,12 +73,12 @@ public class MeasureUnitService {
                 jsrmResult.getMaxThrustInNewton(),
                 jsrmResult.getTotalImpulseInNewtonSecond(),
                 jsrmResult.getSpecificImpulseInSecond(),
-                convertPressureToMeteor(userUnits.getPressureUnit(), jsrmResult.getMaxChamberPressureInMPa()),
+                convertPressureToMeteor(userUnits.getResultPressureUnit(), jsrmResult.getMaxChamberPressureInMPa()),
                 jsrmResult.getThrustTimeInSecond(),
                 jsrmConfig.isOptimalNozzleDesign(),
                 convertLengthToMeteor(userUnits.getLenghtUnit(), jsrmResult.getNozzle().getNozzleExitDiameterInMillimeter()),
                 jsrmResult.getNozzle().getInitialNozzleExitSpeedInMach(),
-                convertPressureToMeteor(userUnits.getPressureUnit(), jsrmResult.getAverageChamberPressureInMPa()),
+                convertPressureToMeteor(userUnits.getResultPressureUnit(), jsrmResult.getAverageChamberPressureInMPa()),
                 convertLengthToMeteor(userUnits.getLenghtUnit(), jsrmResult.getNozzle().getChamberInsideDiameterInMillimeter() - jsrmResult.getNozzle().getNozzleThroatDiameterInMillimeter()),
                 convertLengthToMeteor(userUnits.getLenghtUnit(), jsrmResult.getNozzle().getNozzleExitDiameterInMillimeter() - jsrmResult.getNozzle().getNozzleThroatDiameterInMillimeter()),
                 jsrmResult.getNozzle().getOptimalNozzleExpansionRatio()
@@ -93,7 +90,7 @@ public class MeasureUnitService {
                 motorParameters.getTimeSinceBurnStartInSecond(),
                 motorParameters.getThrustInNewton(),
                 motorParameters.getKn(),
-                convertPressureToMeteor(userUnits.getPressureUnit(), motorParameters.getChamberPressureInMPa()),
+                convertPressureToMeteor(userUnits.getResultPressureUnit(), motorParameters.getChamberPressureInMPa()),
                 convertMassToMeteor(userUnits.getMassUnit(), motorParameters.getMassFlowRateInKgPerSec())
         );
     }
@@ -170,11 +167,11 @@ public class MeasureUnitService {
     }
 
     private double convertPressureToJSRM(Unit<Pressure> pressureUnit, double pressure) {
-        return Quantities.getQuantity(pressure, pressureUnit).to(JSRM_UNITS.getPressureUnit()).getValue().doubleValue();
+        return Quantities.getQuantity(pressure, pressureUnit).to(JSRM_UNITS.getResultPressureUnit()).getValue().doubleValue();
     }
 
     private double convertPressureToMeteor(Unit<Pressure> pressureUnit, double pressure) {
-        return Quantities.getQuantity(pressure, JSRM_UNITS.getPressureUnit()).to(pressureUnit).getValue().doubleValue();
+        return Quantities.getQuantity(pressure, JSRM_UNITS.getResultPressureUnit()).to(pressureUnit).getValue().doubleValue();
     }
 
     private double convertMassToMeteor(Unit<Mass> massUnit, double mass) {

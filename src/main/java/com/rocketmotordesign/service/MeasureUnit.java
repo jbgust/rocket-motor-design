@@ -9,22 +9,25 @@ import javax.measure.quantity.Mass;
 import javax.measure.quantity.Pressure;
 
 public enum MeasureUnit {
-    JSRM_UNITS(Constants.MPa, Constants.MILLI_METER, Units.KILOGRAM),
-    SI(Constants.BAR, Constants.MILLI_METER, Units.KILOGRAM),
-    IMPERIAL(Constants.PSI, Constants.INCH, Constants.POUND);
+    JSRM_UNITS(Constants.MPa, Constants.MPa, Constants.MILLI_METER, Units.KILOGRAM),
 
-    private final Unit<Pressure> pressureUnit;
+    SI(Constants.MPa, Constants.BAR, Constants.MILLI_METER, Units.KILOGRAM),
+    IMPERIAL(Constants.PSI, Constants.PSI, Constants.INCH, Constants.POUND);
+
+    private Unit<Pressure> pressureUnit;
+    private final Unit<Pressure> resultPressureUnit;
     private final Unit<Length> lenghtUnit;
     private final Unit<Mass> massUnit;
 
-    MeasureUnit(Unit<Pressure> pressureUnit, Unit<Length> lenghtUnit, Unit<Mass> massUnit) {
+    MeasureUnit(Unit<Pressure> pressureUnit, Unit<Pressure> resultPressureUnit, Unit<Length> lenghtUnit, Unit<Mass> massUnit) {
         this.pressureUnit = pressureUnit;
+        this.resultPressureUnit = resultPressureUnit;
         this.lenghtUnit = lenghtUnit;
         this.massUnit = massUnit;
     }
 
-    public Unit<Pressure> getPressureUnit() {
-        return pressureUnit;
+    public Unit<Pressure> getResultPressureUnit() {
+        return resultPressureUnit;
     }
 
     public Unit<Length> getLenghtUnit() {
@@ -33,6 +36,10 @@ public enum MeasureUnit {
 
     public Unit<Mass> getMassUnit() {
         return massUnit;
+    }
+
+    public Unit<Pressure> getPressureUnit() {
+        return pressureUnit;
     }
 
     public static class Constants {
