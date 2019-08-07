@@ -49,7 +49,7 @@ public class MeasureUnitService {
         );
     }
 
-    public JSRMConfig toJSRMConfig(ExtraConfiguration extraConfig, MeasureUnit userUnits) {
+    public JSRMConfig toJSRMConfig(ExtraConfiguration extraConfig, MeasureUnit userUnits, boolean safeKNRun) {
         JSRMConfigBuilder jsrmConfigBuilder = new JSRMConfigBuilder()
                 .withAmbiantPressureInMPa(extraConfig.getAmbiantPressureInMPa())
                 .withCombustionEfficiencyRatio(extraConfig.getCombustionEfficiencyRatio())
@@ -58,7 +58,8 @@ public class MeasureUnitService {
                 .withErosiveBurningVelocityCoefficient(extraConfig.getErosiveBurningVelocityCoefficient())
                 .withNozzleEfficiency(extraConfig.getNozzleEfficiency())
                 .withNozzleErosionInMillimeter(convertLengthToJSRM(userUnits.getLenghtUnit(), extraConfig.getNozzleErosion()))
-                .withOptimalNozzleDesign(extraConfig.isOptimalNozzleDesign());
+                .withOptimalNozzleDesign(extraConfig.isOptimalNozzleDesign())
+                .withSafeKNFailure(safeKNRun);
 
         if(extraConfig.getNozzleExpansionRatio() != null){
             jsrmConfigBuilder.withNozzleExpansionRatio(extraConfig.getNozzleExpansionRatio());
@@ -81,8 +82,9 @@ public class MeasureUnitService {
                 convertPressureToMeteor(userUnits.getResultPressureUnit(), jsrmResult.getAverageChamberPressureInMPa()),
                 convertLengthToMeteor(userUnits.getLenghtUnit(), jsrmResult.getNozzle().getChamberInsideDiameterInMillimeter() - jsrmResult.getNozzle().getNozzleThroatDiameterInMillimeter()),
                 convertLengthToMeteor(userUnits.getLenghtUnit(), jsrmResult.getNozzle().getNozzleExitDiameterInMillimeter() - jsrmResult.getNozzle().getNozzleThroatDiameterInMillimeter()),
-                jsrmResult.getNozzle().getOptimalNozzleExpansionRatio()
-        );
+                jsrmResult.getNozzle().getOptimalNozzleExpansionRatio(),
+                jsrmResult.getNumberOfKNCorrection(),
+                convertMassToMeteor(userUnits.getMassUnit(), jsrmResult.getGrainMassInKg()));
     }
 
     public GraphResult toGraphResult(MotorParameters motorParameters, MeasureUnit userUnits) {
@@ -117,8 +119,6 @@ public class MeasureUnitService {
     private SolidPropellant getPropellant(ComputationRequest request) {
         Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
                 .collect(toMap(Enum::name, Function.identity()));
-
-        LOGGER.info("METEOR[PROPELLANT|{}]",propellants.containsKey(request.getPropellantType()) ? request.getPropellantType() : "CUSTOM");
 
         return propellants.computeIfAbsent(request.getPropellantType(), propellantType -> propellantToSIUnits(request));
     }

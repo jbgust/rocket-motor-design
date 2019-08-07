@@ -232,7 +232,7 @@ public class MeasureUnitServiceTest {
         ExtraConfiguration defaultImperialExtraConfiguration = getDefaultImperialExtraConfiguration();
         defaultImperialExtraConfiguration.setNozzleErosion(5);
 
-        JSRMConfig jsrmConfig = measureUnitService.toJSRMConfig(defaultImperialExtraConfiguration, IMPERIAL);
+        JSRMConfig jsrmConfig = measureUnitService.toJSRMConfig(defaultImperialExtraConfiguration, IMPERIAL, true);
 
         assertThat(jsrmConfig.getDensityRatio()).isEqualTo(defaultExtraConfigSIUnit.getDensityRatio());
         assertThat(jsrmConfig.getNozzleErosionInMillimeter()).isEqualTo(5*25.4);
@@ -243,6 +243,7 @@ public class MeasureUnitServiceTest {
         assertThat(jsrmConfig.getNozzleEfficiency()).isEqualTo(defaultExtraConfigSIUnit.getNozzleEfficiency());
         assertThat(jsrmConfig.isOptimalNozzleDesign()).isEqualTo(defaultExtraConfigSIUnit.isOptimalNozzleDesign());
         assertThat(jsrmConfig.getNozzleExpansionRatio()).isEqualTo(defaultExtraConfigSIUnit.getNozzleExpansionRatio());
+        assertThat(jsrmConfig.isSafeKNFailure()).isTrue();
     }
 
     @Test
@@ -269,9 +270,11 @@ public class MeasureUnitServiceTest {
                 MotorClassification.A,
                 emptyList(),
                 nozzle,
-                15);
+                15,
+                1.0,
+                0);
 
-        PerformanceResult performanceResult = measureUnitService.toPerformanceResult(jsrmResult, measureUnitService.toJSRMConfig(getDefaultExtraConfiguration(), SI), IMPERIAL);
+        PerformanceResult performanceResult = measureUnitService.toPerformanceResult(jsrmResult, measureUnitService.toJSRMConfig(getDefaultExtraConfiguration(), SI, false), IMPERIAL);
 
         assertThat(performanceResult.getMotorDescription()).isEqualTo("A15");
         assertThat(performanceResult.getMaxThrust()).isEqualTo(format(jsrmResult.getMaxThrustInNewton()));
@@ -286,6 +289,8 @@ public class MeasureUnitServiceTest {
         assertThat(performanceResult.getConvergenceCrossSectionDiameter()).isCloseTo((nozzle.getChamberInsideDiameterInMillimeter()-nozzle.getNozzleThroatDiameterInMillimeter())/25.4, DEFAULT_OFFSET);
         assertThat(performanceResult.getDivergenceCrossSectionDiameter()).isCloseTo((nozzle.getNozzleExitDiameterInMillimeter() - nozzle.getNozzleThroatDiameterInMillimeter())/25.4, DEFAULT_OFFSET);
         assertThat(performanceResult.getOptimalNozzleExpansionRatio()).isEqualTo(format(nozzle.getOptimalNozzleExpansionRatio()));
+        assertThat(performanceResult.isLowKNCorrection()).isFalse();
+        assertThat(performanceResult.getGrainMass()).isEqualTo("2.205");
     }
 
     @Test

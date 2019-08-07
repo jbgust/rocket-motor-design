@@ -2,6 +2,7 @@ package com.rocketmotordesign.controler;
 
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.exception.JSRMException;
+import com.github.jbgust.jsrm.application.exception.MotorClassificationOutOfBoundException;
 import com.rocketmotordesign.controler.request.ComputationRequest;
 import com.rocketmotordesign.controler.response.ErrorMessage;
 import com.rocketmotordesign.service.BurnRateDataException;
@@ -41,15 +42,44 @@ public class MainControler {
                 LOGGER.error("CustomPropellantChamberPressureOutOfBoundException : "+request.toString(), e);
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage("METEOR can't run this computation due to the following error:",e.getCause().getCause().getMessage()));
-            } else {
-                LOGGER.error("Computation failed :\n\trequest : {}", request.toString());
-                LOGGER.warn("Computation failed :\n\tCAUSE : {}", e.getCause().getMessage());
+            } else if (e.getCause() != null && e.getCause() instanceof MotorClassificationOutOfBoundException) {
+                LOGGER.error("MotorClassificationOutOfBoundException : "+request.toString(), e);
                 return ResponseEntity.badRequest().body(
-                        new ErrorMessage("METEOR can't run this computation due to the following error:", "This often occurs when the ratio between the burning area and the throat area is too low. Try to increase your grain core diameter and/or decrease the throat diameter."));
+                        new ErrorMessage("METEOR can't run this computation due to the following error:",e.getCause().getMessage()));
+            } else {
+                LOGGER.warn("Computation failed, retry with low KN");
+                return retryWithSafeKN(request);
             }
         } catch (BurnRateDataException e) {
             return ResponseEntity.badRequest().body(
                     new ErrorMessage("METEOR can't run this computation due to the following error:", "Your burn rate data are invalid. "+e.getMessage()));
+        } catch (Exception e) {
+            LOGGER.error("Unknown computation error with request : "+request.toString(), e);
+            return ResponseEntity.badRequest().body(
+                    new ErrorMessage("Computation failed due to unknown error, please contact us."));
+        }
+    }
+
+    private ResponseEntity retryWithSafeKN(ComputationRequest request) {
+        try {
+            LOGGER.warn("METEOR[safeKN]");
+            LOGGER.warn("Computation failed request {} : {}", request.hashCode(), request.toString());
+            return ResponseEntity.ok(jsrmService.runComputation(request, true));
+        } catch (JSRMException e) {
+            LOGGER.warn("METEOR[FAILED|{}]", e.getClass().getSimpleName());
+           if (e.getCause() != null && e.getCause().getCause() instanceof CustomPropellantChamberPressureOutOfBoundException) {
+                LOGGER.error("CustomPropellantChamberPressureOutOfBoundException : "+request.toString(), e);
+                return ResponseEntity.badRequest().body(
+                        new ErrorMessage("METEOR can't run this computation due to the following error:",e.getCause().getCause().getMessage()));
+            } else if (e.getCause() != null && e.getCause() instanceof MotorClassificationOutOfBoundException) {
+                LOGGER.error("MotorClassificationOutOfBoundException : "+request.toString(), e);
+                return ResponseEntity.badRequest().body(
+                        new ErrorMessage("METEOR can't run this computation due to the following error:",e.getCause().getMessage()));
+            } else {
+                LOGGER.warn("Computation failed : CAUSE : {}", e.getCause().getMessage());
+                return ResponseEntity.badRequest().body(
+                        new ErrorMessage("METEOR can't run this computation due to the following error:", "This often occurs when the ratio between the burning area and the throat area is too low. Try to increase your grain core diameter and/or decrease the throat diameter."));
+            }
         } catch (Exception e) {
             LOGGER.error("Unknown computation error with request : "+request.toString(), e);
             return ResponseEntity.badRequest().body(

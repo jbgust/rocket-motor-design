@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -20,8 +21,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.utils.TestHelper.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,6 +36,7 @@ public class MainControlerITTest {
 
     @Autowired
     private MockMvc mvc;
+    private ObjectMapper objectMapper;
 
     @Test
     public void shouldRunComputation() throws Exception {
@@ -63,6 +65,8 @@ public class MainControlerITTest {
                 .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
                 .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("2.812")))
 
                 .andExpect(jsonPath("$.motorParameters", hasSize(883)))
 
@@ -101,6 +105,8 @@ public class MainControlerITTest {
                 .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
                 .andExpect(jsonPath("$.performanceResult.averagePressure", is("711.47")))
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("6.200")))
 
                 .andExpect(jsonPath("$.motorParameters", hasSize(883)))
 
@@ -108,6 +114,43 @@ public class MainControlerITTest {
                 .andExpect(jsonPath("$.motorParameters[400].y", is(closeTo(2058.5999, 0.0001d))))
                 .andExpect(jsonPath("$.motorParameters[400].p", is(closeTo(860.2126, 0.0001d))))
                 .andExpect(jsonPath("$.motorParameters[400].m", is(closeTo(3.4921, 0.0001d))));
+    }
+
+    @Test
+    public void shouldRunComputationForLowKNMotor() throws Exception {
+        // GIVEN
+        ComputationRequest lowKNRequest = new ComputationRequest();
+        lowKNRequest.setThroatDiameter(19);
+        lowKNRequest.setOuterDiameter(37);
+        lowKNRequest.setCoreDiameter(20);
+        lowKNRequest.setSegmentLength(10);
+        lowKNRequest.setNumberOfSegment(5);
+        lowKNRequest.setOuterSurface(INHIBITED);
+        lowKNRequest.setEndsSurface(EXPOSED);
+        lowKNRequest.setCoreSurface(EXPOSED);
+        lowKNRequest.setPropellantType(KNSU.name());
+        lowKNRequest.setChamberInnerDiameter(38);
+        lowKNRequest.setChamberLength(500);
+        lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
+
+        // WHEN
+        objectMapper = Jackson2ObjectMapperBuilder.json().build();
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(lowKNRequest)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(true)))
+
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H134")))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("144.95")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("171.40")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("255.97")))
+                .andExpect(jsonPath("$.performanceResult.maxPressure", is("4.41")))
+                .andExpect(jsonPath("$.performanceResult.thrustTime", is("1.28")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)));
     }
 
     @Test
@@ -217,6 +260,7 @@ public class MainControlerITTest {
                 .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
                 .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
 
                 .andExpect(jsonPath("$.motorParameters", hasSize(883)))
 
@@ -366,22 +410,55 @@ public class MainControlerITTest {
     }
 
     @Test
+    public void shouldReturnErrorWheCoreDiamIsLowerThanThroat() throws Exception {
+
+        // GIVEN
+        ComputationRequest invalidMotorDesignRequest = new ComputationRequest();
+        invalidMotorDesignRequest.setThroatDiameter(17.39);
+        invalidMotorDesignRequest.setOuterDiameter(69);
+        invalidMotorDesignRequest.setCoreDiameter(15);
+        invalidMotorDesignRequest.setSegmentLength(115);
+        invalidMotorDesignRequest.setNumberOfSegment(4);
+        invalidMotorDesignRequest.setOuterSurface(INHIBITED);
+        invalidMotorDesignRequest.setEndsSurface(EXPOSED);
+        invalidMotorDesignRequest.setCoreSurface(EXPOSED);
+        invalidMotorDesignRequest.setPropellantType(KNDX.name());
+        invalidMotorDesignRequest.setChamberInnerDiameter(75);
+        invalidMotorDesignRequest.setChamberLength(475);
+        invalidMotorDesignRequest.setExtraConfig(getDefaultExtraConfiguration());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(invalidMotorDesignRequest)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("Throat diameter should be >= than grain core diameter")))
+                .andExpect(jsonPath("$.detail", isEmptyOrNullString()));
+    }
+
+    @Test
     public void shouldReturnErrorWhenComputationFailed() throws Exception {
 
         // GIVEN
         ComputationRequest request = new ComputationRequest();
-        request.setThroatDiameter(6);
-        request.setOuterDiameter(21.2);
-        request.setCoreDiameter(8);
-        request.setSegmentLength(60);
-        request.setNumberOfSegment(1);
+        request.setThroatDiameter(100);
+        request.setOuterDiameter(300);
+        request.setCoreDiameter(150);
+        request.setSegmentLength(1000);
+        request.setNumberOfSegment(15);
         request.setOuterSurface(INHIBITED);
         request.setEndsSurface(INHIBITED);
         request.setCoreSurface(EXPOSED);
-        request.setPropellantType(KNSB_FINE.name());
-        request.setChamberInnerDiameter(21.2);
-        request.setChamberLength(60);
+        request.setPropellantType(KNSU.name());
+        request.setChamberInnerDiameter(400);
+        request.setChamberLength(20000);
         request.setExtraConfig(getDefaultExtraConfiguration());
+
+        //trick pour avoir un moteur encore plus puissant
+        request.setMeasureUnit(IMPERIAL);
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -392,7 +469,7 @@ public class MainControlerITTest {
         resultActions
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("METEOR can't run this computation due to the following error:")))
-                .andExpect(jsonPath("$.detail", is("This often occurs when the ratio between the burning area and the throat area is too low. Try to increase your grain core diameter and/or decrease the throat diameter.")));
+                .andExpect(jsonPath("$.detail", is("The total impulse of this motor is not in [A;V] classes")));
     }
 
 }

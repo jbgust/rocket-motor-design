@@ -16,6 +16,8 @@ public class PerformanceResult {
     private final Double convergenceCrossSectionDiameter;
     private final Double divergenceCrossSectionDiameter;
     private final String optimalNozzleExpansionRatio;
+    private final boolean lowKNCorrection;
+    private final String grainMass;
 
     public PerformanceResult(String motorDescription,
                              double maxThrust,
@@ -29,7 +31,9 @@ public class PerformanceResult {
                              double averagePressure,
                              Double convergenceCrossSectionDiameter,
                              Double divergenceCrossSectionDiameter,
-                             double optimalNozzleExpansionRatio) {
+                             double optimalNozzleExpansionRatio,
+                             long lowKNCorrection,
+                             double grainMass) {
         this.motorDescription = motorDescription;
         this.maxThrust = format(maxThrust);
         this.totalImpulse = format(totalImpulse);
@@ -43,10 +47,16 @@ public class PerformanceResult {
         this.convergenceCrossSectionDiameter = convergenceCrossSectionDiameter;
         this.divergenceCrossSectionDiameter = divergenceCrossSectionDiameter;
         this.optimalNozzleExpansionRatio = format(optimalNozzleExpansionRatio);
+        this.lowKNCorrection = isLowKNCorrection(lowKNCorrection);
+        this.grainMass = format(grainMass, "%.3f");
     }
 
     private String format(Double aDouble) {
-        return String.format(Locale.ENGLISH, "%.2f", aDouble);
+        return format(aDouble, "%.2f");
+    }
+
+    private String format(Double aDouble, String format) {
+        return String.format(Locale.ENGLISH, format, aDouble);
     }
 
     public String getMotorDescription() {
@@ -99,5 +109,24 @@ public class PerformanceResult {
 
     public String getOptimalNozzleExpansionRatio() {
         return optimalNozzleExpansionRatio;
+    }
+
+    public boolean isLowKNCorrection() {
+        return lowKNCorrection;
+    }
+
+    public String getGrainMass() {
+        return grainMass;
+    }
+
+    /**
+     * Si il y a plus de 200 points qiu ont subit une correction
+     * on flag a true lowKNCorrection qui permet d'afficher coté front
+     * une message pour indiquer que le moteur a probleme de conception
+     * @param lowKNCorrection
+     * @return
+     */
+    private boolean isLowKNCorrection(long lowKNCorrection) {
+        return lowKNCorrection > 200 ? true : false;
     }
 }

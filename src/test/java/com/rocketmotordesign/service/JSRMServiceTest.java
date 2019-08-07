@@ -60,7 +60,7 @@ public class JSRMServiceTest {
 
         MeasureUnit userUnits = defaultRequest.getMeasureUnit();
 
-        JSRMConfig customConfig = measureUnitService.toJSRMConfig(defaultRequest.getExtraConfig(), userUnits);
+        JSRMConfig customConfig = measureUnitService.toJSRMConfig(defaultRequest.getExtraConfig(), userUnits, false);
         JSRMResult jsrmResult = new JSRMSimulation(measureUnitService.toSolidRocketMotor(defaultRequest)).run(customConfig);
         assertThat(100*1878/jsrmResult.getAverageThrustInNewton())
                 .describedAs("At least 98% matching burnsim result for viper propellant")
