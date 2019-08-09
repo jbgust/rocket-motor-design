@@ -8,9 +8,6 @@ import com.rocketmotordesign.controler.response.ErrorMessage;
 import com.rocketmotordesign.service.BurnRateDataException;
 import com.rocketmotordesign.service.CustomPropellantChamberPressureOutOfBoundException;
 import com.rocketmotordesign.service.JSRMService;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.Metrics;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -24,20 +21,15 @@ public class MainControler {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainControler.class);
 
     private final JSRMService jsrmService;
-    private final Counter calculs;
 
     public MainControler(JSRMService jsrmService) {
         this.jsrmService = jsrmService;
-        Metrics.addRegistry(new SimpleMeterRegistry());
-        calculs = Metrics.counter("calculs");
     }
 
     @PostMapping("/compute")
     public ResponseEntity compute(@RequestBody ComputationRequest request){
         try {
             LOGGER.info("METEOR[REQUEST|{}]", request.hashCode());
-            calculs.increment();
-            System.err.println("\nreq = "+calculs.count());
             return ResponseEntity.ok(jsrmService.runComputation(request));
         } catch (JSRMException e) {
             LOGGER.warn("METEOR[FAILED|{}]", e.getClass().getSimpleName());
