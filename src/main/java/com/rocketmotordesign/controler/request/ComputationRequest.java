@@ -27,6 +27,9 @@ public class ComputationRequest {
 
     private MeasureUnit measureUnit;
 
+    //Extra
+    private  String computationHash;
+
     private CustomPropellantRequest customPropellant;
 
     public ComputationRequest() {
@@ -173,7 +176,8 @@ public class ComputationRequest {
     @Override
     public String toString() {
         return "ComputationRequest{" +
-                "throatDiameter=" + throatDiameter +
+                "computationHash=" + computationHash +
+                ", throatDiameter=" + throatDiameter +
                 ", outerDiameter=" + outerDiameter +
                 ", coreDiameter=" + coreDiameter +
                 ", segmentLength=" + segmentLength +
@@ -188,5 +192,13 @@ public class ComputationRequest {
                 ", measureUnit=" + measureUnit +
                 ", customPropellant=" + (customPropellant != null ? customPropellant.toString() : "null") +
                 '}';
+    }
+
+    public String getComputationHash() {
+        return computationHash;
+    }
+
+    public void setComputationHash(String computationHash) {
+        this.computationHash = computationHash;
     }
 }

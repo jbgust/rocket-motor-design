@@ -30,6 +30,7 @@ public class MainControler {
     public ResponseEntity compute(@RequestBody ComputationRequest request){
         try {
             LOGGER.info("METEOR[REQUEST|{}]", request.hashCode());
+            LOGGER.info("METEOR[CLIENT-ID|{}]", request.getComputationHash());
             return ResponseEntity.ok(jsrmService.runComputation(request));
         } catch (JSRMException e) {
             LOGGER.warn("METEOR[FAILED|{}]", e.getClass().getSimpleName());
