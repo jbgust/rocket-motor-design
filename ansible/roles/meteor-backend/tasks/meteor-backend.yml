@@ -1,0 +1,19 @@
+- name: Stop METEOR {{subdomain}}
+  service:
+    name: meteor-{{subdomain}}
+    state: stopped
+
+- name: Copie du jar
+  copy:
+    src: ~/rocketMotorDesign/target/RocketMotorDesign.jar
+    dest: /home/meteor-{{subdomain}}/RocketMotorDesign.jar
+
+- name: Restauration config
+  copy:
+    src: ../files/
+    dest: /home/meteor-{{subdomain}}
+
+- name: Start METEOR {{subdomain}}
+  service:
+    name: meteor-{{subdomain}}
+    state: started
