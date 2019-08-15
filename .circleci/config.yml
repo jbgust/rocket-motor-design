@@ -6,33 +6,30 @@ jobs:
     steps:
       - checkout # check out source code to working directory
       - restore_cache:
-          key: rocketMotorDesign-{{ checksum "pom.xml" }}
+          key: rocketMotorDesign-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
       - run: mvn dependency:go-offline
       - save_cache:
           paths:
             - ~/.m2
-          key: rocketMotorDesign-{{ checksum "pom.xml" }}
+          key: rocketMotorDesign-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
       - run: mvn test
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - rocketMotorDesign
+            - .m2
   package:
     working_directory: ~/rocketMotorDesign
     machine: true
     steps:
       - checkout
-      - restore_cache:
-          key: rocketMotorDesign-{{ checksum "pom.xml" }}
-      - run: mvn dependency:go-offline
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: rocketMotorDesign-{{ checksum "pom.xml" }}
+      - attach_workspace:
+          at: ~/
       - run: mvn package
       - store_artifacts:
           path: target/RocketMotorDesign.jar
       - persist_to_workspace:
-          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
-          # taken to be the root directory of the workspace.
           root: ~/rocketMotorDesign
-          # Must be relative path from root
           paths:
             - target
             - ansible
@@ -45,10 +42,9 @@ jobs:
           fingerprints:
             - "fb:23:4a:84:80:aa:e9:ec:e5:84:73:2f:1b:43:88:2a"
       - attach_workspace:
-          # Must be absolute path or relative path from working_directory
           at: ~/rocketMotorDesign
+      # SSH-KEYSCAN permet d'autoriser la clé du server distant (open-sky)
       - run: |
-          ls -alh ~/rocketMotorDesign
           ssh-keyscan -H open-sky.fr >> ~/.ssh/known_hosts
       - run:
           name: Playbook time
