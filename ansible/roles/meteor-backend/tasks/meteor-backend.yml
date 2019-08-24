@@ -1,19 +1,14 @@
-- name: Stop METEOR {{subdomain}}
+- name: Stop METEOR {{serviceName}}
   service:
-    name: meteor-{{subdomain}}
+    name: "{{serviceName}}"
     state: stopped
 
 - name: Copie du jar
   copy:
     src: ~/rocketMotorDesign/target/RocketMotorDesign.jar
-    dest: /home/meteor-{{subdomain}}/RocketMotorDesign.jar
+    dest: "/home/{{serviceName}}/RocketMotorDesign.jar"
 
-- name: Restauration config
-  copy:
-    src: ../files/
-    dest: /home/meteor-{{subdomain}}
-
-- name: Start METEOR {{subdomain}}
+- name: Start METEOR {{serviceName}}
   service:
-    name: meteor-{{subdomain}}
+    name: "{{serviceName}}"
     state: started

@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build-and-test:
     working_directory: ~/rocketMotorDesign
@@ -37,6 +37,10 @@ jobs:
     working_directory: ~/rocketMotorDesign
     docker:
       - image: ansible/ansible-runner
+    parameters:
+      serviceName:
+        type: string
+        default: "meteor-ci"
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -50,18 +54,54 @@ jobs:
           name: Playbook time
           command: |
             cd ~/rocketMotorDesign/ansible
-            ansible-playbook -i inventory open-sky.fr.yml
+            ansible-playbook -i inventory open-sky.fr.yml --extra-vars serviceName=<<parameters.serviceName>>
 workflows:
   version: 2
   build-test-and-approval-package:
     jobs:
-      - build-and-test
+      - build-and-test:
+          filters:
+            branches:
+              ignore: master
       - package:
-          requires:
-            - build-and-test
           filters:
             branches:
               only: master
+            tags:
+              only: /^v.*/
       - deploy:
+          name: deploy-ci
           requires:
             - package
+          filters:
+            tags:
+              ignore: /.*/
+      - hold-deploy-prod:
+          type: approval
+          requires:
+            - package
+          filters:
+            branches:
+              only: master
+            tags:
+              ignore: /.*/
+      - deploy:
+          name: deploy-prod-manual
+          serviceName: "meteor"
+          requires:
+            - hold-deploy-prod
+          filters:
+            branches:
+              only: master
+            tags:
+              ignore: /.*/
+      - deploy:
+          name: deploy-prod-auto-tag
+          serviceName: "meteor"
+          requires:
+            - package
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
