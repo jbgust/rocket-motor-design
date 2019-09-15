@@ -435,7 +435,7 @@ public class MainControlerITTest {
         //THEN
         resultActions
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message", is("Throat diameter should be >= than grain core diameter")))
+                .andExpect(jsonPath("$.message", is("Throat diameter should be <= than grain core diameter")))
                 .andExpect(jsonPath("$.detail", isEmptyOrNullString()));
     }
 
