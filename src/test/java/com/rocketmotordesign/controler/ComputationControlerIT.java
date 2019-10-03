@@ -30,9 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(MainControler.class)
+@WebMvcTest(ComputationControler.class)
 @Import({JSRMService.class, MeasureUnitService.class})
-public class MainControlerITTest {
+public class ComputationControlerIT {
 
     @Autowired
     private MockMvc mvc;

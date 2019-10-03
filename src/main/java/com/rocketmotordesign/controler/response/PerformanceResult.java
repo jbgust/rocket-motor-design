@@ -51,11 +51,11 @@ public class PerformanceResult {
         this.grainMass = format(grainMass, "%.3f");
     }
 
-    private String format(Double aDouble) {
+    public static String format(Double aDouble) {
         return format(aDouble, "%.2f");
     }
 
-    private String format(Double aDouble, String format) {
+    public static String format(Double aDouble, String format) {
         return String.format(Locale.ENGLISH, format, aDouble);
     }
 

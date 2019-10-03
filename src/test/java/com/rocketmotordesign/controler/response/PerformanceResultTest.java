@@ -3,6 +3,7 @@ package com.rocketmotordesign.controler.response;
 
 import org.junit.Test;
 
+import static com.rocketmotordesign.controler.response.PerformanceResult.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PerformanceResultTest {
@@ -21,6 +22,16 @@ public class PerformanceResultTest {
         PerformanceResult result = createPerformanceResult(lowKNCorrection);
 
         assertThat(result.isLowKNCorrection()).isTrue();
+    }
+
+    @Test
+    public void shouldFormat() {
+        assertThat(format(52.329)).isEqualTo("52.33");
+    }
+
+    @Test
+    public void shouldFormatWithPrecision() {
+        assertThat(format(52.329, "%.1f")).isEqualTo("52.3");
     }
 
     private PerformanceResult createPerformanceResult(int lowKNCorrection) {
