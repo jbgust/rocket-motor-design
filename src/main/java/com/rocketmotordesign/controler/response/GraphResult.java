@@ -38,7 +38,7 @@ public class GraphResult {
         return m;
     }
 
-    private double toFrontendPrecision(double timeSinceBurnStartInSecond) {
-        return new BigDecimal(timeSinceBurnStartInSecond).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+    public static double toFrontendPrecision(double value) {
+        return new BigDecimal(value).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 }

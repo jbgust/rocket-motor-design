@@ -21,13 +21,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
+import tec.units.ri.unit.Units;
 
 import java.util.Locale;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
-import static com.rocketmotordesign.service.MeasureUnit.SI;
 import static com.rocketmotordesign.utils.TestHelper.*;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -274,7 +274,7 @@ public class MeasureUnitServiceTest {
                 1.0,
                 0);
 
-        PerformanceResult performanceResult = measureUnitService.toPerformanceResult(jsrmResult, measureUnitService.toJSRMConfig(getDefaultExtraConfiguration(), SI, false), IMPERIAL);
+        PerformanceResult performanceResult = measureUnitService.toPerformanceResult(jsrmResult, getDefaultExtraConfiguration().isOptimalNozzleDesign(), IMPERIAL);
 
         assertThat(performanceResult.getMotorDescription()).isEqualTo("A15");
         assertThat(performanceResult.getMaxThrust()).isEqualTo(format(jsrmResult.getMaxThrustInNewton()));
@@ -305,6 +305,18 @@ public class MeasureUnitServiceTest {
         assertThat(graphResult.getX()).isEqualTo(motorParameters.getTimeSinceBurnStartInSecond());
         assertThat(graphResult.getY()).isEqualTo(motorParameters.getThrustInNewton());
         assertThat(graphResult.getM()).isCloseTo(motorParameters.getMassFlowRateInKgPerSec()/0.45359237, DEFAULT_OFFSET);
+    }
+
+    @Test
+    public void shouldConvertMass() {
+        assertThat(measureUnitService.convertMass(IMPERIAL.getMassUnit(), Units.KILOGRAM, 7.054792))
+                .isCloseTo(3.2, offset(0.001));
+    }
+
+    @Test
+    public void shouldconvertLengthToJSRM() {
+        assertThat(measureUnitService.convertLengthToJSRM(IMPERIAL.getLenghtUnit(),19.685))
+                .isCloseTo(500.0, offset(0.01));
     }
 
     private String format(Double aDouble) {

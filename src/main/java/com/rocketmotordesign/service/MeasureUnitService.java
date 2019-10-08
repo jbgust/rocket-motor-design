@@ -68,7 +68,7 @@ public class MeasureUnitService {
         return jsrmConfigBuilder.createJSRMConfig();
     }
 
-    public PerformanceResult toPerformanceResult(JSRMResult jsrmResult, JSRMConfig jsrmConfig, MeasureUnit userUnits) {
+    public PerformanceResult toPerformanceResult(JSRMResult jsrmResult, boolean optimalNozzleDesign, MeasureUnit userUnits) {
         return new PerformanceResult(
                 jsrmResult.getMotorClassification() + String.valueOf(jsrmResult.getAverageThrustInNewton()),
                 jsrmResult.getMaxThrustInNewton(),
@@ -76,7 +76,7 @@ public class MeasureUnitService {
                 jsrmResult.getSpecificImpulseInSecond(),
                 convertPressureToMeteor(userUnits.getResultPressureUnit(), jsrmResult.getMaxChamberPressureInMPa()),
                 jsrmResult.getThrustTimeInSecond(),
-                jsrmConfig.isOptimalNozzleDesign(),
+                optimalNozzleDesign,
                 convertLengthToMeteor(userUnits.getLenghtUnit(), jsrmResult.getNozzle().getNozzleExitDiameterInMillimeter()),
                 jsrmResult.getNozzle().getInitialNozzleExitSpeedInMach(),
                 convertPressureToMeteor(userUnits.getResultPressureUnit(), jsrmResult.getAverageChamberPressureInMPa()),
@@ -162,7 +162,7 @@ public class MeasureUnitService {
         return idealMassDensity*453.6/Math.pow(2.54, 3);
     }
 
-    private double convertLengthToJSRM(Unit<Length> lenghtUnit, double length) {
+    public double convertLengthToJSRM(Unit<Length> lenghtUnit, double length) {
         return Quantities.getQuantity(length, lenghtUnit).to(JSRM_UNITS.getLenghtUnit()).getValue().doubleValue();
     }
 
@@ -178,6 +178,9 @@ public class MeasureUnitService {
         return Quantities.getQuantity(mass, JSRM_UNITS.getMassUnit()).to(massUnit).getValue().doubleValue();
     }
 
+    public double convertMass(Unit<Mass> fromMassUnit, Unit<Mass> toMassUnit, double mass) {
+        return Quantities.getQuantity(mass, fromMassUnit).to(toMassUnit).getValue().doubleValue();
+    }
 
     private double convertLengthToMeteor(Unit<Length> lengthUnit, double length) {
         return Quantities.getQuantity(length, JSRM_UNITS.getLenghtUnit()).to(lengthUnit).getValue().doubleValue();
