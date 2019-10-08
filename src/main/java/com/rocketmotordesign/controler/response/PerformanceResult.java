@@ -18,6 +18,7 @@ public class PerformanceResult {
     private final String optimalNozzleExpansionRatio;
     private final boolean lowKNCorrection;
     private final String grainMass;
+    private final boolean safeKN;
 
     public PerformanceResult(String motorDescription,
                              double maxThrust,
@@ -32,7 +33,7 @@ public class PerformanceResult {
                              Double convergenceCrossSectionDiameter,
                              Double divergenceCrossSectionDiameter,
                              double optimalNozzleExpansionRatio,
-                             long lowKNCorrection,
+                             long numberOfKNCorrection,
                              double grainMass) {
         this.motorDescription = motorDescription;
         this.maxThrust = format(maxThrust);
@@ -47,8 +48,9 @@ public class PerformanceResult {
         this.convergenceCrossSectionDiameter = convergenceCrossSectionDiameter;
         this.divergenceCrossSectionDiameter = divergenceCrossSectionDiameter;
         this.optimalNozzleExpansionRatio = format(optimalNozzleExpansionRatio);
-        this.lowKNCorrection = isLowKNCorrection(lowKNCorrection);
+        this.lowKNCorrection = isLowKNCorrection(numberOfKNCorrection);
         this.grainMass = format(grainMass, "%.3f");
+        this.safeKN = numberOfKNCorrection > 0 ? true : false;
     }
 
     public static String format(Double aDouble) {
@@ -128,5 +130,9 @@ public class PerformanceResult {
      */
     private boolean isLowKNCorrection(long lowKNCorrection) {
         return lowKNCorrection > 200 ? true : false;
+    }
+
+    public boolean isSafeKN() {
+        return safeKN;
     }
 }

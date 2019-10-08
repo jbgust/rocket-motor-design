@@ -9,11 +9,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PerformanceResultTest {
 
     @Test
+    public void neDoitPasIndiquerLutilisationDeSafeKN() {
+        int lowKNCorrection = 0;
+        PerformanceResult result = createPerformanceResult(lowKNCorrection);
+
+        assertThat(result.isLowKNCorrection()).isFalse();
+        assertThat(result.isSafeKN()).isFalse();
+    }
+
+    @Test
     public void neDoitPasIndiquerUnProblemeDeKN() {
         int lowKNCorrection = 200;
         PerformanceResult result = createPerformanceResult(lowKNCorrection);
 
         assertThat(result.isLowKNCorrection()).isFalse();
+        assertThat(result.isSafeKN()).isTrue();
     }
 
     @Test
@@ -22,6 +32,7 @@ public class PerformanceResultTest {
         PerformanceResult result = createPerformanceResult(lowKNCorrection);
 
         assertThat(result.isLowKNCorrection()).isTrue();
+        assertThat(result.isSafeKN()).isTrue();
     }
 
     @Test

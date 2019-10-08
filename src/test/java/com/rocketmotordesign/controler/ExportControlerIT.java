@@ -1,6 +1,7 @@
 package com.rocketmotordesign.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rocketmotordesign.controler.request.ComputationRequest;
 import com.rocketmotordesign.controler.request.ExportRASPRequest;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
@@ -11,12 +12,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static com.rocketmotordesign.utils.TestHelper.getDefaultRequest;
-import static com.rocketmotordesign.utils.TestHelper.getDefaultRequestImperial;
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.rocketmotordesign.utils.TestHelper.*;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -73,7 +77,7 @@ public class ExportControlerIT {
         exportRequest.setMotorWeight(7.054792); //pounds
         exportRequest.setProjectName("motorTest");
 
-        String request = new ObjectMapper().writeValueAsString(exportRequest);
+        String request = Jackson2ObjectMapperBuilder.json().build().writeValueAsString(exportRequest);
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/export/rasp")
@@ -93,5 +97,45 @@ public class ExportControlerIT {
                                 "    0.0253 917.1436\n"+
                                 "    0.029 959.4651\n"+
                                 "    0.0325 993.7791\n")));
+    }
+
+    @Test
+    public void shouldRunComputationForLowKNMotor() throws Exception {
+        // GIVEN
+        ComputationRequest lowKNRequest = new ComputationRequest();
+        lowKNRequest.setThroatDiameter(19);
+        lowKNRequest.setOuterDiameter(37);
+        lowKNRequest.setCoreDiameter(20);
+        lowKNRequest.setSegmentLength(10);
+        lowKNRequest.setNumberOfSegment(5);
+        lowKNRequest.setOuterSurface(INHIBITED);
+        lowKNRequest.setEndsSurface(EXPOSED);
+        lowKNRequest.setCoreSurface(EXPOSED);
+        lowKNRequest.setPropellantType(KNSU.name());
+        lowKNRequest.setChamberInnerDiameter(38);
+        lowKNRequest.setChamberLength(500);
+        lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
+
+        ExportRASPRequest exportRequest = new ExportRASPRequest();
+        exportRequest.setComputationRequest(lowKNRequest);
+        exportRequest.setDelay("P");
+        exportRequest.setMotorDiameter(72); //mm
+        exportRequest.setMotorLength(500); //mm
+        exportRequest.setMotorWeight(3.2); //kg
+        exportRequest.setProjectName("motorTest");
+        exportRequest.setSafeKN(true);
+
+        // WHEN
+        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+        ResultActions resultActions = mvc.perform(post("/export/rasp")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(exportRequest)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(header().stringValues(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=meteor_motorTest_H134.eng"))
+                .andExpect(content().string(startsWith(
+                        "H134 72.0 500.0 P 0.068 3.200 METEOR")));
     }
 }

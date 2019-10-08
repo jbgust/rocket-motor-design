@@ -8,6 +8,15 @@ public class ExportRASPRequest {
     private double motorLength;
     private double motorWeight;
     private String delay;
+    private boolean safeKN;
+
+    public boolean isSafeKN() {
+        return safeKN;
+    }
+
+    public void setSafeKN(boolean safeKN) {
+        this.safeKN = safeKN;
+    }
 
     public String getDelay() {
         return delay;
