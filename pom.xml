@@ -42,11 +42,6 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.jbgust</groupId>
-			<artifactId>Java-Solid-Rocket-Motor</artifactId>
-			<version>1.5</version>
-		</dependency>
-		<dependency>
 			<groupId>tec.units</groupId>
 			<artifactId>unit-ri</artifactId>
 			<version>1.0.3</version>
@@ -61,17 +56,23 @@
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
 
-<!--		 UNIQUEMENT POUR tester JSRM quand on importe le JAR -->
+<!--		TODO : A mettre a jour avant livraison-->
 <!--		<dependency>-->
-<!--			<groupId>net.objecthunter</groupId>-->
-<!--			<artifactId>exp4j</artifactId>-->
-<!--			<version>0.4.8</version>-->
+<!--			<groupId>com.github.jbgust</groupId>-->
+<!--			<artifactId>Java-Solid-Rocket-Motor</artifactId>-->
+<!--			<version>1.5</version>-->
 <!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>com.google.guava</groupId>-->
-<!--			<artifactId>guava</artifactId>-->
-<!--			<version>27.0-jre</version>-->
-<!--		</dependency>-->
+		<!--		 UNIQUEMENT POUR tester JSRM quand on importe le JAR -->
+		<dependency>
+			<groupId>net.objecthunter</groupId>
+			<artifactId>exp4j</artifactId>
+			<version>0.4.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>27.0-jre</version>
+		</dependency>
 <!--		 FIN: UNIQUEMENT POUR tester JSRM quand on importe le JAR-->
 
         <dependency>
@@ -98,6 +99,7 @@
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
+				<version></version>
 			</plugin>
 		</plugins>
 	</build>

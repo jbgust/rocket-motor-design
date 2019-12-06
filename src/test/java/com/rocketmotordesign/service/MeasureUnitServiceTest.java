@@ -2,6 +2,8 @@ package com.rocketmotordesign.service;
 
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorClassification;
@@ -32,6 +34,7 @@ import static com.rocketmotordesign.utils.TestHelper.*;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
+import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 
 @RunWith(SpringRunner.class)
@@ -56,13 +59,15 @@ public class MeasureUnitServiceTest {
         assertThat(solidRocketMotor.getCombustionChamber().getChamberLengthInMillimeter()).isCloseTo(defaultRequestSIUnit.getChamberLength(), DEFAULT_OFFSET);
         assertThat(solidRocketMotor.getCombustionChamber().getChamberInnerDiameterInMillimeter()).isEqualTo(defaultRequestSIUnit.getChamberInnerDiameter());
 
-        assertThat(solidRocketMotor.getPropellantGrain().getCoreDiameter()).isEqualTo(defaultRequestSIUnit.getCoreDiameter());
-        assertThat(solidRocketMotor.getPropellantGrain().getOuterDiameter()).isEqualTo(defaultRequestSIUnit.getOuterDiameter());
-        assertThat(solidRocketMotor.getPropellantGrain().getSegmentLength()).isCloseTo(defaultRequestSIUnit.getSegmentLength(), DEFAULT_OFFSET);
-        assertThat(solidRocketMotor.getPropellantGrain().getNumberOfSegment()).isEqualTo(defaultRequestSIUnit.getNumberOfSegment());
-        assertThat(solidRocketMotor.getPropellantGrain().getOuterSurface()).isEqualTo(defaultRequestSIUnit.getOuterSurface());
-        assertThat(solidRocketMotor.getPropellantGrain().getEndsSurface()).isEqualTo(defaultRequestSIUnit.getEndsSurface());
-        assertThat(solidRocketMotor.getPropellantGrain().getCoreSurface()).isEqualTo(defaultRequestSIUnit.getCoreSurface());
+        HollowCylinderGrain grain = (HollowCylinderGrain) solidRocketMotor.getPropellantGrain().getGrainConfigutation();
+
+        assertThat((double) getField(grain, "coreDiameter")).isEqualTo(defaultRequestSIUnit.getCoreDiameter());
+        assertThat((double) getField(grain, "outerDiameter")).isEqualTo(defaultRequestSIUnit.getOuterDiameter());
+        assertThat((double) getField(grain, "segmentLength")).isCloseTo(defaultRequestSIUnit.getSegmentLength(), DEFAULT_OFFSET);
+        assertThat((double) getField(grain, "numberOfSegment")).isEqualTo(defaultRequestSIUnit.getNumberOfSegment());
+        assertThat((GrainSurface) getField(grain, "outerSurface")).isEqualTo(defaultRequestSIUnit.getOuterSurface());
+        assertThat((GrainSurface) getField(grain, "endsSurface")).isEqualTo(defaultRequestSIUnit.getEndsSurface());
+        assertThat((GrainSurface) getField(grain, "coreSurface")).isEqualTo(defaultRequestSIUnit.getCoreSurface());
         assertThat(solidRocketMotor.getPropellantGrain().getPropellant()).isEqualTo(KNDX);
     }
 

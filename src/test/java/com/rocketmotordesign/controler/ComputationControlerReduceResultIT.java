@@ -45,7 +45,7 @@ public class ComputationControlerReduceResultIT {
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)))
                 .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
-                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", is(36.63558888655025)))
+                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", is(closeTo(36.6355, 0.0001d))))
 
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("2060.35")))
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("3603.07")))

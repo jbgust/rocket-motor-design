@@ -18,8 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
@@ -54,7 +54,7 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)))
                 .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
-                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", is(36.63558888655025)))
+                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", closeTo(36.6355, 0.0001)))
 
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("2060.35")))
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("3603.07")))
@@ -249,7 +249,7 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)))
                 .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
-                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", is(36.63558888655025)))
+                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", closeTo(36.6355, 0.001d)))
 
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("2060.35")))
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("3603.07")))

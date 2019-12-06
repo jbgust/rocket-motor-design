@@ -3,8 +3,8 @@ package com.rocketmotordesign.utils;
 import com.rocketmotordesign.controler.request.ComputationRequest;
 import com.rocketmotordesign.controler.request.ExtraConfiguration;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.service.MeasureUnit.SI;

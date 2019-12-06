@@ -1,6 +1,6 @@
 package com.rocketmotordesign.controler.request;
 
-import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
 import com.rocketmotordesign.service.MeasureUnit;
 
 import java.util.Objects;

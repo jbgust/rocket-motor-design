@@ -3,8 +3,9 @@ package com.rocketmotordesign.service;
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
+import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
@@ -107,13 +108,14 @@ public class MeasureUnitService {
     private PropellantGrain toPropellantGrain(ComputationRequest request) {
         Unit<Length> userLengthUnit = request.getMeasureUnit().getLenghtUnit();
         return new PropellantGrain(getPropellant(request),
+                new HollowCylinderGrain(
                 convertLengthToJSRM(userLengthUnit, request.getOuterDiameter()),
                 convertLengthToJSRM(userLengthUnit, request.getCoreDiameter()),
                 convertLengthToJSRM(userLengthUnit, request.getSegmentLength()),
                 request.getNumberOfSegment(),
                 request.getOuterSurface(),
                 request.getEndsSurface(),
-                request.getCoreSurface());
+                request.getCoreSurface()));
     }
 
     private SolidPropellant getPropellant(ComputationRequest request) {
