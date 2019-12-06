@@ -3,7 +3,7 @@ package com.rocketmotordesign.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import com.rocketmotordesign.controler.request.BurnRatePressureData;
-import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.HollowComputationRequest;
 import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
@@ -77,9 +77,72 @@ public class ComputationControlerIT {
     }
 
     @Test
+    public void shouldRunFinocylComputation() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultFinocylRequest());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/finocyl")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H214")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                //TODO: a nettoyer
+//                .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
+//                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", closeTo(36.6355, 0.0001)))
+
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("392.74")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("181.36")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.00")))
+//                .andExpect(jsonPath("$.performanceResult.maxPressure", is("59.36")))
+//                .andExpect(jsonPath("$.performanceResult.thrustTime", is("2.15")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
+//                .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
+//                .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
+//                .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.147")))
+
+//                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+//
+//                .andExpect(jsonPath("$.motorParameters[400].x", is(closeTo(1.0343, 0.01d))))
+//                .andExpect(jsonPath("$.motorParameters[400].y", is(closeTo(2058.5999, 0.0001d))))
+//                .andExpect(jsonPath("$.motorParameters[400].p", is(closeTo(59.3117, 0.0001d))))
+//                .andExpect(jsonPath("$.motorParameters[400].m", is(closeTo(1.584, 0.0001d))));
+        ;
+    }
+
+    @Test
+    public void shouldRunFinocylComputationImperial() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultFinocylRequestImperial());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/finocyl")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H214")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("392.74")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("181.36")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.00")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.11")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.324")));
+    }
+
+    @Test
     public void shouldConvertToImperialUnits() throws Exception {
         // GIVEN
-        ComputationRequest defaultRequest = getDefaultRequestImperial();
+        HollowComputationRequest defaultRequest = getDefaultRequestImperial();
 
         String request = new ObjectMapper().writeValueAsString(defaultRequest);
 
@@ -119,7 +182,7 @@ public class ComputationControlerIT {
     @Test
     public void shouldRunComputationForLowKNMotor() throws Exception {
         // GIVEN
-        ComputationRequest lowKNRequest = new ComputationRequest();
+        HollowComputationRequest lowKNRequest = new HollowComputationRequest();
         lowKNRequest.setThroatDiameter(19);
         lowKNRequest.setOuterDiameter(37);
         lowKNRequest.setCoreDiameter(20);
@@ -156,7 +219,7 @@ public class ComputationControlerIT {
     @Test
     public void shouldUseCustomPropellantInImperialUnits() throws Exception {
         // GIVEN
-        ComputationRequest request = getDefaultRequestImperial();
+        HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("My propellant");
         request.getExtraConfig().setNozzleExpansionRatio(8.0);
         request.getExtraConfig().setNozzleEfficiency(0.85);
@@ -191,7 +254,7 @@ public class ComputationControlerIT {
     @Test
     public void shouldUseCustomPropellantInSIUnits() throws Exception {
         // GIVEN
-        ComputationRequest request = getDefaultRequest();
+        HollowComputationRequest request = getDefaultRequest();
         request.setPropellantType("To be defined");
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setDensity(KNSU.getIdealMassDensity());
@@ -219,7 +282,7 @@ public class ComputationControlerIT {
     @Test
     public void shouldUseCustomPropellantInSIUnitsWithMultipleBurnRateData() throws Exception {
         // GIVEN
-        ComputationRequest request = getDefaultRequest();
+        HollowComputationRequest request = getDefaultRequest();
         request.setPropellantType("To be defined");
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setDensity(KNDX.getIdealMassDensity());
@@ -273,7 +336,7 @@ public class ComputationControlerIT {
     @Test
     public void shouldUseCustomPropellantInImperialUnitsWithMultipleBurnRateData() throws Exception {
         // GIVEN
-        ComputationRequest request = getDefaultRequestImperial();
+        HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("To be defined");
 
 
@@ -309,7 +372,7 @@ public class ComputationControlerIT {
     @Test
     public void shouldSendErrorIfBurnRateDataAreOverlaping() throws Exception {
         // GIVEN
-        ComputationRequest request = getDefaultRequestImperial();
+        HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("To be defined");
 
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
@@ -344,7 +407,7 @@ public class ComputationControlerIT {
     @Test
     public void shouldSendErrorWhenPressureIsOutOfBound() throws Exception {
         // GIVEN
-        ComputationRequest request = getDefaultRequestImperial();
+        HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("To be defined");
 
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
@@ -383,7 +446,7 @@ public class ComputationControlerIT {
     public void shouldReturnErrorOnWrongMotorDesing() throws Exception {
 
         // GIVEN
-        ComputationRequest invalidMotorDesignRequest = new ComputationRequest();
+        HollowComputationRequest invalidMotorDesignRequest = new HollowComputationRequest();
         invalidMotorDesignRequest.setThroatDiameter(17.39);
         invalidMotorDesignRequest.setOuterDiameter(69);
         invalidMotorDesignRequest.setCoreDiameter(20);
@@ -413,7 +476,7 @@ public class ComputationControlerIT {
     public void shouldReturnErrorWheCoreDiamIsLowerThanThroat() throws Exception {
 
         // GIVEN
-        ComputationRequest invalidMotorDesignRequest = new ComputationRequest();
+        HollowComputationRequest invalidMotorDesignRequest = new HollowComputationRequest();
         invalidMotorDesignRequest.setThroatDiameter(17.39);
         invalidMotorDesignRequest.setOuterDiameter(69);
         invalidMotorDesignRequest.setCoreDiameter(15);
@@ -443,7 +506,7 @@ public class ComputationControlerIT {
     public void shouldReturnErrorWhenComputationFailed() throws Exception {
 
         // GIVEN
-        ComputationRequest request = new ComputationRequest();
+        HollowComputationRequest request = new HollowComputationRequest();
         request.setThroatDiameter(100);
         request.setOuterDiameter(300);
         request.setCoreDiameter(150);

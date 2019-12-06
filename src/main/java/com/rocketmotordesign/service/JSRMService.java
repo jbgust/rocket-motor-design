@@ -4,7 +4,7 @@ import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.JSRMSimulation;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.BasicComputationRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,11 +16,11 @@ public class JSRMService {
         this.measureUnitService = measureUnitService;
     }
 
-    public JSRMResult runComputation(ComputationRequest request) {
+    public JSRMResult runComputation(BasicComputationRequest request) {
        return runComputation(request, false);
     }
 
-    public JSRMResult runComputation(ComputationRequest request, boolean safeKnRun) {
+    public JSRMResult runComputation(BasicComputationRequest request, boolean safeKnRun) {
         MeasureUnit userUnits = request.getMeasureUnit();
 
         JSRMConfig customConfig = measureUnitService.toJSRMConfig(request.getExtraConfig(), userUnits, safeKnRun);

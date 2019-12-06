@@ -1,7 +1,7 @@
 package com.rocketmotordesign.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.HollowComputationRequest;
 import com.rocketmotordesign.controler.request.ExportRASPRequest;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
@@ -37,7 +37,7 @@ public class ExportControlerIT {
     public void shoulExportToRASP() throws Exception {
         // GIVEN
         ExportRASPRequest exportRequest = new ExportRASPRequest();
-        exportRequest.setComputationRequest(getDefaultRequest());
+        exportRequest.setHollowComputationRequest(getDefaultRequest());
         exportRequest.setDelay("P");
         exportRequest.setMotorDiameter(72); //mm
         exportRequest.setMotorLength(500); //mm
@@ -70,7 +70,7 @@ public class ExportControlerIT {
     public void shoulExportToRASPFromIMPERIAL() throws Exception {
         // GIVEN
         ExportRASPRequest exportRequest = new ExportRASPRequest();
-        exportRequest.setComputationRequest(getDefaultRequestImperial());
+        exportRequest.setHollowComputationRequest(getDefaultRequestImperial());
         exportRequest.setDelay("P");
         exportRequest.setMotorDiameter(2.83465); //inch
         exportRequest.setMotorLength(19.685); //inch
@@ -102,7 +102,7 @@ public class ExportControlerIT {
     @Test
     public void shouldRunComputationForLowKNMotor() throws Exception {
         // GIVEN
-        ComputationRequest lowKNRequest = new ComputationRequest();
+        HollowComputationRequest lowKNRequest = new HollowComputationRequest();
         lowKNRequest.setThroatDiameter(19);
         lowKNRequest.setOuterDiameter(37);
         lowKNRequest.setCoreDiameter(20);
@@ -117,7 +117,7 @@ public class ExportControlerIT {
         lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
 
         ExportRASPRequest exportRequest = new ExportRASPRequest();
-        exportRequest.setComputationRequest(lowKNRequest);
+        exportRequest.setHollowComputationRequest(lowKNRequest);
         exportRequest.setDelay("P");
         exportRequest.setMotorDiameter(72); //mm
         exportRequest.setMotorLength(500); //mm

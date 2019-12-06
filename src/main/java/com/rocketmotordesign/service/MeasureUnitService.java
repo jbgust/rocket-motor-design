@@ -5,15 +5,14 @@ import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.grain.FinocylGrain;
+import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
 import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorParameters;
-import com.rocketmotordesign.controler.request.BurnRatePressureData;
-import com.rocketmotordesign.controler.request.ComputationRequest;
-import com.rocketmotordesign.controler.request.CustomPropellantRequest;
-import com.rocketmotordesign.controler.request.ExtraConfiguration;
+import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.controler.response.GraphResult;
 import com.rocketmotordesign.controler.response.PerformanceResult;
 import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
@@ -42,7 +41,7 @@ public class MeasureUnitService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MeasureUnitService.class);
 
-    public SolidRocketMotor toSolidRocketMotor(ComputationRequest request) {
+    public SolidRocketMotor toSolidRocketMotor(BasicComputationRequest request) {
         return new SolidRocketMotor(
                 toPropellantGrain(request),
                 toCombustionChamber(request),
@@ -98,34 +97,53 @@ public class MeasureUnitService {
         );
     }
 
-    private CombustionChamber toCombustionChamber(ComputationRequest request) {
+    private CombustionChamber toCombustionChamber(BasicComputationRequest request) {
         Unit<Length> userLengthUnit = request.getMeasureUnit().getLenghtUnit();
         return new CombustionChamber(
                 convertLengthToJSRM(userLengthUnit, request.getChamberInnerDiameter()),
                 convertLengthToJSRM(userLengthUnit, request.getChamberLength()));
     }
 
-    private PropellantGrain toPropellantGrain(ComputationRequest request) {
+    private PropellantGrain toPropellantGrain(BasicComputationRequest request) {
         Unit<Length> userLengthUnit = request.getMeasureUnit().getLenghtUnit();
-        return new PropellantGrain(getPropellant(request),
-                new HollowCylinderGrain(
-                convertLengthToJSRM(userLengthUnit, request.getOuterDiameter()),
-                convertLengthToJSRM(userLengthUnit, request.getCoreDiameter()),
-                convertLengthToJSRM(userLengthUnit, request.getSegmentLength()),
-                request.getNumberOfSegment(),
-                request.getOuterSurface(),
-                request.getEndsSurface(),
-                request.getCoreSurface()));
+        GrainConfigutation grainConfigutation;
+        if(request instanceof HollowComputationRequest){
+            HollowComputationRequest hollowComputationRequest = (HollowComputationRequest)request;
+            grainConfigutation = new HollowCylinderGrain(
+                    convertLengthToJSRM(userLengthUnit, hollowComputationRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, hollowComputationRequest.getCoreDiameter()),
+                    convertLengthToJSRM(userLengthUnit, hollowComputationRequest.getSegmentLength()),
+                    request.getNumberOfSegment(),
+                    hollowComputationRequest.getOuterSurface(),
+                    hollowComputationRequest.getEndsSurface(),
+                    hollowComputationRequest.getCoreSurface());
+        } else if(request instanceof FinocylComputationRequest) {
+            FinocylComputationRequest finocylRequest = (FinocylComputationRequest)request;
+            grainConfigutation = new FinocylGrain(
+                    convertLengthToJSRM(userLengthUnit, finocylRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, finocylRequest.getInnerDiameter()),
+                    convertLengthToJSRM(userLengthUnit, finocylRequest.getFinWidth()),
+                    convertLengthToJSRM(userLengthUnit, finocylRequest.getFinDiameter()),
+                    finocylRequest.getFinCount(),
+                    convertLengthToJSRM(userLengthUnit, finocylRequest.getSegmentLength()),
+                    finocylRequest.getNumberOfSegment(),
+                    finocylRequest.getEndSurface()
+            );
+        } else {
+            throw new IllegalStateException("Request inconnue : "+ request.getClass().getSimpleName());
+        }
+
+        return new PropellantGrain(getPropellant(request), grainConfigutation);
     }
 
-    private SolidPropellant getPropellant(ComputationRequest request) {
+    private SolidPropellant getPropellant(BasicComputationRequest request) {
         Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
                 .collect(toMap(Enum::name, Function.identity()));
 
         return propellants.computeIfAbsent(request.getPropellantType(), propellantType -> propellantToSIUnits(request));
     }
 
-    private SolidPropellant propellantToSIUnits(ComputationRequest request) {
+    private SolidPropellant propellantToSIUnits(BasicComputationRequest request) {
         CustomPropellantRequest customPropellantRequest = request.getCustomPropellant();
         boolean si = request.getMeasureUnit() == SI;
 
@@ -142,7 +160,7 @@ public class MeasureUnitService {
         return customPropellant;
     }
 
-    private Set<BurnRatePressureData> convertBurnRateDataToJSRM(ComputationRequest request) {
+    private Set<BurnRatePressureData> convertBurnRateDataToJSRM(BasicComputationRequest request) {
         boolean si = request.getMeasureUnit() == SI;
 
         Set<BurnRatePressureData> burnRateDataSet = request.getCustomPropellant().getBurnRateDataSet();

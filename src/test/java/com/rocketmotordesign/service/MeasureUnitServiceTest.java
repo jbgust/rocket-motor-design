@@ -2,6 +2,7 @@ package com.rocketmotordesign.service;
 
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.grain.FinocylGrain;
 import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
 import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
@@ -10,10 +11,7 @@ import com.github.jbgust.jsrm.application.result.MotorClassification;
 import com.github.jbgust.jsrm.application.result.MotorParameters;
 import com.github.jbgust.jsrm.application.result.Nozzle;
 import com.google.common.collect.Sets;
-import com.rocketmotordesign.controler.request.BurnRatePressureData;
-import com.rocketmotordesign.controler.request.ComputationRequest;
-import com.rocketmotordesign.controler.request.CustomPropellantRequest;
-import com.rocketmotordesign.controler.request.ExtraConfiguration;
+import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.controler.response.GraphResult;
 import com.rocketmotordesign.controler.response.PerformanceResult;
 import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
@@ -50,7 +48,7 @@ public class MeasureUnitServiceTest {
     @Test
     public void shouldConvertMotorFromImperialUnitToJSRMUnit() {
 
-        ComputationRequest defaultRequestSIUnit = getDefaultRequest();
+        HollowComputationRequest defaultRequestSIUnit = getDefaultRequest();
 
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(getDefaultRequestImperial());
 
@@ -64,17 +62,43 @@ public class MeasureUnitServiceTest {
         assertThat((double) getField(grain, "coreDiameter")).isEqualTo(defaultRequestSIUnit.getCoreDiameter());
         assertThat((double) getField(grain, "outerDiameter")).isEqualTo(defaultRequestSIUnit.getOuterDiameter());
         assertThat((double) getField(grain, "segmentLength")).isCloseTo(defaultRequestSIUnit.getSegmentLength(), DEFAULT_OFFSET);
-        assertThat((double) getField(grain, "numberOfSegment")).isEqualTo(defaultRequestSIUnit.getNumberOfSegment());
+        assertThat((int) getField(grain, "numberOfSegment")).isEqualTo(defaultRequestSIUnit.getNumberOfSegment());
         assertThat((GrainSurface) getField(grain, "outerSurface")).isEqualTo(defaultRequestSIUnit.getOuterSurface());
         assertThat((GrainSurface) getField(grain, "endsSurface")).isEqualTo(defaultRequestSIUnit.getEndsSurface());
         assertThat((GrainSurface) getField(grain, "coreSurface")).isEqualTo(defaultRequestSIUnit.getCoreSurface());
         assertThat(solidRocketMotor.getPropellantGrain().getPropellant()).isEqualTo(KNDX);
     }
 
+
+    @Test
+    public void shouldConvertFinocylGrainMotorFromImperialUnitToJSRMUnit() {
+
+        FinocylComputationRequest finocylRequest = getDefaultFinocylRequest();
+
+        SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(getDefaultFinocylRequestImperial());
+
+        assertThat(solidRocketMotor.getThroatDiameterInMillimeter()).isEqualTo(finocylRequest.getThroatDiameter());
+
+        assertThat(solidRocketMotor.getCombustionChamber().getChamberLengthInMillimeter()).isCloseTo(finocylRequest.getChamberLength(), DEFAULT_OFFSET);
+        assertThat(solidRocketMotor.getCombustionChamber().getChamberInnerDiameterInMillimeter()).isEqualTo(finocylRequest.getChamberInnerDiameter());
+
+        FinocylGrain grain = (FinocylGrain) solidRocketMotor.getPropellantGrain().getGrainConfigutation();
+
+        assertThat((double) getField(grain, "innerDiameter")).isEqualTo(finocylRequest.getInnerDiameter());
+        assertThat((double) getField(grain, "outerDiameter")).isEqualTo(finocylRequest.getOuterDiameter());
+        assertThat((double) getField(grain, "finWidth")).isCloseTo(finocylRequest.getFinWidth(), offset(0.000001));
+        assertThat((double) getField(grain, "finDiameter")).isEqualTo(finocylRequest.getFinDiameter());
+        assertThat((int) getField(grain, "finCount")).isEqualTo(finocylRequest.getFinCount());
+
+        assertThat(grain.getLength()).isCloseTo(finocylRequest.getSegmentLength(), DEFAULT_OFFSET);
+        assertThat((int) getField(grain, "numberOfSegment")).isEqualTo(finocylRequest.getNumberOfSegment());
+        assertThat(solidRocketMotor.getPropellantGrain().getPropellant()).isEqualTo(KNSU);
+    }
+
     @Test
     public void shouldConvertPropellantFromSIUnitToJSRMUnit() {
         // GIVEN
-        ComputationRequest request = getDefaultRequest();
+        HollowComputationRequest request = getDefaultRequest();
         CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNSU);
         request.setCustomPropellant(propellantRequest);
         request.setPropellantType("CUSTOM_PROPELLANT");
@@ -102,7 +126,7 @@ public class MeasureUnitServiceTest {
                 new BurnRatePressureData(3, 4, 24, 30)
         ));
 
-        ComputationRequest request = getDefaultRequest();
+        HollowComputationRequest request = getDefaultRequest();
         request.setCustomPropellant(propellantRequest);
         request.setPropellantType("CUSTOM_PROPELLANT");
 
@@ -130,7 +154,7 @@ public class MeasureUnitServiceTest {
         propellantRequest.setCstar(912.38154);
         propellantRequest.setChamberTemperature(null);
 
-        ComputationRequest request = getDefaultRequest();
+        HollowComputationRequest request = getDefaultRequest();
         request.setCustomPropellant(propellantRequest);
         request.setPropellantType("CUSTOM_PROPELLANT");
 
@@ -154,7 +178,7 @@ public class MeasureUnitServiceTest {
         propellantRequest.setPressureExponent(0.319);
         propellantRequest.setDensity(0.06824);
 
-        ComputationRequest request = getDefaultRequestImperial();
+        HollowComputationRequest request = getDefaultRequestImperial();
         request.setCustomPropellant(propellantRequest);
         request.setPropellantType("CUSTOM_PROPELLANT");
 
@@ -182,7 +206,7 @@ public class MeasureUnitServiceTest {
         double burnRateCoeff1Metrique = BurnRateCoefficientConverter.toMetrique(1, 2);
         double burnRateCoeff2Metrique = BurnRateCoefficientConverter.toMetrique(3, 4);
 
-        ComputationRequest request = getDefaultRequestImperial();
+        HollowComputationRequest request = getDefaultRequestImperial();
         request.setCustomPropellant(propellantRequest);
         request.setPropellantType("CUSTOM_PROPELLANT");
 
@@ -213,7 +237,7 @@ public class MeasureUnitServiceTest {
         propellantRequest.setCstar(912.38154 / 0.3048);      //converti de KNDX
         propellantRequest.setChamberTemperature(null);
 
-        ComputationRequest request = getDefaultRequestImperial();
+        HollowComputationRequest request = getDefaultRequestImperial();
         request.setCustomPropellant(propellantRequest);
         request.setPropellantType("CUSTOM_PROPELLANT");
 

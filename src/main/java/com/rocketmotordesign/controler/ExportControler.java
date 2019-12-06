@@ -42,10 +42,10 @@ public class ExportControler {
 
     @PostMapping(value = "/rasp")
     public ResponseEntity exportRASP(@RequestBody ExportRASPRequest request) {
-        JSRMResult jsrmResult = jsrmService.runComputation(request.getComputationRequest(), request.isSafeKN());
+        JSRMResult jsrmResult = jsrmService.runComputation(request.getHollowComputationRequest(), request.isSafeKN());
 
         StringBuilder response = new StringBuilder();
-        MeasureUnit requestUnits = request.getComputationRequest().getMeasureUnit();
+        MeasureUnit requestUnits = request.getHollowComputationRequest().getMeasureUnit();
         String motorClass = jsrmResult.getMotorClassification() + String.valueOf(jsrmResult.getAverageThrustInNewton());
         response
                 .append(motorClass).append(" ")

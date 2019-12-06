@@ -1,7 +1,7 @@
 package com.rocketmotordesign.service;
 
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.HollowComputationRequest;
 import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +30,7 @@ public class JSRMServiceTest {
         customPropellant.setK(1.2768);
         customPropellant.setMolarMass(45.0);
 
-        ComputationRequest defaultRequest = getDefaultRequestImperial();
+        HollowComputationRequest defaultRequest = getDefaultRequestImperial();
 
         defaultRequest.setPropellantType("To be defined");
         defaultRequest.getExtraConfig().setNozzleExpansionRatio(8.0);

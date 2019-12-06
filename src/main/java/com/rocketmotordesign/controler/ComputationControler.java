@@ -6,7 +6,9 @@ import com.github.jbgust.jsrm.application.exception.MotorClassificationOutOfBoun
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.rocketmotordesign.controler.request.ComputationRequest;
+import com.rocketmotordesign.controler.request.BasicComputationRequest;
+import com.rocketmotordesign.controler.request.HollowComputationRequest;
+import com.rocketmotordesign.controler.request.FinocylComputationRequest;
 import com.rocketmotordesign.controler.response.ComputationResponse;
 import com.rocketmotordesign.controler.response.ErrorMessage;
 import com.rocketmotordesign.controler.response.GraphResult;
@@ -47,8 +49,17 @@ public class ComputationControler {
         this.moduloLimitSize = moduloLimitSize;
     }
 
+    @PostMapping("finocyl")
+    public ResponseEntity computeFinocyl(@RequestBody FinocylComputationRequest request) {
+        return computeRequest(request);
+    }
+
     @PostMapping
-    public ResponseEntity compute(@RequestBody ComputationRequest request) {
+    public ResponseEntity computeHollowCylinderGrain(@RequestBody HollowComputationRequest request) {
+        return computeRequest(request);
+    }
+
+    private ResponseEntity computeRequest(BasicComputationRequest request) {
         try {
             ComputationResponse response = toComputationResponse(request, jsrmService.runComputation(request));
             logSuccess(request, response);
@@ -83,8 +94,10 @@ public class ComputationControler {
         }
     }
 
-    private void logSuccess(ComputationRequest request, ComputationResponse response) {
+    private void logSuccess(BasicComputationRequest request, ComputationResponse response) {
         LOGGER.info("METEOR[REQUEST|{}]", request.hashCode());
+
+        LOGGER.info("METEOR[GRAIN|{}]", request.getGrainType());
         LOGGER.info("METEOR[CLIENT-ID|{}]", request.getComputationHash());
         LOGGER.info("METEOR[UNITS|{}]", request.getMeasureUnit());
         Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
@@ -93,7 +106,7 @@ public class ComputationControler {
         LOGGER.info("METEOR[MOTORCLASS|{}]", response.getPerformanceResult().getMotorDescription().substring(0, 1));
     }
 
-    private ResponseEntity retryWithSafeKN(ComputationRequest request) {
+    private ResponseEntity retryWithSafeKN(BasicComputationRequest request) {
         try {
             LOGGER.warn("METEOR[safeKN]");
             ComputationResponse response = toComputationResponse(request, jsrmService.runComputation(request, true));
@@ -121,7 +134,7 @@ public class ComputationControler {
         }
     }
 
-    private ComputationResponse toComputationResponse(ComputationRequest request, JSRMResult jsrmResult) {
+    private ComputationResponse toComputationResponse(BasicComputationRequest request, JSRMResult jsrmResult) {
         MeasureUnit userUnits = request.getMeasureUnit();
         return new ComputationResponse(
                 measureUnitService.toPerformanceResult(jsrmResult, request.getExtraConfig().isOptimalNozzleDesign(), userUnits),
