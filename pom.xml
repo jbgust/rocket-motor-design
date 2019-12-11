@@ -56,23 +56,22 @@
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
 
-<!--		TODO : A mettre a jour avant livraison-->
-<!--		<dependency>-->
-<!--			<groupId>com.github.jbgust</groupId>-->
-<!--			<artifactId>Java-Solid-Rocket-Motor</artifactId>-->
-<!--			<version>1.5</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.github.jbgust</groupId>
+			<artifactId>Java-Solid-Rocket-Motor</artifactId>
+			<version>2.0</version>
+		</dependency>
 		<!--		 UNIQUEMENT POUR tester JSRM quand on importe le JAR -->
-		<dependency>
-			<groupId>net.objecthunter</groupId>
-			<artifactId>exp4j</artifactId>
-			<version>0.4.8</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>27.0-jre</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>net.objecthunter</groupId>-->
+<!--			<artifactId>exp4j</artifactId>-->
+<!--			<version>0.4.8</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>com.google.guava</groupId>-->
+<!--			<artifactId>guava</artifactId>-->
+<!--			<version>27.0-jre</version>-->
+<!--		</dependency>-->
 <!--		 FIN: UNIQUEMENT POUR tester JSRM quand on importe le JAR-->
 
         <dependency>
@@ -99,7 +98,6 @@
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
-				<version></version>
 			</plugin>
 		</plugins>
 	</build>
