@@ -23,15 +23,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/compute", "/export/rasp")
+                .antMatchers("/compute", "/compute/finocyl", "/export/rasp")
                 .permitAll()
 //                .requestMatchers(EndpointRequest.to(PrometheusScrapeEndpoint.class))
 //                .authenticated()
 //                .and()
 //                .formLogin()
                 .and()
-                .csrf().disable()
-        ;
+                .csrf().disable();
     }
 
     @Bean
@@ -42,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedHeaders(asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/compute", configuration);
+        source.registerCorsConfiguration("/compute/finocyl", configuration);
         source.registerCorsConfiguration("/export/rasp", configuration);
         return source;
     }

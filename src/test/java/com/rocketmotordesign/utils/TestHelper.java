@@ -48,6 +48,7 @@ public class TestHelper {
         computationRequest.setChamberInnerDiameter(40d);
         computationRequest.setChamberLength(150d);
         computationRequest.setMeasureUnit(SI);
+        computationRequest.setEndSurface(EXPOSED);
 
         ExtraConfiguration extraConfig = new ExtraConfiguration();
         extraConfig.setDensityRatio(0.96);
