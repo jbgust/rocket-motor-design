@@ -276,6 +276,16 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
+    public void shouldSetMaxNumberOfCalculationLine() {
+        ExtraConfiguration extraConfiguration = getDefaultExtraConfiguration();
+        extraConfiguration.setNumberOfCalculationLine(200);
+
+        JSRMConfig jsrmConfig = measureUnitService.toJSRMConfig(extraConfiguration, IMPERIAL, true);
+
+        assertThat(jsrmConfig.getNumberLineDuringBurnCalculation() + jsrmConfig.getNumberLineDuringPostBurnCalculation()).isEqualTo(199);
+    }
+
+    @Test
     public void shouldConvertPerformanceResultFromJSRMUnitToImperialUnit() {
 
         Nozzle nozzle = new Nozzle(

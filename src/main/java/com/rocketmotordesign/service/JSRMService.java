@@ -26,8 +26,7 @@ public class JSRMService {
         JSRMConfig customConfig = measureUnitService.toJSRMConfig(request.getExtraConfig(), userUnits, safeKnRun);
 
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
-        JSRMResult jsrmResult = new JSRMSimulation(solidRocketMotor).run(customConfig);
 
-        return jsrmResult;
+        return new JSRMSimulation(solidRocketMotor).run(customConfig);
     }
 }

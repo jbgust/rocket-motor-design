@@ -3,6 +3,7 @@ package com.rocketmotordesign.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import com.rocketmotordesign.controler.request.BurnRatePressureData;
+import com.rocketmotordesign.controler.request.FinocylComputationRequest;
 import com.rocketmotordesign.controler.request.HollowComputationRequest;
 import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.service.JSRMService;
@@ -77,9 +78,11 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunFinocylComputation() throws Exception {
+    public void shouldRunFinocylComputationWithFullNumberOfPoints() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultFinocylRequest());
+        FinocylComputationRequest defaultFinocylRequest = getDefaultFinocylRequest();
+        defaultFinocylRequest.getExtraConfig().setNumberOfCalculationLine(883);
+        String request = new ObjectMapper().writeValueAsString(defaultFinocylRequest);
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/finocyl")
@@ -95,7 +98,7 @@ public class ComputationControlerIT {
 //                .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
 //                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", closeTo(36.6355, 0.0001)))
 
-                .andExpect(jsonPath("$.performanceResult.maxThrust", is("392.74")))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("392.73")))
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("181.36")))
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.00")))
 //                .andExpect(jsonPath("$.performanceResult.maxPressure", is("59.36")))
@@ -107,13 +110,37 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("0.147")))
 
-//                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
 //
 //                .andExpect(jsonPath("$.motorParameters[400].x", is(closeTo(1.0343, 0.01d))))
 //                .andExpect(jsonPath("$.motorParameters[400].y", is(closeTo(2058.5999, 0.0001d))))
 //                .andExpect(jsonPath("$.motorParameters[400].p", is(closeTo(59.3117, 0.0001d))))
 //                .andExpect(jsonPath("$.motorParameters[400].m", is(closeTo(1.584, 0.0001d))));
         ;
+    }
+
+    @Test
+    public void shouldRunFinocylComputation() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultFinocylRequest());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/finocyl")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(200)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H216")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("396.17")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("182.59")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.86")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.147")));
+        //THEN
     }
 
     @Test
@@ -129,11 +156,12 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H214")))
+                .andExpect(jsonPath("$.motorParameters", hasSize(200)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H216")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
-                .andExpect(jsonPath("$.performanceResult.maxThrust", is("392.74")))
-                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("181.36")))
-                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.00")))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("396.17")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("182.59")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.86")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.11")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("0.324")));

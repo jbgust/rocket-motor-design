@@ -51,6 +51,9 @@ public class ComputationControler {
 
     @PostMapping("finocyl")
     public ResponseEntity computeFinocyl(@RequestBody FinocylComputationRequest request) {
+        if(request.getExtraConfig().getNumberOfCalculationLine() == null){
+            request.getExtraConfig().setNumberOfCalculationLine(200);
+        }
         return computeRequest(request);
     }
 
@@ -136,15 +139,16 @@ public class ComputationControler {
 
     private ComputationResponse toComputationResponse(BasicComputationRequest request, JSRMResult jsrmResult) {
         MeasureUnit userUnits = request.getMeasureUnit();
+        boolean allResults = request.getExtraConfig().getNumberOfCalculationLine() != null;
         return new ComputationResponse(
                 measureUnitService.toPerformanceResult(jsrmResult, request.getExtraConfig().isOptimalNozzleDesign(), userUnits),
-                reduceGraphResults(jsrmResult, userUnits));
+                reduceGraphResults(jsrmResult, userUnits, allResults));
     }
 
-    private List<GraphResult> reduceGraphResults(JSRMResult result, MeasureUnit userUnits) {
+    private List<GraphResult> reduceGraphResults(JSRMResult result, MeasureUnit userUnits, boolean allResults) {
         AtomicInteger i = new AtomicInteger();
         return result.getMotorParameters().stream()
-                .filter(thrustResult -> moduloLimitSize == 1 || i.getAndIncrement() % moduloLimitSize == 0)
+                .filter(thrustResult -> allResults || (moduloLimitSize == 1 || i.getAndIncrement() % moduloLimitSize == 0))
                 .map(motorParameters1 -> measureUnitService.toGraphResult(motorParameters1, userUnits))
                 .collect(Collectors.toList());
     }

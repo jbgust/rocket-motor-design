@@ -61,6 +61,10 @@ public class MeasureUnitService {
                 .withOptimalNozzleDesign(extraConfig.isOptimalNozzleDesign())
                 .withSafeKNFailure(safeKNRun);
 
+        if(extraConfig.getNumberOfCalculationLine() != null) {
+            jsrmConfigBuilder.withNumberOfCalculationLine(extraConfig.getNumberOfCalculationLine());
+        }
+
         if(extraConfig.getNozzleExpansionRatio() != null){
             jsrmConfigBuilder.withNozzleExpansionRatio(extraConfig.getNozzleExpansionRatio());
         }

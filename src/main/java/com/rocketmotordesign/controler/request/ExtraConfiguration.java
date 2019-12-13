@@ -13,6 +13,7 @@ public class ExtraConfiguration {
     private double nozzleEfficiency;
     private boolean optimalNozzleDesign;
     private Double nozzleExpansionRatio;
+    private Integer numberOfCalculationLine;
 
     public ExtraConfiguration() {
     }
@@ -101,13 +102,14 @@ public class ExtraConfiguration {
                 Double.compare(that.erosiveBurningAreaRatioThreshold, erosiveBurningAreaRatioThreshold) == 0 &&
                 Double.compare(that.erosiveBurningVelocityCoefficient, erosiveBurningVelocityCoefficient) == 0 &&
                 Double.compare(that.nozzleEfficiency, nozzleEfficiency) == 0 &&
+                Double.compare(that.numberOfCalculationLine, numberOfCalculationLine) == 0 &&
                 optimalNozzleDesign == that.optimalNozzleDesign &&
                 Objects.equals(nozzleExpansionRatio, that.nozzleExpansionRatio);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(densityRatio, nozzleErosion, combustionEfficiencyRatio, ambiantPressureInMPa, erosiveBurningAreaRatioThreshold, erosiveBurningVelocityCoefficient, nozzleEfficiency, optimalNozzleDesign, nozzleExpansionRatio);
+        return Objects.hash(densityRatio, nozzleErosion, combustionEfficiencyRatio, ambiantPressureInMPa, erosiveBurningAreaRatioThreshold, erosiveBurningVelocityCoefficient, nozzleEfficiency, optimalNozzleDesign, nozzleExpansionRatio, numberOfCalculationLine);
     }
 
     @Override
@@ -121,7 +123,16 @@ public class ExtraConfiguration {
                 ", erosiveBurningVelocityCoefficient=" + erosiveBurningVelocityCoefficient +
                 ", nozzleEfficiency=" + nozzleEfficiency +
                 ", optimalNozzleDesign=" + optimalNozzleDesign +
+                ", numberOfCalculationLine=" + numberOfCalculationLine +
                 ", nozzleExpansionRatio=" + nozzleExpansionRatio +
                 '}';
+    }
+
+    public Integer getNumberOfCalculationLine() {
+        return numberOfCalculationLine;
+    }
+
+    public void setNumberOfCalculationLine(Integer numberOfCalculationLine) {
+        this.numberOfCalculationLine = numberOfCalculationLine;
     }
 }
