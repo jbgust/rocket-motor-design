@@ -95,29 +95,14 @@ public class ComputationControlerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("H214")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
-                //TODO: a nettoyer
-//                .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
-//                .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", closeTo(36.6355, 0.0001)))
-
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("392.73")))
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("181.36")))
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.00")))
-//                .andExpect(jsonPath("$.performanceResult.maxPressure", is("59.36")))
-//                .andExpect(jsonPath("$.performanceResult.thrustTime", is("2.15")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
-//                .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
-//                .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
-//                .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("0.147")))
 
-                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
-//
-//                .andExpect(jsonPath("$.motorParameters[400].x", is(closeTo(1.0343, 0.01d))))
-//                .andExpect(jsonPath("$.motorParameters[400].y", is(closeTo(2058.5999, 0.0001d))))
-//                .andExpect(jsonPath("$.motorParameters[400].p", is(closeTo(59.3117, 0.0001d))))
-//                .andExpect(jsonPath("$.motorParameters[400].m", is(closeTo(1.584, 0.0001d))));
-        ;
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)));
     }
 
     @Test
@@ -130,6 +115,7 @@ public class ComputationControlerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request));
 
+        //THEN
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.motorParameters", hasSize(200)))
@@ -141,7 +127,54 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("0.147")));
+    }
+
+    @Test
+    public void shouldRunStarGrainComputation() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultStarGrainRequest());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/star")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
         //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(200)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H197")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("366.78")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("201.53")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("124.17")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.166")));
+    }
+
+    @Test
+    public void shouldRunStarGrainComputationInImperial() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultStarGrainRequestImperial());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/star")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(200)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H197")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("366.78")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("201.53")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("124.17")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.11")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.365")));
     }
 
     @Test
@@ -212,17 +245,17 @@ public class ComputationControlerIT {
     public void shouldRunComputationForLowKNMotor() throws Exception {
         // GIVEN
         HollowComputationRequest lowKNRequest = new HollowComputationRequest();
-        lowKNRequest.setThroatDiameter(19);
-        lowKNRequest.setOuterDiameter(37);
-        lowKNRequest.setCoreDiameter(20);
-        lowKNRequest.setSegmentLength(10);
-        lowKNRequest.setNumberOfSegment(5);
+        lowKNRequest.setThroatDiameter(8);
+        lowKNRequest.setOuterDiameter(28);
+        lowKNRequest.setCoreDiameter(12);
+        lowKNRequest.setSegmentLength(98);
+        lowKNRequest.setNumberOfSegment(1);
         lowKNRequest.setOuterSurface(INHIBITED);
         lowKNRequest.setEndsSurface(EXPOSED);
         lowKNRequest.setCoreSurface(EXPOSED);
-        lowKNRequest.setPropellantType(KNSU.name());
-        lowKNRequest.setChamberInnerDiameter(38);
-        lowKNRequest.setChamberLength(500);
+        lowKNRequest.setPropellantType(KNDX.name());
+        lowKNRequest.setChamberInnerDiameter(28);
+        lowKNRequest.setChamberLength(98);
         lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
 
         // WHEN
@@ -234,15 +267,9 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.safeKN", is(true)))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(true)))
-
-                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H134")))
-                .andExpect(jsonPath("$.performanceResult.maxThrust", is("144.95")))
-                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("171.40")))
-                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("255.97")))
-                .andExpect(jsonPath("$.performanceResult.maxPressure", is("4.41")))
-                .andExpect(jsonPath("$.performanceResult.thrustTime", is("1.28")))
-                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(true)));
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("G106")));
     }
 
     @Test

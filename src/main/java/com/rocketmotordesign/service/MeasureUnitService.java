@@ -8,6 +8,7 @@ import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.grain.FinocylGrain;
 import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
 import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
+import com.github.jbgust.jsrm.application.motor.grain.StarGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
@@ -133,6 +134,17 @@ public class MeasureUnitService {
                     convertLengthToJSRM(userLengthUnit, finocylRequest.getSegmentLength()),
                     finocylRequest.getNumberOfSegment(),
                     finocylRequest.getEndSurface()
+            );
+        } else if(request instanceof StarGrainComputationRequest) {
+            StarGrainComputationRequest starGrainComputationRequest = (StarGrainComputationRequest)request;
+            grainConfigutation = new StarGrain(
+                    convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getInnerDiameter()),
+                    convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getPointDiameter()),
+                    starGrainComputationRequest.getPointCount(),
+                    starGrainComputationRequest.getNumberOfSegment(),
+                    convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getSegmentLength()),
+                    starGrainComputationRequest.getEndSurface()
             );
         } else {
             throw new IllegalStateException("Request inconnue : "+ request.getClass().getSimpleName());
