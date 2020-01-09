@@ -1,5 +1,7 @@
 package com.rocketmotordesign.controler.response;
 
+import com.github.jbgust.jsrm.application.result.MotorClassification;
+
 import java.util.Locale;
 
 public class PerformanceResult {
@@ -19,6 +21,7 @@ public class PerformanceResult {
     private final boolean lowKNCorrection;
     private final String grainMass;
     private final boolean safeKN;
+    private final int classPercentage;
 
     public PerformanceResult(String motorDescription,
                              double maxThrust,
@@ -34,7 +37,8 @@ public class PerformanceResult {
                              Double divergenceCrossSectionDiameter,
                              double optimalNozzleExpansionRatio,
                              long numberOfKNCorrection,
-                             double grainMass) {
+                             double grainMass,
+                             MotorClassification motorClassification) {
         this.motorDescription = motorDescription;
         this.maxThrust = format(maxThrust);
         this.totalImpulse = format(totalImpulse);
@@ -51,6 +55,7 @@ public class PerformanceResult {
         this.lowKNCorrection = isLowKNCorrection(numberOfKNCorrection);
         this.grainMass = format(grainMass, "%.3f");
         this.safeKN = numberOfKNCorrection > 0 ? true : false;
+        this.classPercentage = (int)Math.ceil(100 * (totalImpulse - motorClassification.getTotalImpulseRangeInNewtowSecond().lowerEndpoint()) / (motorClassification.getTotalImpulseRangeInNewtowSecond().upperEndpoint()-motorClassification.getTotalImpulseRangeInNewtowSecond().lowerEndpoint()));
     }
 
     public static String format(Double aDouble) {
@@ -119,6 +124,10 @@ public class PerformanceResult {
 
     public String getGrainMass() {
         return grainMass;
+    }
+
+    public int getClassPercentage() {
+        return classPercentage;
     }
 
     /**

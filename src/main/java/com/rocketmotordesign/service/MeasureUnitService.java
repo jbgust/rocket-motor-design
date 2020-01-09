@@ -88,7 +88,8 @@ public class MeasureUnitService {
                 convertLengthToMeteor(userUnits.getLenghtUnit(), jsrmResult.getNozzle().getNozzleExitDiameterInMillimeter() - jsrmResult.getNozzle().getNozzleThroatDiameterInMillimeter()),
                 jsrmResult.getNozzle().getOptimalNozzleExpansionRatio(),
                 jsrmResult.getNumberOfKNCorrection(),
-                convertMassToMeteor(userUnits.getMassUnit(), jsrmResult.getGrainMassInKg()));
+                convertMassToMeteor(userUnits.getMassUnit(), jsrmResult.getGrainMassInKg()),
+                jsrmResult.getMotorClassification());
     }
 
     public GraphResult toGraphResult(MotorParameters motorParameters, MeasureUnit userUnits) {

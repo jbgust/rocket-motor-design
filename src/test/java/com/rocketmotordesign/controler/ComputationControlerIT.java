@@ -68,6 +68,7 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("2.812")))
+                .andExpect(jsonPath("$.performanceResult.classPercentage", is(41)))
 
                 .andExpect(jsonPath("$.motorParameters", hasSize(883)))
 
