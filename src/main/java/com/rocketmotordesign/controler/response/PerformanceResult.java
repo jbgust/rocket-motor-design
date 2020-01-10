@@ -1,6 +1,11 @@
 package com.rocketmotordesign.controler.response;
 
+import com.github.jbgust.jsrm.application.result.MotorClassification;
+import com.rocketmotordesign.service.MeasureUnit;
+
 import java.util.Locale;
+
+import static com.rocketmotordesign.service.MeasureUnit.SI;
 
 public class PerformanceResult {
     private final String motorDescription;
@@ -19,6 +24,7 @@ public class PerformanceResult {
     private final boolean lowKNCorrection;
     private final String grainMass;
     private final boolean safeKN;
+    private final int classPercentage;
 
     public PerformanceResult(String motorDescription,
                              double maxThrust,
@@ -34,7 +40,13 @@ public class PerformanceResult {
                              Double divergenceCrossSectionDiameter,
                              double optimalNozzleExpansionRatio,
                              long numberOfKNCorrection,
-                             double grainMass) {
+                             double grainMass,
+                             MotorClassification motorClassification,
+                             MeasureUnit measureUnit) {
+
+        // ça n'a pas de sens d'avoir la même précision en SI et en IMPERIAL. En IMPERIAL on perd trop en précision sur avec 2 décimales.
+        String formatPourlongueur = SI == measureUnit ? "%.2f" : "%.4f";
+
         this.motorDescription = motorDescription;
         this.maxThrust = format(maxThrust);
         this.totalImpulse = format(totalImpulse);
@@ -42,7 +54,7 @@ public class PerformanceResult {
         this.maxPressure = format(maxPressure);
         this.thrustTime = format(thrustTime);
         this.optimalDesign = optimalDesign;
-        this.nozzleExitDiameter = format(nozzleExitDiameter);
+        this.nozzleExitDiameter = format(nozzleExitDiameter, formatPourlongueur);
         this.exitSpeedInitial = format(exitSpeedInitial);
         this.averagePressure = format(averagePressure);
         this.convergenceCrossSectionDiameter = convergenceCrossSectionDiameter;
@@ -51,6 +63,7 @@ public class PerformanceResult {
         this.lowKNCorrection = isLowKNCorrection(numberOfKNCorrection);
         this.grainMass = format(grainMass, "%.3f");
         this.safeKN = numberOfKNCorrection > 0 ? true : false;
+        this.classPercentage = (int)Math.ceil(100 * (totalImpulse - motorClassification.getTotalImpulseRangeInNewtowSecond().lowerEndpoint()) / (motorClassification.getTotalImpulseRangeInNewtowSecond().upperEndpoint()-motorClassification.getTotalImpulseRangeInNewtowSecond().lowerEndpoint()));
     }
 
     public static String format(Double aDouble) {
@@ -119,6 +132,10 @@ public class PerformanceResult {
 
     public String getGrainMass() {
         return grainMass;
+    }
+
+    public int getClassPercentage() {
+        return classPercentage;
     }
 
     /**

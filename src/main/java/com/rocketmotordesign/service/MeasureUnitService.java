@@ -5,9 +5,7 @@ import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.grain.FinocylGrain;
-import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
-import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
+import com.github.jbgust.jsrm.application.motor.grain.*;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
@@ -88,7 +86,9 @@ public class MeasureUnitService {
                 convertLengthToMeteor(userUnits.getLenghtUnit(), jsrmResult.getNozzle().getNozzleExitDiameterInMillimeter() - jsrmResult.getNozzle().getNozzleThroatDiameterInMillimeter()),
                 jsrmResult.getNozzle().getOptimalNozzleExpansionRatio(),
                 jsrmResult.getNumberOfKNCorrection(),
-                convertMassToMeteor(userUnits.getMassUnit(), jsrmResult.getGrainMassInKg()));
+                convertMassToMeteor(userUnits.getMassUnit(), jsrmResult.getGrainMassInKg()),
+                jsrmResult.getMotorClassification(),
+                userUnits);
     }
 
     public GraphResult toGraphResult(MotorParameters motorParameters, MeasureUnit userUnits) {
@@ -132,6 +132,25 @@ public class MeasureUnitService {
                     convertLengthToJSRM(userLengthUnit, finocylRequest.getSegmentLength()),
                     finocylRequest.getNumberOfSegment(),
                     finocylRequest.getEndSurface()
+            );
+        } else if(request instanceof StarGrainComputationRequest) {
+            StarGrainComputationRequest starGrainComputationRequest = (StarGrainComputationRequest)request;
+            grainConfigutation = new StarGrain(
+                    convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getInnerDiameter()),
+                    convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getPointDiameter()),
+                    starGrainComputationRequest.getPointCount(),
+                    starGrainComputationRequest.getNumberOfSegment(),
+                    convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getSegmentLength()),
+                    starGrainComputationRequest.getEndSurface()
+            );
+        } else if(request instanceof EndBurnerGrainComputationRequest) {
+            EndBurnerGrainComputationRequest endBurnerGrainComputationRequest = (EndBurnerGrainComputationRequest)request;
+            grainConfigutation = new EndBurner(
+                    convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getSegmentLength()),
+                    convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getHoleDiameter()),
+                    convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getHoleDepth())
             );
         } else {
             throw new IllegalStateException("Request inconnue : "+ request.getClass().getSimpleName());

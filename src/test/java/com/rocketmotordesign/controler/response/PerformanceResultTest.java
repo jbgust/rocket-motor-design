@@ -1,12 +1,22 @@
 package com.rocketmotordesign.controler.response;
 
 
+import com.github.jbgust.jsrm.application.result.MotorClassification;
+import com.rocketmotordesign.service.MeasureUnit;
 import org.junit.Test;
 
 import static com.rocketmotordesign.controler.response.PerformanceResult.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PerformanceResultTest {
+
+    @Test
+    public void doitIndiquerLePourcentageDeLaClasse() {
+        PerformanceResult result = createPerformanceResult(0);
+
+        assertThat(result.getMotorDescription()).isEqualTo("L1672");
+        assertThat(result.getClassPercentage()).isEqualTo(41);
+    }
 
     @Test
     public void neDoitPasIndiquerLutilisationDeSafeKN() {
@@ -46,7 +56,7 @@ public class PerformanceResultTest {
     }
 
     private PerformanceResult createPerformanceResult(int lowKNCorrection) {
-        return new PerformanceResult("description", 1, 2, 3, 4, 5, true, 6, 7, 8, 9.0, 10.0, 11, lowKNCorrection, 12);
+        return new PerformanceResult("L1672", 1, 3603.07, 3, 4, 5, true, 6, 7, 8, 9.0, 10.0, 11, lowKNCorrection, 12, MotorClassification.L, MeasureUnit.SI);
     }
 
 }
