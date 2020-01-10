@@ -5,10 +5,7 @@ import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.grain.FinocylGrain;
-import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
-import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
-import com.github.jbgust.jsrm.application.motor.grain.StarGrain;
+import com.github.jbgust.jsrm.application.motor.grain.*;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
@@ -145,6 +142,14 @@ public class MeasureUnitService {
                     starGrainComputationRequest.getNumberOfSegment(),
                     convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getSegmentLength()),
                     starGrainComputationRequest.getEndSurface()
+            );
+        } else if(request instanceof EndBurnerGrainComputationRequest) {
+            EndBurnerGrainComputationRequest endBurnerGrainComputationRequest = (EndBurnerGrainComputationRequest)request;
+            grainConfigutation = new EndBurner(
+                    convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getSegmentLength()),
+                    convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getHoleDiameter()),
+                    convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getHoleDepth())
             );
         } else {
             throw new IllegalStateException("Request inconnue : "+ request.getClass().getSimpleName());

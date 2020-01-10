@@ -1,9 +1,6 @@
 package com.rocketmotordesign.utils;
 
-import com.rocketmotordesign.controler.request.ExtraConfiguration;
-import com.rocketmotordesign.controler.request.FinocylComputationRequest;
-import com.rocketmotordesign.controler.request.HollowComputationRequest;
-import com.rocketmotordesign.controler.request.StarGrainComputationRequest;
+import com.rocketmotordesign.controler.request.*;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
@@ -51,18 +48,7 @@ public class TestHelper {
         computationRequest.setMeasureUnit(SI);
         computationRequest.setEndSurface(EXPOSED);
 
-        ExtraConfiguration extraConfig = new ExtraConfiguration();
-        extraConfig.setDensityRatio(0.96);
-        extraConfig.setAmbiantPressureInMPa(0.101);
-        extraConfig.setCombustionEfficiencyRatio(0.97);
-        extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
-        extraConfig.setNozzleEfficiency(0.85);
-        extraConfig.setNozzleErosion(0);
-        extraConfig.setErosiveBurningVelocityCoefficient(0);
-        extraConfig.setNozzleExpansionRatio(8d);
-        extraConfig.setOptimalNozzleDesign(false);
-
-        computationRequest.setExtraConfig(extraConfig);
+        computationRequest.setExtraConfig(configMotorSim());
 
         return computationRequest;
     }
@@ -84,18 +70,26 @@ public class TestHelper {
         computationRequest.setMeasureUnit(SI);
         computationRequest.setEndSurface(EXPOSED);
 
-        ExtraConfiguration extraConfig = new ExtraConfiguration();
-        extraConfig.setDensityRatio(0.96);
-        extraConfig.setAmbiantPressureInMPa(0.101);
-        extraConfig.setCombustionEfficiencyRatio(0.97);
-        extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
-        extraConfig.setNozzleEfficiency(0.85);
-        extraConfig.setNozzleErosion(0);
-        extraConfig.setErosiveBurningVelocityCoefficient(0);
-        extraConfig.setNozzleExpansionRatio(8d);
-        extraConfig.setOptimalNozzleDesign(false);
+        computationRequest.setExtraConfig(configMotorSim());
 
-        computationRequest.setExtraConfig(extraConfig);
+        return computationRequest;
+    }
+
+    public static EndBurnerGrainComputationRequest getDefaultEndBurnerGrainRequest() {
+        EndBurnerGrainComputationRequest computationRequest = new EndBurnerGrainComputationRequest();
+        computationRequest.setOuterDiameter(30d);
+        computationRequest.setHoleDiameter(10d);
+        computationRequest.setHoleDepth(10d);
+
+        //BasicComputationRequest
+        computationRequest.setThroatDiameter(6d);
+        computationRequest.setSegmentLength(70d);
+        computationRequest.setPropellantType(KNSU.name());
+        computationRequest.setChamberInnerDiameter(40d);
+        computationRequest.setChamberLength(75d);
+        computationRequest.setMeasureUnit(SI);
+
+        computationRequest.setExtraConfig(configMotorSim());
 
         return computationRequest;
     }
@@ -116,6 +110,31 @@ public class TestHelper {
         computationRequest.setChamberLength(150d/25.4);
         computationRequest.setMeasureUnit(IMPERIAL);
 
+        computationRequest.setExtraConfig(configMotorSim());
+
+        return computationRequest;
+    }
+
+    public static EndBurnerGrainComputationRequest getDefaultEndBurnerGrainRequestImperial() {
+        EndBurnerGrainComputationRequest computationRequest = new EndBurnerGrainComputationRequest();
+        computationRequest.setOuterDiameter(30d/25.4);
+        computationRequest.setHoleDiameter(10d/25.4);
+        computationRequest.setHoleDepth(10d/25.4);
+
+        //BasicComputationRequest
+        computationRequest.setThroatDiameter(6d/25.4);
+        computationRequest.setSegmentLength(70d/25.4);
+        computationRequest.setPropellantType(KNSU.name());
+        computationRequest.setChamberInnerDiameter(40d/25.4);
+        computationRequest.setChamberLength(75d/25.4);
+        computationRequest.setMeasureUnit(IMPERIAL);
+
+        computationRequest.setExtraConfig(configMotorSim());
+
+        return computationRequest;
+    }
+
+    private static ExtraConfiguration configMotorSim() {
         ExtraConfiguration extraConfig = new ExtraConfiguration();
         extraConfig.setDensityRatio(0.96);
         extraConfig.setAmbiantPressureInMPa(0.101);
@@ -126,10 +145,7 @@ public class TestHelper {
         extraConfig.setErosiveBurningVelocityCoefficient(0);
         extraConfig.setNozzleExpansionRatio(8d);
         extraConfig.setOptimalNozzleDesign(false);
-
-        computationRequest.setExtraConfig(extraConfig);
-
-        return computationRequest;
+        return extraConfig;
     }
 
     public static FinocylComputationRequest getDefaultFinocylRequestImperial() {
@@ -149,16 +165,7 @@ public class TestHelper {
         computationRequest.setChamberLength(150d/25.4);
         computationRequest.setMeasureUnit(IMPERIAL);
 
-        ExtraConfiguration extraConfig = new ExtraConfiguration();
-        extraConfig.setDensityRatio(0.96);
-        extraConfig.setAmbiantPressureInMPa(0.101);
-        extraConfig.setCombustionEfficiencyRatio(0.97);
-        extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
-        extraConfig.setNozzleEfficiency(0.85);
-        extraConfig.setNozzleErosion(0);
-        extraConfig.setErosiveBurningVelocityCoefficient(0);
-        extraConfig.setNozzleExpansionRatio(8d);
-        extraConfig.setOptimalNozzleDesign(false);
+        ExtraConfiguration extraConfig = configMotorSim();
 
         computationRequest.setExtraConfig(extraConfig);
 

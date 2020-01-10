@@ -6,10 +6,7 @@ import com.github.jbgust.jsrm.application.exception.MotorClassificationOutOfBoun
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.rocketmotordesign.controler.request.BasicComputationRequest;
-import com.rocketmotordesign.controler.request.HollowComputationRequest;
-import com.rocketmotordesign.controler.request.FinocylComputationRequest;
-import com.rocketmotordesign.controler.request.StarGrainComputationRequest;
+import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.controler.response.ComputationResponse;
 import com.rocketmotordesign.controler.response.ErrorMessage;
 import com.rocketmotordesign.controler.response.GraphResult;
@@ -63,6 +60,11 @@ public class ComputationControler {
         if(request.getExtraConfig().getNumberOfCalculationLine() == null){
             request.getExtraConfig().setNumberOfCalculationLine(200);
         }
+        return computeRequest(request);
+    }
+
+    @PostMapping("endburner")
+    public ResponseEntity computeEndBurner(@RequestBody EndBurnerGrainComputationRequest request) {
         return computeRequest(request);
     }
 

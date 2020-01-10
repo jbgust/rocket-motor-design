@@ -1,32 +1,20 @@
 package com.rocketmotordesign.controler.request;
 
-import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
-
 import java.util.Objects;
 
-public class StarGrainComputationRequest extends BasicComputationRequest{
+public class EndBurnerGrainComputationRequest extends BasicComputationRequest{
 
     //Grain
     private double outerDiameter;
-    private double innerDiameter;
-    private double pointDiameter;
-    private int pointCount;
-    private GrainSurface endSurface;
+    private double holeDiameter;
+    private double holeDepth;
 
-    public StarGrainComputationRequest() {
+    public EndBurnerGrainComputationRequest() {
     }
 
     @Override
     public String getGrainType() {
-        return "STAR";
-    }
-
-    public GrainSurface getEndSurface() {
-        return endSurface;
-    }
-
-    public void setEndSurface(GrainSurface endSurface) {
-        this.endSurface = endSurface;
+        return "END_BURNER";
     }
 
     public double getOuterDiameter() {
@@ -37,35 +25,27 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
         this.outerDiameter = outerDiameter;
     }
 
-    public double getInnerDiameter() {
-        return innerDiameter;
+    public double getHoleDiameter() {
+        return holeDiameter;
     }
 
-    public void setInnerDiameter(double innerDiameter) {
-        this.innerDiameter = innerDiameter;
+    public void setHoleDiameter(double holeDiameter) {
+        this.holeDiameter = holeDiameter;
     }
 
-    public double getPointDiameter() {
-        return pointDiameter;
+    public double getHoleDepth() {
+        return holeDepth;
     }
 
-    public void setPointDiameter(double pointDiameter) {
-        this.pointDiameter = pointDiameter;
-    }
-
-    public int getPointCount() {
-        return pointCount;
-    }
-
-    public void setPointCount(int pointCount) {
-        this.pointCount = pointCount;
+    public void setHoleDepth(double holeDepth) {
+        this.holeDepth = holeDepth;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof StarGrainComputationRequest)) return false;
-        StarGrainComputationRequest that = (StarGrainComputationRequest) o;
+        if (!(o instanceof EndBurnerGrainComputationRequest)) return false;
+        EndBurnerGrainComputationRequest that = (EndBurnerGrainComputationRequest) o;
         return Double.compare(that.throatDiameter, throatDiameter) == 0 &&
                 Double.compare(that.segmentLength, segmentLength) == 0 &&
                 Double.compare(that.numberOfSegment, numberOfSegment) == 0 &&
@@ -77,15 +57,14 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
                 Objects.equals(customPropellant, that.customPropellant) &&
 
                 Double.compare(that.outerDiameter, outerDiameter) == 0 &&
-                Double.compare(that.innerDiameter, innerDiameter) == 0 &&
-                Double.compare(that.pointDiameter, pointDiameter) == 0 &&
-                Double.compare(that.pointCount, pointCount) == 0 &&
-                endSurface == that.endSurface;
+                Double.compare(that.holeDiameter, holeDiameter) == 0 &&
+                Double.compare(that.holeDepth, holeDepth) == 0 &&
+                Double.compare(that.holeDiameter, holeDiameter) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(outerDiameter, innerDiameter, pointDiameter, pointCount, endSurface);
+        return Objects.hash(outerDiameter, holeDiameter, holeDepth, holeDiameter);
     }
 
 
@@ -93,16 +72,14 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
     public String toString() {
         return "StarComputationRequest{" +
                 "outerDiameter=" + outerDiameter +
-                ", innerDiameter=" + innerDiameter +
-                ", pointDiameter=" + pointDiameter +
-                ", pointCount=" + pointCount +
-                ", endSurface=" + endSurface +
+                ", holeDiameter=" + holeDiameter +
+                ", holeDepth=" + holeDepth +
+                ", holeDiameter=" + holeDiameter +
                 ", throatDiameter=" + throatDiameter +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
                 ", chamberLength=" + chamberLength +
                 ", propellantType='" + propellantType + '\'' +
                 ", segmentLength=" + segmentLength +
-                ", numberOfSegment=" + numberOfSegment +
                 ", extraConfig=" + extraConfig +
                 ", measureUnit=" + measureUnit +
                 ", computationHash='" + computationHash + '\'' +

@@ -178,6 +178,54 @@ public class ComputationControlerIT {
     }
 
     @Test
+    public void shouldRunEndBurnerGrainComputation() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultEndBurnerGrainRequest());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/endburner")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("G9")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("33.97")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("92.36")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("106.66")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("16.97")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.088")));
+    }
+
+    @Test
+    public void shouldRunEndBurnerGrainComputationImperial() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultEndBurnerGrainRequestImperial());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/endburner")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("G9")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("33.97")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("92.36")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("106.66")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("0.67")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.195")));
+    }
+
+    @Test
     public void shouldRunFinocylComputationImperial() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultFinocylRequestImperial());
