@@ -87,7 +87,8 @@ public class MeasureUnitService {
                 jsrmResult.getNozzle().getOptimalNozzleExpansionRatio(),
                 jsrmResult.getNumberOfKNCorrection(),
                 convertMassToMeteor(userUnits.getMassUnit(), jsrmResult.getGrainMassInKg()),
-                jsrmResult.getMotorClassification());
+                jsrmResult.getMotorClassification(),
+                userUnits);
     }
 
     public GraphResult toGraphResult(MotorParameters motorParameters, MeasureUnit userUnits) {

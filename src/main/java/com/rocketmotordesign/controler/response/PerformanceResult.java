@@ -1,8 +1,11 @@
 package com.rocketmotordesign.controler.response;
 
 import com.github.jbgust.jsrm.application.result.MotorClassification;
+import com.rocketmotordesign.service.MeasureUnit;
 
 import java.util.Locale;
+
+import static com.rocketmotordesign.service.MeasureUnit.SI;
 
 public class PerformanceResult {
     private final String motorDescription;
@@ -38,7 +41,12 @@ public class PerformanceResult {
                              double optimalNozzleExpansionRatio,
                              long numberOfKNCorrection,
                              double grainMass,
-                             MotorClassification motorClassification) {
+                             MotorClassification motorClassification,
+                             MeasureUnit measureUnit) {
+
+        // ça n'a pas de sens d'avoir la même précision en SI et en IMPERIAL. En IMPERIAL on perd trop en précision sur avec 2 décimales.
+        String formatPourlongueur = SI == measureUnit ? "%.2f" : "%.4f";
+
         this.motorDescription = motorDescription;
         this.maxThrust = format(maxThrust);
         this.totalImpulse = format(totalImpulse);
@@ -46,7 +54,7 @@ public class PerformanceResult {
         this.maxPressure = format(maxPressure);
         this.thrustTime = format(thrustTime);
         this.optimalDesign = optimalDesign;
-        this.nozzleExitDiameter = format(nozzleExitDiameter);
+        this.nozzleExitDiameter = format(nozzleExitDiameter, formatPourlongueur);
         this.exitSpeedInitial = format(exitSpeedInitial);
         this.averagePressure = format(averagePressure);
         this.convergenceCrossSectionDiameter = convergenceCrossSectionDiameter;

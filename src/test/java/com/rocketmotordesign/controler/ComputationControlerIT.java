@@ -172,7 +172,7 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("366.78")))
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("201.53")))
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("124.17")))
-                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.11")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.1136")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("0.365")));
     }
@@ -220,7 +220,7 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("33.97")))
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("92.36")))
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("106.66")))
-                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("0.67")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("0.6681")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("0.195")));
     }
@@ -244,7 +244,7 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("396.17")))
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("182.59")))
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.86")))
-                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.11")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.1136")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("0.324")));
     }
@@ -274,7 +274,7 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("130.65")))
                 .andExpect(jsonPath("$.performanceResult.maxPressure", is("860.88")))
                 .andExpect(jsonPath("$.performanceResult.thrustTime", is("2.15")))
-                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("2.13")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("2.1270")))
                 .andExpect(jsonPath("$.performanceResult.exitSpeedInitial", is("3.07")))
                 .andExpect(jsonPath("$.performanceResult.averagePressure", is("711.47")))
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))

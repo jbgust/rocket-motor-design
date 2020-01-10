@@ -322,7 +322,7 @@ public class MeasureUnitServiceTest {
         assertThat(performanceResult.getMaxPressure()).isEqualTo(format(jsrmResult.getMaxChamberPressureInMPa()*MPa_TO_PSI_RATIO));
         assertThat(performanceResult.getThrustTime()).isEqualTo(format(jsrmResult.getThrustTimeInSecond()));
         assertThat(performanceResult.isOptimalDesign()).isEqualTo(true);
-        assertThat(performanceResult.getNozzleExitDiameter()).isEqualTo(format(nozzle.getNozzleExitDiameterInMillimeter()/25.4));
+        assertThat(performanceResult.getNozzleExitDiameter()).isEqualTo(format(nozzle.getNozzleExitDiameterInMillimeter()/25.4, "%.4f"));
         assertThat(performanceResult.getExitSpeedInitial()).isEqualTo(format(nozzle.getInitialNozzleExitSpeedInMach()));
         assertThat(performanceResult.getAveragePressure()).isEqualTo(format(jsrmResult.getAverageChamberPressureInMPa()*MPa_TO_PSI_RATIO));
         assertThat(performanceResult.getConvergenceCrossSectionDiameter()).isCloseTo((nozzle.getChamberInsideDiameterInMillimeter()-nozzle.getNozzleThroatDiameterInMillimeter())/25.4, DEFAULT_OFFSET);
@@ -358,10 +358,13 @@ public class MeasureUnitServiceTest {
                 .isCloseTo(500.0, offset(0.01));
     }
 
-    private String format(Double aDouble) {
-        return String.format(Locale.ENGLISH, "%.2f", aDouble);
+    private String format(Double aDouble, String format) {
+        return String.format(Locale.ENGLISH, format, aDouble);
     }
 
+    private String format(Double aDouble) {
+        return format(aDouble, "%.2f");
+    }
 
     private CustomPropellantRequest createPropellantWithBasicInfo(SolidPropellant solidPropellant) {
         CustomPropellantRequest propellantRequest = new CustomPropellantRequest();
