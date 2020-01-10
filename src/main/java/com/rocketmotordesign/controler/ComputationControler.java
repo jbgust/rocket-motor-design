@@ -38,19 +38,25 @@ public class ComputationControler {
     private final JSRMService jsrmService;
     private MeasureUnitService measureUnitService;
     private Integer moduloLimitSize;
+    private Integer finocylLimit;
+    private Integer starlLimit;
 
     public ComputationControler(JSRMService jsrmService,
                                 MeasureUnitService measureUnitService,
-                                @Value("${computation.response.limit.size}") Integer moduloLimitSize) {
+                                @Value("${computation.response.limit.size}") Integer moduloLimitSize,
+                                @Value("${computation.finocyl.limit.size:400}") Integer finocylLimit,
+                                @Value("${computation.star.limit.size:400}") Integer starlLimit) {
         this.jsrmService = jsrmService;
         this.measureUnitService = measureUnitService;
         this.moduloLimitSize = moduloLimitSize;
+        this.finocylLimit = finocylLimit;
+        this.starlLimit = starlLimit;
     }
 
     @PostMapping("finocyl")
     public ResponseEntity computeFinocyl(@RequestBody FinocylComputationRequest request) {
         if(request.getExtraConfig().getNumberOfCalculationLine() == null){
-            request.getExtraConfig().setNumberOfCalculationLine(200);
+            request.getExtraConfig().setNumberOfCalculationLine(finocylLimit);
         }
         return computeRequest(request);
     }
@@ -58,7 +64,7 @@ public class ComputationControler {
     @PostMapping("star")
     public ResponseEntity computeStar(@RequestBody StarGrainComputationRequest request) {
         if(request.getExtraConfig().getNumberOfCalculationLine() == null){
-            request.getExtraConfig().setNumberOfCalculationLine(200);
+            request.getExtraConfig().setNumberOfCalculationLine(starlLimit);
         }
         return computeRequest(request);
     }
