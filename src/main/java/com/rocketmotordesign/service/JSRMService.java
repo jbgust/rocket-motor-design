@@ -16,17 +16,17 @@ public class JSRMService {
         this.measureUnitService = measureUnitService;
     }
 
-    public JSRMResult runComputation(BasicComputationRequest request) {
+    public SimulationResult runComputation(BasicComputationRequest request) {
        return runComputation(request, false);
     }
 
-    public JSRMResult runComputation(BasicComputationRequest request, boolean safeKnRun) {
+    public SimulationResult runComputation(BasicComputationRequest request, boolean safeKnRun) {
         MeasureUnit userUnits = request.getMeasureUnit();
 
         JSRMConfig customConfig = measureUnitService.toJSRMConfig(request.getExtraConfig(), userUnits, safeKnRun);
 
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
 
-        return new JSRMSimulation(solidRocketMotor).run(customConfig);
+        return new SimulationResult(new JSRMSimulation(solidRocketMotor).run(customConfig), customConfig);
     }
 }

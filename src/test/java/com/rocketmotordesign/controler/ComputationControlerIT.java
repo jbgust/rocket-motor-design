@@ -102,7 +102,7 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("0.147")))
 
-                .andExpect(jsonPath("$.motorParameters", hasSize(883)));
+                .andExpect(jsonPath("$.motorParameters", hasSize(847)));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.motorParameters", hasSize(200)))
+                .andExpect(jsonPath("$.motorParameters", hasSize(192)))
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("H216")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("396.17")))
@@ -142,7 +142,7 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.motorParameters", hasSize(200)))
+                .andExpect(jsonPath("$.motorParameters", hasSize(192)))
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("H197")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("366.78")))
@@ -166,7 +166,7 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.motorParameters", hasSize(200)))
+                .andExpect(jsonPath("$.motorParameters", hasSize(192)))
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("H197")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("366.78")))
@@ -190,7 +190,7 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("G9")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("33.97")))
@@ -214,7 +214,7 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("G9")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("33.97")))
@@ -238,7 +238,7 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.motorParameters", hasSize(200)))
+                .andExpect(jsonPath("$.motorParameters", hasSize(192)))
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("H216")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("396.17")))

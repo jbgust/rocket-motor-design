@@ -5,7 +5,6 @@ import com.github.jbgust.jsrm.application.exception.JSRMException;
 import com.github.jbgust.jsrm.application.exception.MotorClassificationOutOfBoundException;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
-import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.controler.response.ComputationResponse;
 import com.rocketmotordesign.controler.response.ErrorMessage;
@@ -58,7 +57,7 @@ public class ComputationControler {
         if(request.getExtraConfig().getNumberOfCalculationLine() == null){
             request.getExtraConfig().setNumberOfCalculationLine(finocylLimit);
         }
-        return computeRequest(request);
+        return computeRequest(request, true);
     }
 
     @PostMapping("star")
@@ -66,22 +65,22 @@ public class ComputationControler {
         if(request.getExtraConfig().getNumberOfCalculationLine() == null){
             request.getExtraConfig().setNumberOfCalculationLine(starlLimit);
         }
-        return computeRequest(request);
+        return computeRequest(request, true);
     }
 
     @PostMapping("endburner")
     public ResponseEntity computeEndBurner(@RequestBody EndBurnerGrainComputationRequest request) {
-        return computeRequest(request);
+        return computeRequest(request, true);
     }
 
     @PostMapping
     public ResponseEntity computeHollowCylinderGrain(@RequestBody HollowComputationRequest request) {
-        return computeRequest(request);
+        return computeRequest(request, false);
     }
 
-    private ResponseEntity computeRequest(BasicComputationRequest request) {
+    private ResponseEntity computeRequest(BasicComputationRequest request, boolean removePostBurnResult) {
         try {
-            ComputationResponse response = toComputationResponse(request, jsrmService.runComputation(request));
+            ComputationResponse response = toComputationResponse(request, jsrmService.runComputation(request), removePostBurnResult);
             logSuccess(request, response);
             return ResponseEntity.ok(response);
         } catch (JSRMException e) {
@@ -129,7 +128,7 @@ public class ComputationControler {
     private ResponseEntity retryWithSafeKN(BasicComputationRequest request) {
         try {
             LOGGER.warn("METEOR[safeKN]");
-            ComputationResponse response = toComputationResponse(request, jsrmService.runComputation(request, true));
+            ComputationResponse response = toComputationResponse(request, jsrmService.runComputation(request, true), false);
             logSuccess(request, response);
             return ResponseEntity.ok(response);
         } catch (JSRMException e) {
@@ -154,17 +153,17 @@ public class ComputationControler {
         }
     }
 
-    private ComputationResponse toComputationResponse(BasicComputationRequest request, JSRMResult jsrmResult) {
+    private ComputationResponse toComputationResponse(BasicComputationRequest request, SimulationResult simulationResult, boolean removePostBurnResult) {
         MeasureUnit userUnits = request.getMeasureUnit();
         boolean allResults = request.getExtraConfig().getNumberOfCalculationLine() != null;
         return new ComputationResponse(
-                measureUnitService.toPerformanceResult(jsrmResult, request.getExtraConfig().isOptimalNozzleDesign(), userUnits),
-                reduceGraphResults(jsrmResult, userUnits, allResults));
+                measureUnitService.toPerformanceResult(simulationResult.getResult(), request.getExtraConfig().isOptimalNozzleDesign(), userUnits),
+                reduceGraphResults(simulationResult, userUnits, allResults, removePostBurnResult));
     }
 
-    private List<GraphResult> reduceGraphResults(JSRMResult result, MeasureUnit userUnits, boolean allResults) {
+    private List<GraphResult> reduceGraphResults(SimulationResult result, MeasureUnit userUnits, boolean allResults, boolean removePostBurnResult) {
         AtomicInteger i = new AtomicInteger();
-        return result.getMotorParameters().stream()
+        return result.getMotorParameters(removePostBurnResult).stream()
                 .filter(thrustResult -> allResults || (moduloLimitSize == 1 || i.getAndIncrement() % moduloLimitSize == 0))
                 .map(motorParameters1 -> measureUnitService.toGraphResult(motorParameters1, userUnits))
                 .collect(Collectors.toList());

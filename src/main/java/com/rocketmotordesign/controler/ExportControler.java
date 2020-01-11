@@ -42,7 +42,7 @@ public class ExportControler {
 
     @PostMapping(value = "/rasp")
     public ResponseEntity exportRASP(@RequestBody ExportRASPRequest request) {
-        JSRMResult jsrmResult = jsrmService.runComputation(request.getHollowComputationRequest(), request.isSafeKN());
+        JSRMResult jsrmResult = jsrmService.runComputation(request.getHollowComputationRequest(), request.isSafeKN()).getResult();
 
         StringBuilder response = new StringBuilder();
         MeasureUnit requestUnits = request.getHollowComputationRequest().getMeasureUnit();

@@ -40,7 +40,7 @@ public class JSRMServiceTest {
         defaultRequest.getExtraConfig().setDensityRatio(1);
         defaultRequest.setCustomPropellant(customPropellant);
 
-        JSRMResult jsrmResult = jsrmService.runComputation(defaultRequest);
+        JSRMResult jsrmResult = jsrmService.runComputation(defaultRequest).getResult();
         assertThat(100*1878/jsrmResult.getAverageThrustInNewton())
                 .describedAs("At least 98% matching burnsim result for viper propellant")
                 .isGreaterThanOrEqualTo(98);
