@@ -78,6 +78,11 @@ public class ComputationControler {
         return computeRequest(request, true);
     }
 
+    @PostMapping("rodtube")
+    public ResponseEntity computeRodTube(@RequestBody RodTubeGrainComputationRequest request) {
+        return computeRequest(request, true);
+    }
+
     @PostMapping("endburner")
     public ResponseEntity computeEndBurner(@RequestBody EndBurnerGrainComputationRequest request) {
         return computeRequest(request, true);

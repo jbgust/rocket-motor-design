@@ -174,6 +174,16 @@ public class MeasureUnitService {
                     convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSegmentLength()),
                     cSlotGrainComputationRequest.getEndSurface()
             );
+        } else if(request instanceof RodTubeGrainComputationRequest) {
+            RodTubeGrainComputationRequest rodTubeGrainComputationRequest = (RodTubeGrainComputationRequest)request;
+            grainConfigutation = new RodAndTubeGrain(
+                    convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getRodDiameter()),
+                    convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getTubeOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getTubeInnerDiameter()),
+                    rodTubeGrainComputationRequest.getNumberOfSegment(),
+                    convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getSegmentLength()),
+                    rodTubeGrainComputationRequest.getEndSurface()
+            );
         } else {
             throw new IllegalStateException("Request inconnue : "+ request.getClass().getSimpleName());
         }

@@ -29,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/compute/endburner",
                         "/compute/finocyl",
                         "/compute/moonburner",
+                        "/compute/rodtube",
                         "/compute/star",
                         "/export/rasp")
                 .permitAll()
@@ -52,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/compute/endburner", configuration);
         source.registerCorsConfiguration("/compute/finocyl", configuration);
         source.registerCorsConfiguration("/compute/moonburner", configuration);
+        source.registerCorsConfiguration("/compute/rodtube", configuration);
         source.registerCorsConfiguration("/compute/star", configuration);
         source.registerCorsConfiguration("/export/rasp", configuration);
         return source;

@@ -138,6 +138,30 @@ public class TestHelper {
         return computationRequest;
     }
 
+    public static RodTubeGrainComputationRequest getDefaultRodTubeGrainRequest() {
+        RodTubeGrainComputationRequest computationRequest = new RodTubeGrainComputationRequest();
+        computationRequest.setRodDiameter(10d);
+        computationRequest.setTubeOuterDiameter(30d);
+        computationRequest.setTubeInnerDiameter(20d);
+        computationRequest.setEndSurface(EXPOSED);
+
+        basicMotorSimConfig(computationRequest);
+
+        return computationRequest;
+    }
+
+    public static RodTubeGrainComputationRequest getDefaultRodTubeGrainRequestImperial() {
+        RodTubeGrainComputationRequest computationRequest = new RodTubeGrainComputationRequest();
+        computationRequest.setRodDiameter(10d/25.4);
+        computationRequest.setTubeOuterDiameter(30d/25.4);
+        computationRequest.setTubeInnerDiameter(20d/25.4);
+        computationRequest.setEndSurface(EXPOSED);
+
+        basicMotorSimConfigImperial(computationRequest);
+
+        return computationRequest;
+    }
+
     private static void basicMotorSimConfigImperial(BasicComputationRequest computationRequest) {
         //BasicComputationRequest
         computationRequest.setThroatDiameter(10d/25.4);
