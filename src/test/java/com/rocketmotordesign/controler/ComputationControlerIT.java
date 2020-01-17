@@ -178,6 +178,54 @@ public class ComputationControlerIT {
     }
 
     @Test
+    public void shouldRunMoonBurnerGrainComputation() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultMoonBurnerGrainRequest());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/moonburner")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H100")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("204.00")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("181.87")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("116.24")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.160")));
+    }
+
+    @Test
+    public void shouldRunMoonBurnerGrainComputationImperial() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultMoonBurnerGrainRequestImperial());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/moonburner")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H100")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("204.00")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("181.87")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("116.24")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.1136")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.352")));
+    }
+
+    @Test
     public void shouldRunEndBurnerGrainComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultEndBurnerGrainRequest());

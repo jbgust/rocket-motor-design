@@ -152,6 +152,16 @@ public class MeasureUnitService {
                     convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getHoleDiameter()),
                     convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getHoleDepth())
             );
+        } else if(request instanceof MoonBurnerGrainComputationRequest) {
+            MoonBurnerGrainComputationRequest moonBurnerGrainComputationRequest = (MoonBurnerGrainComputationRequest)request;
+            grainConfigutation = new MoonBurnerGrain(
+                    convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getCoreDiameter()),
+                    convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getCoreOffset()),
+                    moonBurnerGrainComputationRequest.getNumberOfSegment(),
+                    convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getSegmentLength()),
+                    moonBurnerGrainComputationRequest.getEndSurface()
+                    );
         } else {
             throw new IllegalStateException("Request inconnue : "+ request.getClass().getSimpleName());
         }

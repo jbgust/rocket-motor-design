@@ -68,6 +68,11 @@ public class ComputationControler {
         return computeRequest(request, true);
     }
 
+    @PostMapping("moonburner")
+    public ResponseEntity computeMoonBurner(@RequestBody MoonBurnerGrainComputationRequest request) {
+        return computeRequest(request, true);
+    }
+
     @PostMapping("endburner")
     public ResponseEntity computeEndBurner(@RequestBody EndBurnerGrainComputationRequest request) {
         return computeRequest(request, true);
