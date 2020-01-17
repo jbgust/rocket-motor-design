@@ -10,7 +10,7 @@ public class RodTubeGrainComputationRequest extends BasicComputationRequest{
     private double rodDiameter;
     private double tubeOuterDiameter;
     private double tubeInnerDiameter;
-    private GrainSurface endSurface;
+    private GrainSurface endsSurface;
 
     public RodTubeGrainComputationRequest() {
     }
@@ -44,12 +44,12 @@ public class RodTubeGrainComputationRequest extends BasicComputationRequest{
         this.tubeInnerDiameter = tubeInnerDiameter;
     }
 
-    public GrainSurface getEndSurface() {
-        return endSurface;
+    public GrainSurface getEndsSurface() {
+        return endsSurface;
     }
 
-    public void setEndSurface(GrainSurface endSurface) {
-        this.endSurface = endSurface;
+    public void setEndsSurface(GrainSurface endsSurface) {
+        this.endsSurface = endsSurface;
     }
 
     @Override
@@ -70,12 +70,12 @@ public class RodTubeGrainComputationRequest extends BasicComputationRequest{
                 Double.compare(that.rodDiameter, rodDiameter) == 0 &&
                 Double.compare(that.getTubeOuterDiameter(), tubeOuterDiameter) == 0 &&
                 Double.compare(that.getTubeInnerDiameter(), tubeInnerDiameter) == 0 &&
-                endSurface == that.endSurface;
+                endsSurface == that.endsSurface;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rodDiameter, tubeOuterDiameter, tubeInnerDiameter, endSurface);
+        return Objects.hash(rodDiameter, tubeOuterDiameter, tubeInnerDiameter, endsSurface);
     }
 
 
@@ -85,7 +85,7 @@ public class RodTubeGrainComputationRequest extends BasicComputationRequest{
                 "rodDiameter=" + rodDiameter +
                 ", tubeOuterDiameter=" + tubeOuterDiameter +
                 ", tubeInnerDiameter=" + tubeInnerDiameter +
-                ", endSurface=" + endSurface +
+                ", endsSurface=" + endsSurface +
                 ", throatDiameter=" + throatDiameter +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
                 ", chamberLength=" + chamberLength +

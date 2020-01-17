@@ -10,7 +10,7 @@ public class MoonBurnerGrainComputationRequest extends BasicComputationRequest{
     private double outerDiameter;
     private double coreDiameter;
     private double coreOffset;
-    private GrainSurface endSurface;
+    private GrainSurface endsSurface;
 
     public MoonBurnerGrainComputationRequest() {
     }
@@ -44,12 +44,12 @@ public class MoonBurnerGrainComputationRequest extends BasicComputationRequest{
         this.coreOffset = coreOffset;
     }
 
-    public GrainSurface getEndSurface() {
-        return endSurface;
+    public GrainSurface getEndsSurface() {
+        return endsSurface;
     }
 
-    public void setEndSurface(GrainSurface endSurface) {
-        this.endSurface = endSurface;
+    public void setEndsSurface(GrainSurface endsSurface) {
+        this.endsSurface = endsSurface;
     }
 
     @Override
@@ -70,12 +70,12 @@ public class MoonBurnerGrainComputationRequest extends BasicComputationRequest{
                 Double.compare(that.outerDiameter, outerDiameter) == 0 &&
                 Double.compare(that.getCoreDiameter(), coreDiameter) == 0 &&
                 Double.compare(that.getCoreOffset(), coreOffset) == 0 &&
-                endSurface == that.endSurface;
+                endsSurface == that.endsSurface;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(outerDiameter, coreDiameter, coreOffset, endSurface);
+        return Objects.hash(outerDiameter, coreDiameter, coreOffset, endsSurface);
     }
 
 
@@ -85,7 +85,7 @@ public class MoonBurnerGrainComputationRequest extends BasicComputationRequest{
                 "outerDiameter=" + outerDiameter +
                 ", coreDiameter=" + coreDiameter +
                 ", coreOffset=" + coreOffset +
-                ", endSurface=" + endSurface +
+                ", endsSurface=" + endsSurface +
                 ", throatDiameter=" + throatDiameter +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
                 ", chamberLength=" + chamberLength +

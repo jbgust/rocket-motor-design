@@ -11,7 +11,7 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
     private double innerDiameter;
     private double pointDiameter;
     private int pointCount;
-    private GrainSurface endSurface;
+    private GrainSurface endsSurface;
 
     public StarGrainComputationRequest() {
     }
@@ -21,12 +21,12 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
         return "STAR";
     }
 
-    public GrainSurface getEndSurface() {
-        return endSurface;
+    public GrainSurface getEndsSurface() {
+        return endsSurface;
     }
 
-    public void setEndSurface(GrainSurface endSurface) {
-        this.endSurface = endSurface;
+    public void setEndsSurface(GrainSurface endsSurface) {
+        this.endsSurface = endsSurface;
     }
 
     public double getOuterDiameter() {
@@ -80,12 +80,12 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
                 Double.compare(that.innerDiameter, innerDiameter) == 0 &&
                 Double.compare(that.pointDiameter, pointDiameter) == 0 &&
                 Double.compare(that.pointCount, pointCount) == 0 &&
-                endSurface == that.endSurface;
+                endsSurface == that.endsSurface;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(outerDiameter, innerDiameter, pointDiameter, pointCount, endSurface);
+        return Objects.hash(outerDiameter, innerDiameter, pointDiameter, pointCount, endsSurface);
     }
 
 
@@ -96,7 +96,7 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
                 ", innerDiameter=" + innerDiameter +
                 ", pointDiameter=" + pointDiameter +
                 ", pointCount=" + pointCount +
-                ", endSurface=" + endSurface +
+                ", endsSurface=" + endsSurface +
                 ", throatDiameter=" + throatDiameter +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
                 ", chamberLength=" + chamberLength +

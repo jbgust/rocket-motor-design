@@ -286,7 +286,7 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("G350")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("438.59")))
@@ -310,7 +310,7 @@ public class ComputationControlerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
                 .andExpect(jsonPath("$.performanceResult.motorDescription", is("G350")))
                 .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("438.59")))

@@ -37,7 +37,7 @@ public class TestHelper {
         computationRequest.setFinWidth(2d);
         computationRequest.setFinDiameter(20d);
         computationRequest.setFinCount(5);
-        computationRequest.setEndSurface(EXPOSED);
+        computationRequest.setEndsSurface(EXPOSED);
         basicMotorSimConfig(computationRequest);
 
         return computationRequest;
@@ -49,7 +49,7 @@ public class TestHelper {
         computationRequest.setInnerDiameter(5d);
         computationRequest.setPointDiameter(15d);
         computationRequest.setPointCount(5);
-        computationRequest.setEndSurface(EXPOSED);
+        computationRequest.setEndsSurface(EXPOSED);
 
         basicMotorSimConfig(computationRequest);
 
@@ -92,7 +92,7 @@ public class TestHelper {
         computationRequest.setOuterDiameter(30d);
         computationRequest.setCoreDiameter(10d);
         computationRequest.setCoreOffset(5d);
-        computationRequest.setEndSurface(EXPOSED);
+        computationRequest.setEndsSurface(EXPOSED);
 
         basicMotorSimConfig(computationRequest);
 
@@ -117,7 +117,7 @@ public class TestHelper {
         computationRequest.setSlotWidth(5d);
         computationRequest.setSlotDepth(15d);
         computationRequest.setSlotOffset(7d);
-        computationRequest.setEndSurface(EXPOSED);
+        computationRequest.setEndsSurface(EXPOSED);
 
         basicMotorSimConfig(computationRequest);
 
@@ -131,7 +131,7 @@ public class TestHelper {
         computationRequest.setSlotWidth(5d/25.4);
         computationRequest.setSlotDepth(15d/25.4);
         computationRequest.setSlotOffset(7d/25.4);
-        computationRequest.setEndSurface(EXPOSED);
+        computationRequest.setEndsSurface(EXPOSED);
 
         basicMotorSimConfigImperial(computationRequest);
 
@@ -143,7 +143,7 @@ public class TestHelper {
         computationRequest.setRodDiameter(10d);
         computationRequest.setTubeOuterDiameter(30d);
         computationRequest.setTubeInnerDiameter(20d);
-        computationRequest.setEndSurface(EXPOSED);
+        computationRequest.setEndsSurface(EXPOSED);
 
         basicMotorSimConfig(computationRequest);
 
@@ -155,7 +155,7 @@ public class TestHelper {
         computationRequest.setRodDiameter(10d/25.4);
         computationRequest.setTubeOuterDiameter(30d/25.4);
         computationRequest.setTubeInnerDiameter(20d/25.4);
-        computationRequest.setEndSurface(EXPOSED);
+        computationRequest.setEndsSurface(EXPOSED);
 
         basicMotorSimConfigImperial(computationRequest);
 

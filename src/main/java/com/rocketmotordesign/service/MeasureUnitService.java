@@ -131,7 +131,7 @@ public class MeasureUnitService {
                     finocylRequest.getFinCount(),
                     convertLengthToJSRM(userLengthUnit, finocylRequest.getSegmentLength()),
                     finocylRequest.getNumberOfSegment(),
-                    finocylRequest.getEndSurface()
+                    finocylRequest.getEndsSurface()
             );
         } else if(request instanceof StarGrainComputationRequest) {
             StarGrainComputationRequest starGrainComputationRequest = (StarGrainComputationRequest)request;
@@ -142,7 +142,7 @@ public class MeasureUnitService {
                     starGrainComputationRequest.getPointCount(),
                     starGrainComputationRequest.getNumberOfSegment(),
                     convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getSegmentLength()),
-                    starGrainComputationRequest.getEndSurface()
+                    starGrainComputationRequest.getEndsSurface()
             );
         } else if(request instanceof EndBurnerGrainComputationRequest) {
             EndBurnerGrainComputationRequest endBurnerGrainComputationRequest = (EndBurnerGrainComputationRequest)request;
@@ -160,7 +160,7 @@ public class MeasureUnitService {
                     convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getCoreOffset()),
                     moonBurnerGrainComputationRequest.getNumberOfSegment(),
                     convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getSegmentLength()),
-                    moonBurnerGrainComputationRequest.getEndSurface()
+                    moonBurnerGrainComputationRequest.getEndsSurface()
                     );
         } else if(request instanceof CSlotGrainComputationRequest) {
             CSlotGrainComputationRequest cSlotGrainComputationRequest = (CSlotGrainComputationRequest)request;
@@ -172,7 +172,7 @@ public class MeasureUnitService {
                     convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSlotOffset()),
                     cSlotGrainComputationRequest.getNumberOfSegment(),
                     convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSegmentLength()),
-                    cSlotGrainComputationRequest.getEndSurface()
+                    cSlotGrainComputationRequest.getEndsSurface()
             );
         } else if(request instanceof RodTubeGrainComputationRequest) {
             RodTubeGrainComputationRequest rodTubeGrainComputationRequest = (RodTubeGrainComputationRequest)request;
@@ -182,7 +182,7 @@ public class MeasureUnitService {
                     convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getTubeInnerDiameter()),
                     rodTubeGrainComputationRequest.getNumberOfSegment(),
                     convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getSegmentLength()),
-                    rodTubeGrainComputationRequest.getEndSurface()
+                    rodTubeGrainComputationRequest.getEndsSurface()
             );
         } else {
             throw new IllegalStateException("Request inconnue : "+ request.getClass().getSimpleName());

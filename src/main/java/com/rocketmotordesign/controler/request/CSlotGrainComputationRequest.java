@@ -12,7 +12,7 @@ public class CSlotGrainComputationRequest extends BasicComputationRequest{
     private double slotWidth;
     private double slotDepth;
     private double slotOffset;
-    private GrainSurface endSurface;
+    private GrainSurface endsSurface;
 
     public CSlotGrainComputationRequest() {
     }
@@ -62,12 +62,12 @@ public class CSlotGrainComputationRequest extends BasicComputationRequest{
         this.slotOffset = slotOffset;
     }
 
-    public GrainSurface getEndSurface() {
-        return endSurface;
+    public GrainSurface getEndsSurface() {
+        return endsSurface;
     }
 
-    public void setEndSurface(GrainSurface endSurface) {
-        this.endSurface = endSurface;
+    public void setEndsSurface(GrainSurface endsSurface) {
+        this.endsSurface = endsSurface;
     }
 
     @Override
@@ -90,12 +90,12 @@ public class CSlotGrainComputationRequest extends BasicComputationRequest{
                 Double.compare(that.getSlotWidth(), slotWidth) == 0 &&
                 Double.compare(that.getSlotDepth(), slotDepth) == 0 &&
                 Double.compare(that.getSlotOffset(), slotOffset) == 0 &&
-                endSurface == that.endSurface;
+                endsSurface == that.endsSurface;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(outerDiameter, coreDiameter, slotWidth, slotDepth, slotOffset, endSurface);
+        return Objects.hash(outerDiameter, coreDiameter, slotWidth, slotDepth, slotOffset, endsSurface);
     }
 
 
@@ -107,7 +107,7 @@ public class CSlotGrainComputationRequest extends BasicComputationRequest{
                 ", slotWidth=" + slotWidth +
                 ", slotDepth=" + slotDepth +
                 ", slotOffset=" + slotOffset +
-                ", endSurface=" + endSurface +
+                ", endsSurface=" + endsSurface +
                 ", throatDiameter=" + throatDiameter +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
                 ", chamberLength=" + chamberLength +

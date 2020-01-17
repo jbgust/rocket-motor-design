@@ -12,7 +12,7 @@ public class FinocylComputationRequest  extends BasicComputationRequest{
     private double finWidth;
     private double finDiameter;
     private int finCount;
-    private GrainSurface endSurface;
+    private GrainSurface endsSurface;
 
 
     public FinocylComputationRequest() {
@@ -63,12 +63,12 @@ public class FinocylComputationRequest  extends BasicComputationRequest{
         this.finCount = finCount;
     }
 
-    public GrainSurface getEndSurface() {
-        return endSurface;
+    public GrainSurface getEndsSurface() {
+        return endsSurface;
     }
 
-    public void setEndSurface(GrainSurface endSurface) {
-        this.endSurface = endSurface;
+    public void setEndsSurface(GrainSurface endsSurface) {
+        this.endsSurface = endsSurface;
     }
 
     @Override
@@ -91,12 +91,12 @@ public class FinocylComputationRequest  extends BasicComputationRequest{
                 Double.compare(that.finWidth, finWidth) == 0 &&
                 Double.compare(that.finDiameter, finDiameter) == 0 &&
                 finCount == that.finCount &&
-                endSurface == that.endSurface;
+                endsSurface == that.endsSurface;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(outerDiameter, innerDiameter, finWidth, finDiameter, finCount, endSurface);
+        return Objects.hash(outerDiameter, innerDiameter, finWidth, finDiameter, finCount, endsSurface);
     }
 
 
@@ -108,7 +108,7 @@ public class FinocylComputationRequest  extends BasicComputationRequest{
                 ", finWidth=" + finWidth +
                 ", finDiameter=" + finDiameter +
                 ", finCount=" + finCount +
-                ", endSurface=" + endSurface +
+                ", endsSurface=" + endsSurface +
                 ", throatDiameter=" + throatDiameter +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
                 ", chamberLength=" + chamberLength +
