@@ -146,7 +146,7 @@ public class MeasureUnitService {
             );
         } else if(request instanceof EndBurnerGrainComputationRequest) {
             EndBurnerGrainComputationRequest endBurnerGrainComputationRequest = (EndBurnerGrainComputationRequest)request;
-            grainConfigutation = new EndBurner(
+            grainConfigutation = new EndBurnerGrain(
                     convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getSegmentLength()),
                     convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getOuterDiameter()),
                     convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getHoleDiameter()),
