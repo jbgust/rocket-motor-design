@@ -73,6 +73,11 @@ public class ComputationControler {
         return computeRequest(request, true);
     }
 
+    @PostMapping("cslot")
+    public ResponseEntity computeCSlot(@RequestBody CSlotGrainComputationRequest request) {
+        return computeRequest(request, true);
+    }
+
     @PostMapping("endburner")
     public ResponseEntity computeEndBurner(@RequestBody EndBurnerGrainComputationRequest request) {
         return computeRequest(request, true);

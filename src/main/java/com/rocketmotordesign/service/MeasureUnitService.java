@@ -162,6 +162,18 @@ public class MeasureUnitService {
                     convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getSegmentLength()),
                     moonBurnerGrainComputationRequest.getEndSurface()
                     );
+        } else if(request instanceof CSlotGrainComputationRequest) {
+            CSlotGrainComputationRequest cSlotGrainComputationRequest = (CSlotGrainComputationRequest)request;
+            grainConfigutation = new CSlotGrain(
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getCoreDiameter()),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSlotWidth()),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSlotDepth()),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSlotOffset()),
+                    cSlotGrainComputationRequest.getNumberOfSegment(),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSegmentLength()),
+                    cSlotGrainComputationRequest.getEndSurface()
+            );
         } else {
             throw new IllegalStateException("Request inconnue : "+ request.getClass().getSimpleName());
         }

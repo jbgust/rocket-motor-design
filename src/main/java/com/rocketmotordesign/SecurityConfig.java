@@ -25,6 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/compute",
+                        "/compute/cslot",
                         "/compute/endburner",
                         "/compute/finocyl",
                         "/compute/moonburner",
@@ -47,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedHeaders(asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/compute", configuration);
+        source.registerCorsConfiguration("/compute/cslot", configuration);
         source.registerCorsConfiguration("/compute/endburner", configuration);
         source.registerCorsConfiguration("/compute/finocyl", configuration);
         source.registerCorsConfiguration("/compute/moonburner", configuration);

@@ -156,6 +156,51 @@ public class TestHelper {
         return computationRequest;
     }
 
+    public static CSlotGrainComputationRequest getDefaultCSlotGrainRequest() {
+        CSlotGrainComputationRequest computationRequest = new CSlotGrainComputationRequest();
+        computationRequest.setOuterDiameter(30d);
+        computationRequest.setCoreDiameter(10d);
+        computationRequest.setSlotWidth(5d);
+        computationRequest.setSlotDepth(15d);
+        computationRequest.setSlotOffset(7d);
+
+        //BasicComputationRequest
+        computationRequest.setThroatDiameter(10d);
+        computationRequest.setSegmentLength(70d);
+        computationRequest.setNumberOfSegment(2);
+        computationRequest.setPropellantType(KNSU.name());
+        computationRequest.setChamberInnerDiameter(40d);
+        computationRequest.setChamberLength(150d);
+        computationRequest.setMeasureUnit(SI);
+        computationRequest.setEndSurface(EXPOSED);
+
+        computationRequest.setExtraConfig(configMotorSim());
+
+        return computationRequest;
+    }
+
+    public static CSlotGrainComputationRequest getDefaultCSlotGrainRequestImperial() {
+        CSlotGrainComputationRequest computationRequest = new CSlotGrainComputationRequest();
+        computationRequest.setOuterDiameter(30d/25.4);
+        computationRequest.setCoreDiameter(10d/25.4);
+        computationRequest.setSlotWidth(5d/25.4);
+        computationRequest.setSlotDepth(15d/25.4);
+        computationRequest.setSlotOffset(7d/25.4);
+
+        //BasicComputationRequest
+        computationRequest.setThroatDiameter(10d/25.4);
+        computationRequest.setSegmentLength(70d/25.4);
+        computationRequest.setNumberOfSegment(2);
+        computationRequest.setPropellantType(KNSU.name());
+        computationRequest.setChamberInnerDiameter(40d/25.4);
+        computationRequest.setChamberLength(150d/25.4);
+        computationRequest.setMeasureUnit(IMPERIAL);
+
+        computationRequest.setExtraConfig(configMotorSim());
+
+        return computationRequest;
+    }
+
     public static EndBurnerGrainComputationRequest getDefaultEndBurnerGrainRequestImperial() {
         EndBurnerGrainComputationRequest computationRequest = new EndBurnerGrainComputationRequest();
         computationRequest.setOuterDiameter(30d/25.4);
