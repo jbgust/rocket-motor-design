@@ -37,18 +37,8 @@ public class TestHelper {
         computationRequest.setFinWidth(2d);
         computationRequest.setFinDiameter(20d);
         computationRequest.setFinCount(5);
-
-        //BasicComputationRequest
-        computationRequest.setThroatDiameter(10d);
-        computationRequest.setSegmentLength(70d);
-        computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantType(KNSU.name());
-        computationRequest.setChamberInnerDiameter(40d);
-        computationRequest.setChamberLength(150d);
-        computationRequest.setMeasureUnit(SI);
         computationRequest.setEndSurface(EXPOSED);
-
-        computationRequest.setExtraConfig(configMotorSim());
+        basicMotorSimConfig(computationRequest);
 
         return computationRequest;
     }
@@ -59,18 +49,9 @@ public class TestHelper {
         computationRequest.setInnerDiameter(5d);
         computationRequest.setPointDiameter(15d);
         computationRequest.setPointCount(5);
-
-        //BasicComputationRequest
-        computationRequest.setThroatDiameter(10d);
-        computationRequest.setSegmentLength(70d);
-        computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantType(KNSU.name());
-        computationRequest.setChamberInnerDiameter(40d);
-        computationRequest.setChamberLength(150d);
-        computationRequest.setMeasureUnit(SI);
         computationRequest.setEndSurface(EXPOSED);
 
-        computationRequest.setExtraConfig(configMotorSim());
+        basicMotorSimConfig(computationRequest);
 
         return computationRequest;
     }
@@ -101,16 +82,7 @@ public class TestHelper {
         computationRequest.setPointDiameter(0.5905511811);
         computationRequest.setPointCount(5);
 
-        //BasicComputationRequest
-        computationRequest.setThroatDiameter(10d/25.4);
-        computationRequest.setSegmentLength(70d/25.4);
-        computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantType(KNSU.name());
-        computationRequest.setChamberInnerDiameter(40d/25.4);
-        computationRequest.setChamberLength(150d/25.4);
-        computationRequest.setMeasureUnit(IMPERIAL);
-
-        computationRequest.setExtraConfig(configMotorSim());
+        basicMotorSimConfigImperial(computationRequest);
 
         return computationRequest;
     }
@@ -120,18 +92,9 @@ public class TestHelper {
         computationRequest.setOuterDiameter(30d);
         computationRequest.setCoreDiameter(10d);
         computationRequest.setCoreOffset(5d);
-
-        //BasicComputationRequest
-        computationRequest.setThroatDiameter(10d);
-        computationRequest.setSegmentLength(70d);
-        computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantType(KNSU.name());
-        computationRequest.setChamberInnerDiameter(40d);
-        computationRequest.setChamberLength(150d);
-        computationRequest.setMeasureUnit(SI);
         computationRequest.setEndSurface(EXPOSED);
 
-        computationRequest.setExtraConfig(configMotorSim());
+        basicMotorSimConfig(computationRequest);
 
         return computationRequest;
     }
@@ -142,16 +105,7 @@ public class TestHelper {
         computationRequest.setCoreDiameter(10d/25.4);
         computationRequest.setCoreOffset(5d/25.4);
 
-        //BasicComputationRequest
-        computationRequest.setThroatDiameter(10d/25.4);
-        computationRequest.setSegmentLength(70d/25.4);
-        computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantType(KNSU.name());
-        computationRequest.setChamberInnerDiameter(40d/25.4);
-        computationRequest.setChamberLength(150d/25.4);
-        computationRequest.setMeasureUnit(IMPERIAL);
-
-        computationRequest.setExtraConfig(configMotorSim());
+        basicMotorSimConfigImperial(computationRequest);
 
         return computationRequest;
     }
@@ -163,18 +117,9 @@ public class TestHelper {
         computationRequest.setSlotWidth(5d);
         computationRequest.setSlotDepth(15d);
         computationRequest.setSlotOffset(7d);
-
-        //BasicComputationRequest
-        computationRequest.setThroatDiameter(10d);
-        computationRequest.setSegmentLength(70d);
-        computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantType(KNSU.name());
-        computationRequest.setChamberInnerDiameter(40d);
-        computationRequest.setChamberLength(150d);
-        computationRequest.setMeasureUnit(SI);
         computationRequest.setEndSurface(EXPOSED);
 
-        computationRequest.setExtraConfig(configMotorSim());
+        basicMotorSimConfig(computationRequest);
 
         return computationRequest;
     }
@@ -186,7 +131,14 @@ public class TestHelper {
         computationRequest.setSlotWidth(5d/25.4);
         computationRequest.setSlotDepth(15d/25.4);
         computationRequest.setSlotOffset(7d/25.4);
+        computationRequest.setEndSurface(EXPOSED);
 
+        basicMotorSimConfigImperial(computationRequest);
+
+        return computationRequest;
+    }
+
+    private static void basicMotorSimConfigImperial(BasicComputationRequest computationRequest) {
         //BasicComputationRequest
         computationRequest.setThroatDiameter(10d/25.4);
         computationRequest.setSegmentLength(70d/25.4);
@@ -197,8 +149,6 @@ public class TestHelper {
         computationRequest.setMeasureUnit(IMPERIAL);
 
         computationRequest.setExtraConfig(configMotorSim());
-
-        return computationRequest;
     }
 
     public static EndBurnerGrainComputationRequest getDefaultEndBurnerGrainRequestImperial() {
@@ -242,18 +192,7 @@ public class TestHelper {
         computationRequest.setFinDiameter(20d/25.4);
         computationRequest.setFinCount(5);
 
-        //BasicComputationRequest
-        computationRequest.setThroatDiameter(10d/25.4);
-        computationRequest.setSegmentLength(70d/25.4);
-        computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantType(KNSU.name());
-        computationRequest.setChamberInnerDiameter(40d/25.4);
-        computationRequest.setChamberLength(150d/25.4);
-        computationRequest.setMeasureUnit(IMPERIAL);
-
-        ExtraConfiguration extraConfig = configMotorSim();
-
-        computationRequest.setExtraConfig(extraConfig);
+        basicMotorSimConfigImperial(computationRequest);
 
         return computationRequest;
     }
@@ -303,5 +242,18 @@ public class TestHelper {
         extraConfig.setNozzleExpansionRatio(null);
         extraConfig.setOptimalNozzleDesign(true);
         return extraConfig;
+    }
+
+    private static void basicMotorSimConfig(BasicComputationRequest computationRequest) {
+        //BasicComputationRequest
+        computationRequest.setThroatDiameter(10d);
+        computationRequest.setSegmentLength(70d);
+        computationRequest.setNumberOfSegment(2);
+        computationRequest.setPropellantType(KNSU.name());
+        computationRequest.setChamberInnerDiameter(40d);
+        computationRequest.setChamberLength(150d);
+        computationRequest.setMeasureUnit(SI);
+
+        computationRequest.setExtraConfig(configMotorSim());
     }
 }
