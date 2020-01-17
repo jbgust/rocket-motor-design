@@ -131,7 +131,7 @@ public class MeasureUnitService {
                     finocylRequest.getFinCount(),
                     convertLengthToJSRM(userLengthUnit, finocylRequest.getSegmentLength()),
                     finocylRequest.getNumberOfSegment(),
-                    finocylRequest.getEndSurface()
+                    finocylRequest.getEndsSurface()
             );
         } else if(request instanceof StarGrainComputationRequest) {
             StarGrainComputationRequest starGrainComputationRequest = (StarGrainComputationRequest)request;
@@ -142,15 +142,47 @@ public class MeasureUnitService {
                     starGrainComputationRequest.getPointCount(),
                     starGrainComputationRequest.getNumberOfSegment(),
                     convertLengthToJSRM(userLengthUnit, starGrainComputationRequest.getSegmentLength()),
-                    starGrainComputationRequest.getEndSurface()
+                    starGrainComputationRequest.getEndsSurface()
             );
         } else if(request instanceof EndBurnerGrainComputationRequest) {
             EndBurnerGrainComputationRequest endBurnerGrainComputationRequest = (EndBurnerGrainComputationRequest)request;
-            grainConfigutation = new EndBurner(
+            grainConfigutation = new EndBurnerGrain(
                     convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getSegmentLength()),
                     convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getOuterDiameter()),
                     convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getHoleDiameter()),
                     convertLengthToJSRM(userLengthUnit, endBurnerGrainComputationRequest.getHoleDepth())
+            );
+        } else if(request instanceof MoonBurnerGrainComputationRequest) {
+            MoonBurnerGrainComputationRequest moonBurnerGrainComputationRequest = (MoonBurnerGrainComputationRequest)request;
+            grainConfigutation = new MoonBurnerGrain(
+                    convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getCoreDiameter()),
+                    convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getCoreOffset()),
+                    moonBurnerGrainComputationRequest.getNumberOfSegment(),
+                    convertLengthToJSRM(userLengthUnit, moonBurnerGrainComputationRequest.getSegmentLength()),
+                    moonBurnerGrainComputationRequest.getEndsSurface()
+                    );
+        } else if(request instanceof CSlotGrainComputationRequest) {
+            CSlotGrainComputationRequest cSlotGrainComputationRequest = (CSlotGrainComputationRequest)request;
+            grainConfigutation = new CSlotGrain(
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getCoreDiameter()),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSlotWidth()),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSlotDepth()),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSlotOffset()),
+                    cSlotGrainComputationRequest.getNumberOfSegment(),
+                    convertLengthToJSRM(userLengthUnit, cSlotGrainComputationRequest.getSegmentLength()),
+                    cSlotGrainComputationRequest.getEndsSurface()
+            );
+        } else if(request instanceof RodTubeGrainComputationRequest) {
+            RodTubeGrainComputationRequest rodTubeGrainComputationRequest = (RodTubeGrainComputationRequest)request;
+            grainConfigutation = new RodAndTubeGrain(
+                    convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getRodDiameter()),
+                    convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getTubeOuterDiameter()),
+                    convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getTubeInnerDiameter()),
+                    rodTubeGrainComputationRequest.getNumberOfSegment(),
+                    convertLengthToJSRM(userLengthUnit, rodTubeGrainComputationRequest.getSegmentLength()),
+                    rodTubeGrainComputationRequest.getEndsSurface()
             );
         } else {
             throw new IllegalStateException("Request inconnue : "+ request.getClass().getSimpleName());

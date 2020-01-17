@@ -4,63 +4,44 @@ import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
 
 import java.util.Objects;
 
-public class FinocylComputationRequest  extends BasicComputationRequest{
+public class RodTubeGrainComputationRequest extends BasicComputationRequest{
 
     //Grain
-    private double outerDiameter;
-    private double innerDiameter;
-    private double finWidth;
-    private double finDiameter;
-    private int finCount;
+    private double rodDiameter;
+    private double tubeOuterDiameter;
+    private double tubeInnerDiameter;
     private GrainSurface endsSurface;
 
-
-    public FinocylComputationRequest() {
+    public RodTubeGrainComputationRequest() {
     }
 
     @Override
     public String getGrainType() {
-        return "FINOCYL";
+        return "ROD_TUBE";
     }
 
-    public double getOuterDiameter() {
-        return outerDiameter;
+    public double getRodDiameter() {
+        return rodDiameter;
     }
 
-    public void setOuterDiameter(double outerDiameter) {
-        this.outerDiameter = outerDiameter;
+    public void setRodDiameter(double rodDiameter) {
+        this.rodDiameter = rodDiameter;
     }
 
-    public double getInnerDiameter() {
-        return innerDiameter;
+    public double getTubeOuterDiameter() {
+        return tubeOuterDiameter;
     }
 
-    public void setInnerDiameter(double innerDiameter) {
-        this.innerDiameter = innerDiameter;
+    public void setTubeOuterDiameter(double tubeOuterDiameter) {
+        this.tubeOuterDiameter = tubeOuterDiameter;
     }
 
-    public double getFinWidth() {
-        return finWidth;
+    public double getTubeInnerDiameter() {
+        return tubeInnerDiameter;
     }
 
-    public void setFinWidth(double finWidth) {
-        this.finWidth = finWidth;
-    }
-
-    public double getFinDiameter() {
-        return finDiameter;
-    }
-
-    public void setFinDiameter(double finDiameter) {
-        this.finDiameter = finDiameter;
-    }
-
-    public int getFinCount() {
-        return finCount;
-    }
-
-    public void setFinCount(int finCount) {
-        this.finCount = finCount;
+    public void setTubeInnerDiameter(double tubeInnerDiameter) {
+        this.tubeInnerDiameter = tubeInnerDiameter;
     }
 
     public GrainSurface getEndsSurface() {
@@ -74,8 +55,8 @@ public class FinocylComputationRequest  extends BasicComputationRequest{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FinocylComputationRequest)) return false;
-        FinocylComputationRequest that = (FinocylComputationRequest) o;
+        if (!(o instanceof RodTubeGrainComputationRequest)) return false;
+        RodTubeGrainComputationRequest that = (RodTubeGrainComputationRequest) o;
         return Double.compare(that.throatDiameter, throatDiameter) == 0 &&
                 Double.compare(that.segmentLength, segmentLength) == 0 &&
                 Double.compare(that.numberOfSegment, numberOfSegment) == 0 &&
@@ -86,28 +67,24 @@ public class FinocylComputationRequest  extends BasicComputationRequest{
                 measureUnit == that.measureUnit &&
                 Objects.equals(customPropellant, that.customPropellant) &&
 
-                Double.compare(that.outerDiameter, outerDiameter) == 0 &&
-                Double.compare(that.innerDiameter, innerDiameter) == 0 &&
-                Double.compare(that.finWidth, finWidth) == 0 &&
-                Double.compare(that.finDiameter, finDiameter) == 0 &&
-                finCount == that.finCount &&
+                Double.compare(that.rodDiameter, rodDiameter) == 0 &&
+                Double.compare(that.getTubeOuterDiameter(), tubeOuterDiameter) == 0 &&
+                Double.compare(that.getTubeInnerDiameter(), tubeInnerDiameter) == 0 &&
                 endsSurface == that.endsSurface;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(outerDiameter, innerDiameter, finWidth, finDiameter, finCount, endsSurface);
+        return Objects.hash(rodDiameter, tubeOuterDiameter, tubeInnerDiameter, endsSurface);
     }
 
 
     @Override
     public String toString() {
-        return "FinocylComputationRequest{" +
-                "outerDiameter=" + outerDiameter +
-                ", innerDiameter=" + innerDiameter +
-                ", finWidth=" + finWidth +
-                ", finDiameter=" + finDiameter +
-                ", finCount=" + finCount +
+        return "RodTubeGrainComputationRequest{" +
+                "rodDiameter=" + rodDiameter +
+                ", tubeOuterDiameter=" + tubeOuterDiameter +
+                ", tubeInnerDiameter=" + tubeInnerDiameter +
                 ", endsSurface=" + endsSurface +
                 ", throatDiameter=" + throatDiameter +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +

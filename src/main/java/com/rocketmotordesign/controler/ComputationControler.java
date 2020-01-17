@@ -68,6 +68,21 @@ public class ComputationControler {
         return computeRequest(request, true);
     }
 
+    @PostMapping("moonburner")
+    public ResponseEntity computeMoonBurner(@RequestBody MoonBurnerGrainComputationRequest request) {
+        return computeRequest(request, true);
+    }
+
+    @PostMapping("cslot")
+    public ResponseEntity computeCSlot(@RequestBody CSlotGrainComputationRequest request) {
+        return computeRequest(request, true);
+    }
+
+    @PostMapping("rodtube")
+    public ResponseEntity computeRodTube(@RequestBody RodTubeGrainComputationRequest request) {
+        return computeRequest(request, false);
+    }
+
     @PostMapping("endburner")
     public ResponseEntity computeEndBurner(@RequestBody EndBurnerGrainComputationRequest request) {
         return computeRequest(request, true);

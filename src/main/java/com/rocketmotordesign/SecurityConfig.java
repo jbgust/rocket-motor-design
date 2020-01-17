@@ -23,7 +23,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/compute", "/compute/finocyl", "/compute/star", "/compute/endburner", "/export/rasp")
+                .antMatchers(
+                        "/compute",
+                        "/compute/cslot",
+                        "/compute/endburner",
+                        "/compute/finocyl",
+                        "/compute/moonburner",
+                        "/compute/rodtube",
+                        "/compute/star",
+                        "/export/rasp")
                 .permitAll()
 //                .requestMatchers(EndpointRequest.to(PrometheusScrapeEndpoint.class))
 //                .authenticated()
@@ -41,9 +49,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedHeaders(asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/compute", configuration);
-        source.registerCorsConfiguration("/compute/finocyl", configuration);
-        source.registerCorsConfiguration("/compute/star", configuration);
+        source.registerCorsConfiguration("/compute/cslot", configuration);
         source.registerCorsConfiguration("/compute/endburner", configuration);
+        source.registerCorsConfiguration("/compute/finocyl", configuration);
+        source.registerCorsConfiguration("/compute/moonburner", configuration);
+        source.registerCorsConfiguration("/compute/rodtube", configuration);
+        source.registerCorsConfiguration("/compute/star", configuration);
         source.registerCorsConfiguration("/export/rasp", configuration);
         return source;
     }

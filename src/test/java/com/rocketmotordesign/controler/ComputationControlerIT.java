@@ -178,6 +178,150 @@ public class ComputationControlerIT {
     }
 
     @Test
+    public void shouldRunMoonBurnerGrainComputation() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultMoonBurnerGrainRequest());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/moonburner")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H100")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("204.00")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("181.87")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("116.24")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.160")));
+    }
+
+    @Test
+    public void shouldRunMoonBurnerGrainComputationImperial() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultMoonBurnerGrainRequestImperial());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/moonburner")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H100")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("204.00")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("181.87")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("116.24")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.1136")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.352")));
+    }
+
+    @Test
+    public void shouldRunCSlotGrainComputation() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultCSlotGrainRequest());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/cslot")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H74")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("180.77")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("166.58")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("114.08")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.149")));
+    }
+
+    @Test
+    public void shouldRunCSlotGrainComputationImperial() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultCSlotGrainRequestImperial());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/cslot")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(835)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("H74")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("180.77")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("166.58")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("114.08")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.1136")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.328")));
+    }
+
+    @Test
+    public void shouldRunRodTubeGrainComputation() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultRodTubeGrainRequest());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/rodtube")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("G350")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("438.59")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("149.47")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("127.40")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.120")));
+    }
+
+    @Test
+    public void shouldRunRodTubeGrainComputationImperial() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultRodTubeGrainRequestImperial());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/rodtube")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.motorParameters", hasSize(883)))
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("G350")))
+                .andExpect(jsonPath("$.performanceResult.optimalDesign", is(false)))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("438.59")))
+                .andExpect(jsonPath("$.performanceResult.totalImpulse", is("149.47")))
+                .andExpect(jsonPath("$.performanceResult.specificImpulse", is("127.40")))
+                .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("1.1136")))
+                .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.264")));
+    }
+
+    @Test
     public void shouldRunEndBurnerGrainComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultEndBurnerGrainRequest());

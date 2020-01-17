@@ -4,29 +4,22 @@ import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
 
 import java.util.Objects;
 
-public class StarGrainComputationRequest extends BasicComputationRequest{
+public class CSlotGrainComputationRequest extends BasicComputationRequest{
 
     //Grain
     private double outerDiameter;
-    private double innerDiameter;
-    private double pointDiameter;
-    private int pointCount;
+    private double coreDiameter;
+    private double slotWidth;
+    private double slotDepth;
+    private double slotOffset;
     private GrainSurface endsSurface;
 
-    public StarGrainComputationRequest() {
+    public CSlotGrainComputationRequest() {
     }
 
     @Override
     public String getGrainType() {
-        return "STAR";
-    }
-
-    public GrainSurface getEndsSurface() {
-        return endsSurface;
-    }
-
-    public void setEndsSurface(GrainSurface endsSurface) {
-        this.endsSurface = endsSurface;
+        return "C_SLOT";
     }
 
     public double getOuterDiameter() {
@@ -37,35 +30,51 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
         this.outerDiameter = outerDiameter;
     }
 
-    public double getInnerDiameter() {
-        return innerDiameter;
+    public double getCoreDiameter() {
+        return coreDiameter;
     }
 
-    public void setInnerDiameter(double innerDiameter) {
-        this.innerDiameter = innerDiameter;
+    public void setCoreDiameter(double coreDiameter) {
+        this.coreDiameter = coreDiameter;
     }
 
-    public double getPointDiameter() {
-        return pointDiameter;
+    public double getSlotWidth() {
+        return slotWidth;
     }
 
-    public void setPointDiameter(double pointDiameter) {
-        this.pointDiameter = pointDiameter;
+    public void setSlotWidth(double slotWidth) {
+        this.slotWidth = slotWidth;
     }
 
-    public int getPointCount() {
-        return pointCount;
+    public double getSlotDepth() {
+        return slotDepth;
     }
 
-    public void setPointCount(int pointCount) {
-        this.pointCount = pointCount;
+    public void setSlotDepth(double slotDepth) {
+        this.slotDepth = slotDepth;
+    }
+
+    public double getSlotOffset() {
+        return slotOffset;
+    }
+
+    public void setSlotOffset(double slotOffset) {
+        this.slotOffset = slotOffset;
+    }
+
+    public GrainSurface getEndsSurface() {
+        return endsSurface;
+    }
+
+    public void setEndsSurface(GrainSurface endsSurface) {
+        this.endsSurface = endsSurface;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof StarGrainComputationRequest)) return false;
-        StarGrainComputationRequest that = (StarGrainComputationRequest) o;
+        if (!(o instanceof CSlotGrainComputationRequest)) return false;
+        CSlotGrainComputationRequest that = (CSlotGrainComputationRequest) o;
         return Double.compare(that.throatDiameter, throatDiameter) == 0 &&
                 Double.compare(that.segmentLength, segmentLength) == 0 &&
                 Double.compare(that.numberOfSegment, numberOfSegment) == 0 &&
@@ -77,25 +86,27 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
                 Objects.equals(customPropellant, that.customPropellant) &&
 
                 Double.compare(that.outerDiameter, outerDiameter) == 0 &&
-                Double.compare(that.innerDiameter, innerDiameter) == 0 &&
-                Double.compare(that.pointDiameter, pointDiameter) == 0 &&
-                Double.compare(that.pointCount, pointCount) == 0 &&
+                Double.compare(that.getCoreDiameter(), coreDiameter) == 0 &&
+                Double.compare(that.getSlotWidth(), slotWidth) == 0 &&
+                Double.compare(that.getSlotDepth(), slotDepth) == 0 &&
+                Double.compare(that.getSlotOffset(), slotOffset) == 0 &&
                 endsSurface == that.endsSurface;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(outerDiameter, innerDiameter, pointDiameter, pointCount, endsSurface);
+        return Objects.hash(outerDiameter, coreDiameter, slotWidth, slotDepth, slotOffset, endsSurface);
     }
 
 
     @Override
     public String toString() {
-        return "StarComputationRequest{" +
+        return "CSlotGrainComputationRequest{" +
                 "outerDiameter=" + outerDiameter +
-                ", innerDiameter=" + innerDiameter +
-                ", pointDiameter=" + pointDiameter +
-                ", pointCount=" + pointCount +
+                ", coreDiameter=" + coreDiameter +
+                ", slotWidth=" + slotWidth +
+                ", slotDepth=" + slotDepth +
+                ", slotOffset=" + slotOffset +
                 ", endsSurface=" + endsSurface +
                 ", throatDiameter=" + throatDiameter +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
