@@ -57,7 +57,7 @@ public class ComputationControler {
         if(request.getExtraConfig().getNumberOfCalculationLine() == null){
             request.getExtraConfig().setNumberOfCalculationLine(finocylLimit);
         }
-        return computeRequest(request, true);
+        return computeRequest(request, true, true);
     }
 
     @PostMapping("star")
@@ -65,35 +65,35 @@ public class ComputationControler {
         if(request.getExtraConfig().getNumberOfCalculationLine() == null){
             request.getExtraConfig().setNumberOfCalculationLine(starlLimit);
         }
-        return computeRequest(request, true);
+        return computeRequest(request, true, false);
     }
 
     @PostMapping("moonburner")
     public ResponseEntity computeMoonBurner(@RequestBody MoonBurnerGrainComputationRequest request) {
-        return computeRequest(request, true);
+        return computeRequest(request, true, true);
     }
 
     @PostMapping("cslot")
     public ResponseEntity computeCSlot(@RequestBody CSlotGrainComputationRequest request) {
-        return computeRequest(request, true);
+        return computeRequest(request, true, true);
     }
 
     @PostMapping("rodtube")
     public ResponseEntity computeRodTube(@RequestBody RodTubeGrainComputationRequest request) {
-        return computeRequest(request, false);
+        return computeRequest(request, false, true);
     }
 
     @PostMapping("endburner")
     public ResponseEntity computeEndBurner(@RequestBody EndBurnerGrainComputationRequest request) {
-        return computeRequest(request, true);
+        return computeRequest(request, true, true);
     }
 
     @PostMapping
     public ResponseEntity computeHollowCylinderGrain(@RequestBody HollowComputationRequest request) {
-        return computeRequest(request, false);
+        return computeRequest(request, false, true);
     }
 
-    private ResponseEntity computeRequest(BasicComputationRequest request, boolean removePostBurnResult) {
+    private ResponseEntity computeRequest(BasicComputationRequest request, boolean removePostBurnResult, boolean enableSafeKn) {
         try {
             ComputationResponse response = toComputationResponse(request, jsrmService.runComputation(request), removePostBurnResult);
             logSuccess(request, response);
@@ -113,10 +113,14 @@ public class ComputationControler {
                 LOGGER.error("MotorClassificationOutOfBoundException : " + request.toString(), e);
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getMessage()));
-            } else {
+            } else if (enableSafeKn){
                 LOGGER.warn("Computation failed, retry with low KN");
                 LOGGER.warn("Computation failed request {} : {}", request.hashCode(), request.toString());
                 return retryWithSafeKN(request);
+            } else {
+                LOGGER.warn("Computation failed, safe KN retry NOT ALLOWED");
+                return ResponseEntity.badRequest().body(
+                        new ErrorMessage("METEOR can't run this computation due to the following error:", "This often occurs when the ratio between the burning area and the throat area is too low. Try to increase your grain core diameter and/or decrease the throat diameter."));
             }
         } catch (BurnRateDataException e) {
             return ResponseEntity.badRequest().body(
