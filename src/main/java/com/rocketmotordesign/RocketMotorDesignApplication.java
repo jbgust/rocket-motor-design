@@ -1,13 +1,26 @@
 package com.rocketmotordesign;
 
+import com.rocketmotordesign.config.MeteorRequestLoggingFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 @SpringBootApplication
 public class RocketMotorDesignApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(RocketMotorDesignApplication.class, args);
+	}
+
+	@Bean
+	public CommonsRequestLoggingFilter buildReauqetLogger() {
+		MeteorRequestLoggingFilter loggingFilter = new MeteorRequestLoggingFilter();
+		loggingFilter.setIncludeQueryString(true);
+		loggingFilter.setIncludePayload(true);
+		loggingFilter.setMaxPayloadLength(1200);
+		loggingFilter.setIncludeClientInfo(true);
+		return loggingFilter;
 	}
 
 }
