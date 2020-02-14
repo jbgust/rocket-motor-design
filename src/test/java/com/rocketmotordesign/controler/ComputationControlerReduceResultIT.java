@@ -3,14 +3,15 @@ package com.rocketmotordesign.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -19,7 +20,7 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(ComputationControler.class)
 @Import({JSRMService.class, MeasureUnitService.class})
 @TestPropertySource(properties = "computation.response.limit.size=4")
@@ -30,7 +31,7 @@ public class ComputationControlerReduceResultIT {
     private ObjectMapper objectMapper;
 
     @Test
-    public void shoulReduceResultSize() throws Exception {
+    void shoulReduceResultSize() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultRequest());
 

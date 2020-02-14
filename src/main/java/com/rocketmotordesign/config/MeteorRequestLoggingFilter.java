@@ -25,12 +25,14 @@ public class MeteorRequestLoggingFilter extends CommonsRequestLoggingFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        logger.info(PREFIX_HTTP_STATUTS + response.getStatus());
+        if(shouldLog(request)){
+            logger.info(PREFIX_HTTP_STATUTS + response.getStatus());
+        }
         super.doFilterInternal(request, response, filterChain);
     }
 
     @Override
     protected boolean shouldLog(HttpServletRequest request) {
-        return true;
+        return !request.getRequestURI().contains("/actuator");
     }
 }

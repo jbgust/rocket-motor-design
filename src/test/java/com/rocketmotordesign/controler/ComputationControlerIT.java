@@ -3,19 +3,19 @@ package com.rocketmotordesign.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import com.rocketmotordesign.controler.request.BurnRatePressureData;
+import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.controler.request.FinocylComputationRequest;
 import com.rocketmotordesign.controler.request.HollowComputationRequest;
-import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(ComputationControler.class)
 @Import({JSRMService.class, MeasureUnitService.class})
 public class ComputationControlerIT {
@@ -40,7 +40,7 @@ public class ComputationControlerIT {
     private ObjectMapper objectMapper;
 
     @Test
-    public void shouldRunComputation() throws Exception {
+    void shouldRunComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultRequest());
 
@@ -79,7 +79,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunFinocylComputationWithFullNumberOfPoints() throws Exception {
+    void shouldRunFinocylComputationWithFullNumberOfPoints() throws Exception {
         // GIVEN
         FinocylComputationRequest defaultFinocylRequest = getDefaultFinocylRequest();
         defaultFinocylRequest.getExtraConfig().setNumberOfCalculationLine(883);
@@ -106,7 +106,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunFinocylComputation() throws Exception {
+    void shouldRunFinocylComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultFinocylRequest());
 
@@ -130,7 +130,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunStarGrainComputation() throws Exception {
+    void shouldRunStarGrainComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultStarGrainRequest());
 
@@ -154,7 +154,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunStarGrainComputationInImperial() throws Exception {
+    void shouldRunStarGrainComputationInImperial() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultStarGrainRequestImperial());
 
@@ -178,7 +178,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunMoonBurnerGrainComputation() throws Exception {
+    void shouldRunMoonBurnerGrainComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultMoonBurnerGrainRequest());
 
@@ -202,7 +202,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunMoonBurnerGrainComputationImperial() throws Exception {
+    void shouldRunMoonBurnerGrainComputationImperial() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultMoonBurnerGrainRequestImperial());
 
@@ -226,7 +226,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunCSlotGrainComputation() throws Exception {
+    void shouldRunCSlotGrainComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultCSlotGrainRequest());
 
@@ -250,7 +250,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunCSlotGrainComputationImperial() throws Exception {
+    void shouldRunCSlotGrainComputationImperial() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultCSlotGrainRequestImperial());
 
@@ -274,7 +274,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunRodTubeGrainComputation() throws Exception {
+    void shouldRunRodTubeGrainComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultRodTubeGrainRequest());
 
@@ -298,7 +298,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunRodTubeGrainComputationImperial() throws Exception {
+    void shouldRunRodTubeGrainComputationImperial() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultRodTubeGrainRequestImperial());
 
@@ -322,7 +322,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunEndBurnerGrainComputation() throws Exception {
+    void shouldRunEndBurnerGrainComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultEndBurnerGrainRequest());
 
@@ -346,7 +346,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunEndBurnerGrainComputationImperial() throws Exception {
+    void shouldRunEndBurnerGrainComputationImperial() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultEndBurnerGrainRequestImperial());
 
@@ -370,7 +370,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunFinocylComputationImperial() throws Exception {
+    void shouldRunFinocylComputationImperial() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultFinocylRequestImperial());
 
@@ -394,7 +394,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldConvertToImperialUnits() throws Exception {
+    void shouldConvertToImperialUnits() throws Exception {
         // GIVEN
         HollowComputationRequest defaultRequest = getDefaultRequestImperial();
 
@@ -434,7 +434,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldRunComputationForLowKNMotor() throws Exception {
+    void shouldRunComputationForLowKNMotor() throws Exception {
         // GIVEN
         HollowComputationRequest lowKNRequest = new HollowComputationRequest();
         lowKNRequest.setThroatDiameter(8);
@@ -465,7 +465,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldUseCustomPropellantInImperialUnits() throws Exception {
+    void shouldUseCustomPropellantInImperialUnits() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("My propellant");
@@ -500,7 +500,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldUseCustomPropellantInSIUnits() throws Exception {
+    void shouldUseCustomPropellantInSIUnits() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequest();
         request.setPropellantType("To be defined");
@@ -528,7 +528,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldUseCustomPropellantInSIUnitsWithMultipleBurnRateData() throws Exception {
+    void shouldUseCustomPropellantInSIUnitsWithMultipleBurnRateData() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequest();
         request.setPropellantType("To be defined");
@@ -582,7 +582,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldUseCustomPropellantInImperialUnitsWithMultipleBurnRateData() throws Exception {
+    void shouldUseCustomPropellantInImperialUnitsWithMultipleBurnRateData() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("To be defined");
@@ -618,7 +618,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldSendErrorIfBurnRateDataAreOverlaping() throws Exception {
+    void shouldSendErrorIfBurnRateDataAreOverlaping() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("To be defined");
@@ -653,7 +653,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldSendErrorWhenPressureIsOutOfBound() throws Exception {
+    void shouldSendErrorWhenPressureIsOutOfBound() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantType("To be defined");
@@ -691,7 +691,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldReturnErrorOnWrongMotorDesing() throws Exception {
+    void shouldReturnErrorOnWrongMotorDesing() throws Exception {
 
         // GIVEN
         HollowComputationRequest invalidMotorDesignRequest = new HollowComputationRequest();
@@ -721,7 +721,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldReturnErrorWheCoreDiamIsLowerThanThroat() throws Exception {
+    void shouldReturnErrorWheCoreDiamIsLowerThanThroat() throws Exception {
 
         // GIVEN
         HollowComputationRequest invalidMotorDesignRequest = new HollowComputationRequest();
@@ -751,7 +751,7 @@ public class ComputationControlerIT {
     }
 
     @Test
-    public void shouldReturnErrorWhenComputationFailed() throws Exception {
+    void shouldReturnErrorWhenComputationFailed() throws Exception {
 
         // GIVEN
         HollowComputationRequest request = new HollowComputationRequest();

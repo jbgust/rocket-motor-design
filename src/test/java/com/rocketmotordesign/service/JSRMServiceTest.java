@@ -1,18 +1,18 @@
 package com.rocketmotordesign.service;
 
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.rocketmotordesign.controler.request.HollowComputationRequest;
 import com.rocketmotordesign.controler.request.CustomPropellantRequest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.rocketmotordesign.controler.request.HollowComputationRequest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.rocketmotordesign.utils.TestHelper.getDefaultRequestImperial;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @Import({JSRMService.class, MeasureUnitService.class})
 public class JSRMServiceTest {
 
@@ -20,7 +20,7 @@ public class JSRMServiceTest {
     private JSRMService jsrmService;
 
     @Test
-    public void shouldUseCustomPropellantViper() {
+    void shouldUseCustomPropellantViper() {
         // GIVEN
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setCstar(5468.4);

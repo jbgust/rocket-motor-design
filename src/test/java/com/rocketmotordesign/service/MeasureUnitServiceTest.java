@@ -16,11 +16,12 @@ import com.rocketmotordesign.controler.response.GraphResult;
 import com.rocketmotordesign.controler.response.PerformanceResult;
 import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
 import org.assertj.core.data.Offset;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tec.units.ri.unit.Units;
 
 import java.util.Locale;
@@ -35,7 +36,7 @@ import static org.assertj.core.data.Offset.offset;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @Import(MeasureUnitService.class)
 public class MeasureUnitServiceTest {
 
@@ -46,7 +47,7 @@ public class MeasureUnitServiceTest {
     private MeasureUnitService measureUnitService;
 
     @Test
-    public void shouldConvertMotorFromImperialUnitToJSRMUnit() {
+    void shouldConvertMotorFromImperialUnitToJSRMUnit() {
 
         HollowComputationRequest defaultRequestSIUnit = getDefaultRequest();
 
@@ -71,7 +72,7 @@ public class MeasureUnitServiceTest {
 
 
     @Test
-    public void shouldConvertFinocylGrainMotorFromImperialUnitToJSRMUnit() {
+    void shouldConvertFinocylGrainMotorFromImperialUnitToJSRMUnit() {
 
         FinocylComputationRequest finocylRequest = getDefaultFinocylRequest();
 
@@ -96,7 +97,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertPropellantFromSIUnitToJSRMUnit() {
+    void shouldConvertPropellantFromSIUnitToJSRMUnit() {
         // GIVEN
         HollowComputationRequest request = getDefaultRequest();
         CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNSU);
@@ -118,7 +119,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertPropellantWithComplexBurnRateFromSIUnitToJSRMUnit() {
+    void shouldConvertPropellantWithComplexBurnRateFromSIUnitToJSRMUnit() {
         // GIVEN
         CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNSU);
         propellantRequest.setBurnRateDataSet(Sets.newHashSet(
@@ -148,7 +149,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertPropellantWithCstarFromSIUnitToJSRMUnit() {
+    void shouldConvertPropellantWithCstarFromSIUnitToJSRMUnit() {
         // GIVEN
         CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNDX);
         propellantRequest.setCstar(912.38154);
@@ -171,7 +172,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertPropellantFromImperialUnitToJSRMUnit() {
+    void shouldConvertPropellantFromImperialUnitToJSRMUnit() {
         // GIVEN
         CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNSU);
         propellantRequest.setBurnRateCoefficient(0.0665);
@@ -195,7 +196,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertPropellantWithComplexBurnRateFromIMPERIALUnitToJSRMUnit() {
+    void shouldConvertPropellantWithComplexBurnRateFromIMPERIALUnitToJSRMUnit() {
         // GIVEN
         CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNDX);
         propellantRequest.setDensity(0.06824);
@@ -228,7 +229,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertPropellantWithCstarFromIMPERIALUnitToJSRMUnit() {
+    void shouldConvertPropellantWithCstarFromIMPERIALUnitToJSRMUnit() {
         // GIVEN
         CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNDX);
         propellantRequest.setBurnRateCoefficient(0.0665);    //converti de KNSU
@@ -254,7 +255,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertConfigFromImperialUnitToJSRMUnit() {
+    void shouldConvertConfigFromImperialUnitToJSRMUnit() {
 
         ExtraConfiguration defaultExtraConfigSIUnit = getDefaultExtraConfiguration();
 
@@ -276,7 +277,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldSetMaxNumberOfCalculationLine() {
+    void shouldSetMaxNumberOfCalculationLine() {
         ExtraConfiguration extraConfiguration = getDefaultExtraConfiguration();
         extraConfiguration.setNumberOfCalculationLine(200);
 
@@ -286,7 +287,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertPerformanceResultFromJSRMUnitToImperialUnit() {
+    void shouldConvertPerformanceResultFromJSRMUnitToImperialUnit() {
 
         Nozzle nozzle = new Nozzle(
                 23,
@@ -333,7 +334,7 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertGraphResultFromJSRMUnitToImperialUnit() {
+    void shouldConvertGraphResultFromJSRMUnitToImperialUnit() {
 
         MotorParameters motorParameters = new MotorParameters(23.6, 45.6, 234.12, 5.12, 23.12);
 
@@ -347,13 +348,13 @@ public class MeasureUnitServiceTest {
     }
 
     @Test
-    public void shouldConvertMass() {
+    void shouldConvertMass() {
         assertThat(measureUnitService.convertMass(IMPERIAL.getMassUnit(), Units.KILOGRAM, 7.054792))
                 .isCloseTo(3.2, offset(0.001));
     }
 
     @Test
-    public void shouldconvertLengthToJSRM() {
+    void shouldconvertLengthToJSRM() {
         assertThat(measureUnitService.convertLengthToJSRM(IMPERIAL.getLenghtUnit(),19.685))
                 .isCloseTo(500.0, offset(0.01));
     }

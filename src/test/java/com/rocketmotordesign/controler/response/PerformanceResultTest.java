@@ -3,7 +3,7 @@ package com.rocketmotordesign.controler.response;
 
 import com.github.jbgust.jsrm.application.result.MotorClassification;
 import com.rocketmotordesign.service.MeasureUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.rocketmotordesign.controler.response.PerformanceResult.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PerformanceResultTest {
 
     @Test
-    public void doitIndiquerLePourcentageDeLaClasse() {
+    void doitIndiquerLePourcentageDeLaClasse() {
         PerformanceResult result = createPerformanceResult(0);
 
         assertThat(result.getMotorDescription()).isEqualTo("L1672");
@@ -19,7 +19,7 @@ public class PerformanceResultTest {
     }
 
     @Test
-    public void neDoitPasIndiquerLutilisationDeSafeKN() {
+    void neDoitPasIndiquerLutilisationDeSafeKN() {
         int lowKNCorrection = 0;
         PerformanceResult result = createPerformanceResult(lowKNCorrection);
 
@@ -28,7 +28,7 @@ public class PerformanceResultTest {
     }
 
     @Test
-    public void neDoitPasIndiquerUnProblemeDeKN() {
+    void neDoitPasIndiquerUnProblemeDeKN() {
         int lowKNCorrection = 200;
         PerformanceResult result = createPerformanceResult(lowKNCorrection);
 
@@ -37,7 +37,7 @@ public class PerformanceResultTest {
     }
 
     @Test
-    public void doitIndiquerUnProblemeDeKN() {
+    void doitIndiquerUnProblemeDeKN() {
         int lowKNCorrection = 201;
         PerformanceResult result = createPerformanceResult(lowKNCorrection);
 
@@ -46,12 +46,12 @@ public class PerformanceResultTest {
     }
 
     @Test
-    public void shouldFormat() {
+    void shouldFormat() {
         assertThat(format(52.329)).isEqualTo("52.33");
     }
 
     @Test
-    public void shouldFormatWithPrecision() {
+    void shouldFormatWithPrecision() {
         assertThat(format(52.329, "%.1f")).isEqualTo("52.3");
     }
 

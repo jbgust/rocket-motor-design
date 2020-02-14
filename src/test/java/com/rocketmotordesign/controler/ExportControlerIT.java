@@ -5,15 +5,16 @@ import com.rocketmotordesign.controler.request.HollowComputationRequest;
 import com.rocketmotordesign.controler.request.ExportRASPRequest;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,7 +26,7 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(ExportControler.class)
 @Import({JSRMService.class, MeasureUnitService.class})
 public class ExportControlerIT {
@@ -34,7 +35,7 @@ public class ExportControlerIT {
     private MockMvc mvc;
 
     @Test
-    public void shoulExportToRASP() throws Exception {
+    void shoulExportToRASP() throws Exception {
         // GIVEN
         ExportRASPRequest exportRequest = new ExportRASPRequest();
         exportRequest.setHollowComputationRequest(getDefaultRequest());
@@ -67,7 +68,7 @@ public class ExportControlerIT {
     }
 
     @Test
-    public void shoulExportToRASPFromIMPERIAL() throws Exception {
+    void shoulExportToRASPFromIMPERIAL() throws Exception {
         // GIVEN
         ExportRASPRequest exportRequest = new ExportRASPRequest();
         exportRequest.setHollowComputationRequest(getDefaultRequestImperial());
@@ -100,7 +101,7 @@ public class ExportControlerIT {
     }
 
     @Test
-    public void shouldRunComputationForLowKNMotor() throws Exception {
+    void shouldRunComputationForLowKNMotor() throws Exception {
         // GIVEN
         HollowComputationRequest lowKNRequest = new HollowComputationRequest();
         lowKNRequest.setThroatDiameter(19);

@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import com.rocketmotordesign.controler.request.BurnRatePressureData;
 
 import org.assertj.core.data.Offset;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.infra.JSRMConstant.UNIVERSAL_GAS_CONSTANT;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.fail;
 public class CustomPropellantTest {
 
     @Test
-    public void shouldCreateCustomPropellant() {
+    void shouldCreateCustomPropellant() {
         CustomPropellant customPropellant = new CustomPropellant(
                 1d,
                 3d,
@@ -39,7 +39,7 @@ public class CustomPropellantTest {
     }
 
     @Test
-    public void shouldCreateCustomPropellantWithAllValueWithoutCstar() {
+    void shouldCreateCustomPropellantWithAllValueWithoutCstar() {
         CustomPropellant customPropellant = new CustomPropellant(
                 null,
                 3d,
@@ -63,7 +63,7 @@ public class CustomPropellantTest {
     }
 
     @Test
-    public void shouldResolveChamberTemperature() {
+    void shouldResolveChamberTemperature() {
 
         PropellantType propellant = KNDX;
         double k = propellant.getK();
@@ -82,7 +82,7 @@ public class CustomPropellantTest {
     }
 
     @Test
-    public void shouldNotResolveChamberTemperature() {
+    void shouldNotResolveChamberTemperature() {
         PropellantType propellant = KNDX;
         double k = propellant.getK();
 
@@ -98,7 +98,7 @@ public class CustomPropellantTest {
     }
 
     @Test
-    public void shoudlUseBurnRateDatasInstead() {
+    void shoudlUseBurnRateDatasInstead() {
 
         PropellantType propellant = KNDX;
         double k = propellant.getK();
@@ -126,7 +126,7 @@ public class CustomPropellantTest {
     }
 
     @Test
-    public void shoudlThrowExceptionWhenPressureIsOUtOfBounds() {
+    void shoudlThrowExceptionWhenPressureIsOUtOfBounds() {
 
         PropellantType propellant = KNDX;
         double k = propellant.getK();
@@ -151,7 +151,7 @@ public class CustomPropellantTest {
     }
 
     @Test
-    public void shoudlThrowExceptionWhenBurnRateDataOverlapping() {
+    void shoudlThrowExceptionWhenBurnRateDataOverlapping() {
         assertThatThrownBy(() -> new CustomPropellant(
                 912.38154,
                 2d,
@@ -167,7 +167,7 @@ public class CustomPropellantTest {
     }
 
     @Test
-    public void shoudlThrowExceptionWhenBurnRateDataIsInvalid() {
+    void shoudlThrowExceptionWhenBurnRateDataIsInvalid() {
         assertThatThrownBy(() -> new CustomPropellant(
                 912.38154,
                 2d,
