@@ -39,17 +39,20 @@ public class ComputationControler {
     private Integer moduloLimitSize;
     private Integer finocylLimit;
     private Integer starlLimit;
+    private Integer maxStarBranches;
 
     public ComputationControler(JSRMService jsrmService,
                                 MeasureUnitService measureUnitService,
                                 @Value("${computation.response.limit.size}") Integer moduloLimitSize,
                                 @Value("${computation.finocyl.limit.size:400}") Integer finocylLimit,
-                                @Value("${computation.star.limit.size:400}") Integer starlLimit) {
+                                @Value("${computation.star.limit.size:400}") Integer starlLimit,
+                                @Value("${computation.star.limit.size:6}") Integer maxStarBranches) {
         this.jsrmService = jsrmService;
         this.measureUnitService = measureUnitService;
         this.moduloLimitSize = moduloLimitSize;
         this.finocylLimit = finocylLimit;
         this.starlLimit = starlLimit;
+        this.maxStarBranches = maxStarBranches;
     }
 
     @PostMapping("finocyl")
@@ -65,6 +68,14 @@ public class ComputationControler {
         if(request.getExtraConfig().getNumberOfCalculationLine() == null){
             request.getExtraConfig().setNumberOfCalculationLine(starlLimit);
         }
+
+        if(request.getPointCount() > maxStarBranches){
+            LOGGER.warn("Max branches limit exceed : {}", request.getPointCount());
+            return ResponseEntity.badRequest().body(
+            new ErrorMessage("METEOR can't run this computation due to the following error:",
+                            "Due to performance issue on METEOR, you can't use more than 6 branches on star grain."));
+        }
+
         return computeRequest(request, true, false);
     }
 
