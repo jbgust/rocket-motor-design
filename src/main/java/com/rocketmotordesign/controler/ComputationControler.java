@@ -21,6 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -39,19 +45,22 @@ public class ComputationControler {
     private Integer moduloLimitSize;
     private Integer finocylLimit;
     private Integer starlLimit;
+    private Integer starTimeoutMilliseconds;
     private Integer maxStarBranches;
 
     public ComputationControler(JSRMService jsrmService,
                                 MeasureUnitService measureUnitService,
                                 @Value("${computation.response.limit.size}") Integer moduloLimitSize,
                                 @Value("${computation.finocyl.limit.size:400}") Integer finocylLimit,
-                                @Value("${computation.star.limit.size:400}") Integer starlLimit,
+                                @Value("${computation.star.limit.size:300}") Integer starlLimit,
+                                @Value("${computation.star.timeout.ms:10000}") Integer starTimeoutMilliseconds,
                                 @Value("${computation.star.limit.size:6}") Integer maxStarBranches) {
         this.jsrmService = jsrmService;
         this.measureUnitService = measureUnitService;
         this.moduloLimitSize = moduloLimitSize;
         this.finocylLimit = finocylLimit;
         this.starlLimit = starlLimit;
+        this.starTimeoutMilliseconds = starTimeoutMilliseconds;
         this.maxStarBranches = maxStarBranches;
     }
 
@@ -76,7 +85,17 @@ public class ComputationControler {
                             "Due to performance issue on METEOR, you can't use more than 6 branches on star grain."));
         }
 
-        return computeRequest(request, true, false);
+
+        CompletableFuture<ResponseEntity> responseEntityCompletableFuture = CompletableFuture.supplyAsync(() -> computeRequest(request, true, false));
+        try {
+            return responseEntityCompletableFuture
+                    .get(starTimeoutMilliseconds, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            LOGGER.warn("Close completableFuture ", responseEntityCompletableFuture.cancel(true));
+            LOGGER.warn("STAR_GRAIN_ERROR", e);
+            return ResponseEntity.badRequest().body(
+                    new ErrorMessage("METEOR can't run this computation due to the following error:", "Your star grain configuration take too much time to be computed. This happens sometimes, try too use other values (close to yours)."));
+        }
     }
 
     @PostMapping("moonburner")
