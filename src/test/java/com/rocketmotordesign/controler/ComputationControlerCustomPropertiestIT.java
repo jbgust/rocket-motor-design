@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ComputationControler.class)
 @Import({JSRMService.class, MeasureUnitService.class})
-@TestPropertySource(properties = "computation.response.limit.size=4")
-public class ComputationControlerReduceResultIT {
+@TestPropertySource(properties = {"computation.response.limit.size=4", "computation.star.enable= false"})
+public class ComputationControlerCustomPropertiestIT {
 
     @Autowired
     private MockMvc mvc;
@@ -61,6 +61,23 @@ public class ComputationControlerReduceResultIT {
                 .andExpect(jsonPath("$.performanceResult.grainMass", is("2.812")))
 
                 .andExpect(jsonPath("$.motorParameters", hasSize(221)));
+    }
+
+    @Test
+    void shouldRunStarGrainComputation() throws Exception {
+        // GIVEN
+        String request = new ObjectMapper().writeValueAsString(getDefaultStarGrainRequest());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute/star")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        //THEN
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("Star grain is no more available")))
+                .andExpect(jsonPath("$.detail", is("Due to performance problem star grain are temporarily not available.")));
     }
 
 
