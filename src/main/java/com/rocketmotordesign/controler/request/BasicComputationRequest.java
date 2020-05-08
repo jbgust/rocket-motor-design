@@ -1,9 +1,23 @@
 package com.rocketmotordesign.controler.request;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.rocketmotordesign.service.MeasureUnit;
 
 import java.util.Optional;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "grainType")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = HollowComputationRequest.class, name = "HOLLOW"),
+        @JsonSubTypes.Type(value = MoonBurnerGrainComputationRequest.class, name = "MOON_BURNER"),
+        @JsonSubTypes.Type(value = RodTubeGrainComputationRequest.class, name = "ROD_TUBE"),
+        @JsonSubTypes.Type(value = CSlotGrainComputationRequest.class, name = "C_SLOT"),
+        @JsonSubTypes.Type(value = FinocylComputationRequest.class, name = "FINOCYL"),
+        @JsonSubTypes.Type(value = EndBurnerGrainComputationRequest.class, name = "END_BURNER")
+})
 public abstract class BasicComputationRequest {
 
     protected double throatDiameter;
@@ -112,4 +126,8 @@ public abstract class BasicComputationRequest {
     }
 
     public abstract String getGrainType();
+
+    public boolean isRemovePostBurnResult() {
+        return false;
+    }
 }

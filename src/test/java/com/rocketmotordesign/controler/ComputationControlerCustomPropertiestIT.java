@@ -1,8 +1,11 @@
 package com.rocketmotordesign.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rocketmotordesign.service.ConfigRestricterService;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
+import com.rocketmotordesign.service.ResultService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ComputationControler.class)
-@Import({JSRMService.class, MeasureUnitService.class})
+@Import({JSRMService.class, MeasureUnitService.class, ConfigRestricterService.class, ResultService.class})
 @TestPropertySource(properties = {"computation.response.limit.size=4", "computation.star.enable= false"})
 public class ComputationControlerCustomPropertiestIT {
 

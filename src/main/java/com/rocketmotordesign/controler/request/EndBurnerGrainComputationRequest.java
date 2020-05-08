@@ -86,4 +86,9 @@ public class EndBurnerGrainComputationRequest extends BasicComputationRequest{
                 ", customPropellant=" + customPropellant +
                 '}';
     }
+
+    @Override
+    public boolean isRemovePostBurnResult() {
+        return true;
+    }
 }

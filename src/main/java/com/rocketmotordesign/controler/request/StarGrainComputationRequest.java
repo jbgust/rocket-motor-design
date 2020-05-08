@@ -109,4 +109,9 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
                 ", customPropellant=" + customPropellant +
                 '}';
     }
+
+    @Override
+    public boolean isRemovePostBurnResult() {
+        return true;
+    }
 }

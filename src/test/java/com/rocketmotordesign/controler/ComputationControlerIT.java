@@ -6,8 +6,11 @@ import com.rocketmotordesign.controler.request.BurnRatePressureData;
 import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.controler.request.FinocylComputationRequest;
 import com.rocketmotordesign.controler.request.HollowComputationRequest;
+import com.rocketmotordesign.service.ConfigRestricterService;
 import com.rocketmotordesign.service.JSRMService;
 import com.rocketmotordesign.service.MeasureUnitService;
+import com.rocketmotordesign.service.ResultService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ComputationControler.class)
-@Import({JSRMService.class, MeasureUnitService.class})
+@Import({JSRMService.class, MeasureUnitService.class, ConfigRestricterService.class, ResultService.class})
 public class ComputationControlerIT {
 
     @Autowired

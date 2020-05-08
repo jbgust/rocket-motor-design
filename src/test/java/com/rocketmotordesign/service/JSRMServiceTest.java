@@ -13,14 +13,14 @@ import static com.rocketmotordesign.utils.TestHelper.getDefaultRequestImperial;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-@Import({JSRMService.class, MeasureUnitService.class})
+@Import({JSRMService.class, MeasureUnitService.class, ConfigRestricterService.class})
 public class JSRMServiceTest {
 
     @Autowired
     private JSRMService jsrmService;
 
     @Test
-    void shouldUseCustomPropellantViper() {
+    void shouldUseCustomPropellantViper() throws UnauthorizedValueException {
         // GIVEN
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setCstar(5468.4);

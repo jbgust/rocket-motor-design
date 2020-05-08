@@ -3,7 +3,7 @@ package com.rocketmotordesign.controler.request;
 public class ExportRASPRequest {
 
     private String projectName;
-    private HollowComputationRequest hollowComputationRequest;
+    private BasicComputationRequest computationRequest;
     private double motorDiameter;
     private double motorLength;
     private double motorWeight;
@@ -26,12 +26,12 @@ public class ExportRASPRequest {
         this.delay = delay;
     }
 
-    public HollowComputationRequest getHollowComputationRequest() {
-        return hollowComputationRequest;
+    public BasicComputationRequest getComputationRequest() {
+        return computationRequest;
     }
 
-    public void setHollowComputationRequest(HollowComputationRequest hollowComputationRequest) {
-        this.hollowComputationRequest = hollowComputationRequest;
+    public void setComputationRequest(BasicComputationRequest computationRequest) {
+        this.computationRequest = computationRequest;
     }
 
     public double getMotorDiameter() {
