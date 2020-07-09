@@ -1,22 +1,17 @@
 package com.rocketmotordesign.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rocketmotordesign.controler.request.HollowComputationRequest;
 import com.rocketmotordesign.controler.request.ExportRASPRequest;
-import com.rocketmotordesign.service.ConfigRestricterService;
-import com.rocketmotordesign.service.JSRMService;
-import com.rocketmotordesign.service.MeasureUnitService;
-import com.rocketmotordesign.service.ResultService;
-
+import com.rocketmotordesign.controler.request.HollowComputationRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -31,8 +26,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(ExportControler.class)
-@Import({JSRMService.class, MeasureUnitService.class, ConfigRestricterService.class, ResultService.class})
+@SpringBootTest
+@AutoConfigureMockMvc
+@WithMockUser("spring") //TODO : a changer
 public class ExportControlerIT {
 
     @Autowired

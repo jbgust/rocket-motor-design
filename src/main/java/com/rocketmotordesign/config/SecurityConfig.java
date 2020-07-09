@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
+                .authorizeRequests().antMatchers("/auth/**").permitAll()
                 .requestMatchers(EndpointRequest.to(PrometheusScrapeEndpoint.class)).permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -86,6 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedMethods(asList("*"));
         configuration.setAllowedHeaders(asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/auth/signin", configuration);
+        source.registerCorsConfiguration("/auth/signup", configuration);
         source.registerCorsConfiguration("/compute", configuration);
         source.registerCorsConfiguration("/compute/cslot", configuration);
         source.registerCorsConfiguration("/compute/endburner", configuration);

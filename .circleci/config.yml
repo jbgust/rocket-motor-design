@@ -12,7 +12,7 @@ jobs:
           paths:
             - ~/.m2
           key: rocketMotorDesign-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
-      - run: mvn test
+      - run: mvn verify
       - persist_to_workspace:
           root: ~/
           paths:

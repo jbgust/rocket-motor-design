@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser("spring") //TODO : a changer
 public class ComputationControlerIT {
 
     @Autowired
@@ -39,7 +40,6 @@ public class ComputationControlerIT {
     private ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser("spring")
     void shouldRunComputation() throws Exception {
         // GIVEN
         String request = new ObjectMapper().writeValueAsString(getDefaultRequest());
