@@ -25,7 +25,7 @@ class JwtUtilsTest {
     @Test
     void doitGenererUnTokenJWT(){
         Authentication authentication = mock(Authentication.class);
-        given(authentication.getPrincipal()).willReturn(new UserDetailsImpl(1234L, "username", "email", "password", singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
+        given(authentication.getPrincipal()).willReturn(new UserDetailsImpl(1234L, "username", "email", "password", singletonList(new SimpleGrantedAuthority("ROLE_USER")), true));
 
 
         String generateJwtToken = jwtUtils.generateJwtToken(authentication);
@@ -35,7 +35,7 @@ class JwtUtilsTest {
     @Test
     void doitRecupererleUsername(){
         Authentication authentication = mock(Authentication.class);
-        given(authentication.getPrincipal()).willReturn(new UserDetailsImpl(1234L, "username", "email", "password", singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
+        given(authentication.getPrincipal()).willReturn(new UserDetailsImpl(1234L, "username", "email", "password", singletonList(new SimpleGrantedAuthority("ROLE_USER")), true));
 
 
         String generateJwtToken = jwtUtils.generateJwtToken(authentication);
@@ -45,7 +45,7 @@ class JwtUtilsTest {
     @Test
     void doitIdentifierUnTokenInvalide(){
         Authentication authentication = mock(Authentication.class);
-        given(authentication.getPrincipal()).willReturn(new UserDetailsImpl(1234L, "username", "email", "password", singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
+        given(authentication.getPrincipal()).willReturn(new UserDetailsImpl(1234L, "username", "email", "password", singletonList(new SimpleGrantedAuthority("ROLE_USER")), true));
         String generateJwtToken = jwtUtils.generateJwtToken(authentication);
 
         assertThat(new JwtUtils("fausse-cle", 86400000).validateJwtToken(generateJwtToken)).isFalse();
@@ -54,7 +54,7 @@ class JwtUtilsTest {
     @Test
     void doitIdentifierUnTokenExpire(){
         Authentication authentication = mock(Authentication.class);
-        given(authentication.getPrincipal()).willReturn(new UserDetailsImpl(1234L, "username", "email", "password", singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
+        given(authentication.getPrincipal()).willReturn(new UserDetailsImpl(1234L, "username", "email", "password", singletonList(new SimpleGrantedAuthority("ROLE_USER")), true));
         JwtUtils jwtUtils1 = new JwtUtils(JWT_SECRET, 0);
         String generateJwtToken = jwtUtils1.generateJwtToken(authentication);
 

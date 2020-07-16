@@ -36,6 +36,8 @@ public class User {
 
 	private LocalDateTime derniereConnexion;
 
+	private boolean compteValide;
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles",
 				joinColumns = @JoinColumn(name = "user_id"),
@@ -48,6 +50,7 @@ public class User {
 	public User(String email, String password) {
 		this.email = email;
 		this.password = password;
+		this.compteValide = false;
 	}
 
 	public Long getId() {
@@ -96,5 +99,13 @@ public class User {
 
 	public void updateDerniereConnexion() {
 		this.derniereConnexion = LocalDateTime.now();
+	}
+
+	public boolean isCompteValide() {
+		return compteValide;
+	}
+
+	public void setCompteValide(boolean compteValide) {
+		this.compteValide = compteValide;
 	}
 }

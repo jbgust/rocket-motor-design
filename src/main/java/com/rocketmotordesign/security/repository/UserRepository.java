@@ -13,8 +13,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByEmail(String email);
 
-	Boolean existsByEmail(String email);
-
 	@Modifying
 	@Query("update User u set u.derniereConnexion=current_timestamp where u.email=:email")
 	void logDateConnexion(@Param("email") String email);

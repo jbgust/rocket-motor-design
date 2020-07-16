@@ -1,6 +1,8 @@
 package com.rocketmotordesign.security;
 
+import com.rocketmotordesign.security.models.UserValidationToken;
 import com.rocketmotordesign.security.repository.UserRepository;
+import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
+import java.util.stream.StreamSupport;
 
+import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,6 +31,9 @@ class AuthControllerIT {
     private UserRepository userRepository;
 
     @Autowired
+    private UserValidationTokenRepository userValidationTokenRepository;
+
+    @Autowired
     private MockMvc mvc;
 
     @Test
@@ -35,7 +42,7 @@ class AuthControllerIT {
         ResultActions resultActions = mvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
-                        "  \"email\": \"toto@titi.fr\",\n" +
+                        "  \"email\": \"tata@titi.fr\",\n" +
                         "  \"password\": \"Toto$it1\"\n" +
                         "}"));
 
@@ -44,7 +51,7 @@ class AuthControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is("User registered successfully!")));
 
-        assertThat(userRepository.findByEmail("toto@titi.fr"))
+        assertThat(userRepository.findByEmail("tata@titi.fr"))
                 .isPresent()
                 .hasValueSatisfying(user -> assertThat(user.getDateCreation().toLocalDate()).isToday());
     }
@@ -74,6 +81,11 @@ class AuthControllerIT {
                         "  \"password\": \"Toto$it1\"\n" +
                         "}"));
 
+        String tokenValidationCompte = recupererTokenValidationCompte("toto@titi.fr");
+
+        mvc.perform(post("/auth/validate/{idToken}", tokenValidationCompte)
+                .contentType(MediaType.APPLICATION_JSON));
+
         LocalDateTime avantConnexion = LocalDateTime.now();
         ResultActions resultActions = mvc.perform(post("/auth/signin")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -90,10 +102,42 @@ class AuthControllerIT {
 
         assertThat(userRepository.findByEmail("toto@titi.fr"))
                 .isPresent()
-                .hasValueSatisfying(user -> assertThat(
-                        user.getDerniereConnexion())
-                        .isBetween(avantConnexion, apresConnexion));
+                .hasValueSatisfying(user -> {
+                        assertThat(user.getDerniereConnexion()).isBetween(avantConnexion, apresConnexion);
+                        assertThat(user.isCompteValide()).isTrue();
+                });
     }
+
+    @Test
+    void neDoitPasSeConnecterSiCompteNonValider() throws Exception {
+        // WHEN
+        mvc.perform(post("/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"email\": \"toto@titi.fr\",\n" +
+                        "  \"password\": \"Toto$it1\"\n" +
+                        "}"));
+
+        ResultActions resultActions = mvc.perform(post("/auth/signin")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"username\": \"toto@titi.fr\",\n" +
+                        "  \"password\": \"Toto$it1\"\n" +
+                        "}"));
+
+        //THEN
+        resultActions
+                .andExpect(status().isUnauthorized());
+    }
+
+    private String recupererTokenValidationCompte(String email) {
+        return StreamSupport.stream(userValidationTokenRepository.findAll().spliterator(), false)
+                .filter(userValidationToken -> userValidationToken.getUtilisateur().getEmail().equals(email))
+                .filter(userValidationToken -> CREATION_COMPTE == userValidationToken.getTokenType())
+                .map(UserValidationToken::getId)
+                .findFirst().orElse(null);
+    }
+
 
     @Test
     void doitEchoueSiRequeteIncomplete() throws Exception {
