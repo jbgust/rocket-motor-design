@@ -1,7 +1,7 @@
 package com.rocketmotordesign.security;
 
 import com.rocketmotordesign.security.jwt.JwtUtils;
-import com.rocketmotordesign.security.models.*;
+import com.rocketmotordesign.security.models.UserValidationToken;
 import com.rocketmotordesign.security.repository.RoleRepository;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
@@ -9,8 +9,10 @@ import com.rocketmotordesign.security.request.LoginRequest;
 import com.rocketmotordesign.security.request.SignupRequest;
 import com.rocketmotordesign.security.response.JwtResponse;
 import com.rocketmotordesign.security.response.MessageResponse;
+import com.rocketmotordesign.security.services.AuthenticationService;
+import com.rocketmotordesign.security.services.EnvoiLienValidationException;
 import com.rocketmotordesign.security.services.UserDetailsImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rocketmotordesign.security.services.UtilisateurDejaEnregistrerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,31 +25,35 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-	@Autowired
-    AuthenticationManager authenticationManager;
 
-	@Autowired
-	UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+	private final UserRepository userRepository;
+	private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
+	private final JwtUtils jwtUtils;
+	private final UserValidationTokenRepository userValidationTokenRepository;
+	private final AuthenticationService authenticationService;
 
-	@Autowired
-	RoleRepository roleRepository;
+	public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, UserValidationTokenRepository userValidationTokenRepository, AuthenticationService authenticationService) {
+		this.authenticationManager = authenticationManager;
+		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
+		this.encoder = encoder;
+		this.jwtUtils = jwtUtils;
+		this.userValidationTokenRepository = userValidationTokenRepository;
+		this.authenticationService = authenticationService;
+	}
 
-	@Autowired
-    PasswordEncoder encoder;
-
-	@Autowired
-	JwtUtils jwtUtils;
-
-	@Autowired
-	UserValidationTokenRepository userValidationTokenRepository;
 
 	@Transactional
 	@PostMapping("/signin")
@@ -74,7 +80,7 @@ public class AuthController {
 	}
 
 	@Transactional
-	@PostMapping("/validate/{idToken}")
+	@GetMapping("/validate/{idToken}")
 	public ResponseEntity validationCompte(@PathVariable String idToken) {
 
 		Optional<UserValidationToken> tokenType = userValidationTokenRepository.findByIdAndTokenType(idToken, CREATION_COMPTE);
@@ -83,6 +89,7 @@ public class AuthController {
 			if(userValidationToken.getExpiryDate().isAfter(LocalDateTime.now())){
 				userValidationToken.getUtilisateur().setCompteValide(true);
 				userRepository.save(userValidationToken.getUtilisateur());
+				userValidationTokenRepository.delete(userValidationToken);
 				return ResponseEntity.ok().build();
 			} else {
 				return ResponseEntity.badRequest().body("Token has expired.");
@@ -96,27 +103,16 @@ public class AuthController {
 	@Transactional
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-
-		if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
+		try {
+			authenticationService.enregistrerUtilisateur(signUpRequest);
+			return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		} catch (UtilisateurDejaEnregistrerException e) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Email is already in use!"));
+		} catch (EnvoiLienValidationException e) {
+			return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+					.body("Failed to send activation link");
 		}
-
-		// Create new user's account
-		User user = new User(signUpRequest.getEmail(),
-							 encoder.encode(signUpRequest.getPassword()));
-
-
-		Set<Role> roles = new HashSet<>();
-		Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-				.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-		roles.add(userRole);
-
-		user.setRoles(roles);
-		userRepository.save(user);
-		userValidationTokenRepository.save(new UserValidationToken(UUID.randomUUID().toString(), user, CREATION_COMPTE));
-
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 }

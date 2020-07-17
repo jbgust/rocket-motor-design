@@ -3,11 +3,13 @@ package com.rocketmotordesign.security;
 import com.rocketmotordesign.security.models.UserValidationToken;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
+import com.rocketmotordesign.security.services.MailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,9 +21,9 @@ import java.util.stream.StreamSupport;
 import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -35,6 +37,9 @@ class AuthControllerIT {
 
     @Autowired
     private MockMvc mvc;
+
+    @MockBean
+    private MailService mailService;
 
     @Test
     void doitEnregistrerUnUtilisateur() throws Exception {
@@ -81,10 +86,7 @@ class AuthControllerIT {
                         "  \"password\": \"Toto$it1\"\n" +
                         "}"));
 
-        String tokenValidationCompte = recupererTokenValidationCompte("toto@titi.fr");
-
-        mvc.perform(post("/auth/validate/{idToken}", tokenValidationCompte)
-                .contentType(MediaType.APPLICATION_JSON));
+        validerCompte("toto@titi.fr");
 
         LocalDateTime avantConnexion = LocalDateTime.now();
         ResultActions resultActions = mvc.perform(post("/auth/signin")
@@ -130,15 +132,6 @@ class AuthControllerIT {
                 .andExpect(status().isUnauthorized());
     }
 
-    private String recupererTokenValidationCompte(String email) {
-        return StreamSupport.stream(userValidationTokenRepository.findAll().spliterator(), false)
-                .filter(userValidationToken -> userValidationToken.getUtilisateur().getEmail().equals(email))
-                .filter(userValidationToken -> CREATION_COMPTE == userValidationToken.getTokenType())
-                .map(UserValidationToken::getId)
-                .findFirst().orElse(null);
-    }
-
-
     @Test
     void doitEchoueSiRequeteIncomplete() throws Exception {
         // WHEN
@@ -166,6 +159,21 @@ class AuthControllerIT {
         //THEN
         resultActions
                 .andExpect(status().isBadRequest());
+    }
+
+    private String recupererTokenValidationCompte(String email) {
+        return StreamSupport.stream(userValidationTokenRepository.findAll().spliterator(), false)
+                .filter(userValidationToken -> userValidationToken.getUtilisateur().getEmail().equals(email))
+                .filter(userValidationToken -> CREATION_COMPTE == userValidationToken.getTokenType())
+                .map(UserValidationToken::getId)
+                .findFirst().orElse(null);
+    }
+
+    private void validerCompte(String email) throws Exception {
+        String tokenValidationCompte = recupererTokenValidationCompte(email);
+
+        mvc.perform(get("/auth/validate/{idToken}", tokenValidationCompte)
+                .contentType(MediaType.APPLICATION_JSON));
     }
 
 }
