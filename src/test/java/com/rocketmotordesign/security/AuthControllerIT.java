@@ -1,11 +1,13 @@
 package com.rocketmotordesign.security;
 
 import com.rocketmotordesign.security.models.UserValidationToken;
+import com.rocketmotordesign.security.models.UserValidationTokenType;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
 import com.rocketmotordesign.security.services.MailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,11 +21,17 @@ import java.time.LocalDateTime;
 import java.util.stream.StreamSupport;
 
 import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
+import static com.rocketmotordesign.security.models.UserValidationTokenType.RESET_PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.startsWith;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -59,6 +67,59 @@ class AuthControllerIT {
         assertThat(userRepository.findByEmail("tata@titi.fr"))
                 .isPresent()
                 .hasValueSatisfying(user -> assertThat(user.getDateCreation().toLocalDate()).isToday());
+    }
+
+    @Test
+    void doitPouvoirChangerDeMotDePasse() throws Exception {
+        //Creation du compte
+        mvc.perform(post("/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"email\": \"user@titi.fr\",\n" +
+                        "  \"password\": \"User$it1\"\n" +
+                        "}"));
+
+        validerCompte("user@titi.fr");
+
+        //demande de changepment de password
+        mvc.perform(post("/auth/reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"email\": \"user@titi.fr\"\n" +
+                        "}"))
+                .andExpect(status().isOk());
+
+        String tokenResetPassword = recupererToken("user@titi.fr", RESET_PASSWORD);
+
+        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(mailService, times(2)).sendHtmlMessage(
+                startsWith("METEOR : "),
+                argumentCaptor.capture(),
+                eq("user@titi.fr")
+        );
+
+        assertThat(argumentCaptor.getAllValues().get(1))
+                .isEqualTo("<html><body><p>Click on the link below to reset your password.</p>" +
+                        "<a href=\"http://test.meteor.gov/auth/reset-password/" + tokenResetPassword + "\">" +
+                        "http://test.meteor.gov/auth/reset-password/" + tokenResetPassword + "</a></body></html>");
+
+
+        //Changement de password
+        mvc.perform(post("/auth/reset-password/{token}", tokenResetPassword)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"password\": \"NewP@ssw0d!\"\n" +
+                        "}"))
+                .andExpect(status().isOk());
+
+        mvc.perform(post("/auth/signin")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"username\": \"user@titi.fr\",\n" +
+                        "  \"password\": \"NewP@ssw0d!\"\n" +
+                        "}"))
+
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -161,16 +222,16 @@ class AuthControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
-    private String recupererTokenValidationCompte(String email) {
+    private String recupererToken(String email, UserValidationTokenType tokenType) {
         return StreamSupport.stream(userValidationTokenRepository.findAll().spliterator(), false)
                 .filter(userValidationToken -> userValidationToken.getUtilisateur().getEmail().equals(email))
-                .filter(userValidationToken -> CREATION_COMPTE == userValidationToken.getTokenType())
+                .filter(userValidationToken -> tokenType == userValidationToken.getTokenType())
                 .map(UserValidationToken::getId)
                 .findFirst().orElse(null);
     }
 
     private void validerCompte(String email) throws Exception {
-        String tokenValidationCompte = recupererTokenValidationCompte(email);
+        String tokenValidationCompte = recupererToken(email, CREATION_COMPTE);
 
         mvc.perform(get("/auth/validate/{idToken}", tokenValidationCompte)
                 .contentType(MediaType.APPLICATION_JSON));

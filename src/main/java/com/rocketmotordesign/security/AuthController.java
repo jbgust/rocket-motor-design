@@ -1,18 +1,15 @@
 package com.rocketmotordesign.security;
 
 import com.rocketmotordesign.security.jwt.JwtUtils;
-import com.rocketmotordesign.security.models.UserValidationToken;
 import com.rocketmotordesign.security.repository.RoleRepository;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
+import com.rocketmotordesign.security.request.ChangePasswordRequest;
 import com.rocketmotordesign.security.request.LoginRequest;
 import com.rocketmotordesign.security.request.SignupRequest;
 import com.rocketmotordesign.security.response.JwtResponse;
 import com.rocketmotordesign.security.response.MessageResponse;
-import com.rocketmotordesign.security.services.AuthenticationService;
-import com.rocketmotordesign.security.services.EnvoiLienValidationException;
-import com.rocketmotordesign.security.services.UserDetailsImpl;
-import com.rocketmotordesign.security.services.UtilisateurDejaEnregistrerException;
+import com.rocketmotordesign.security.services.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,12 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
@@ -82,22 +76,14 @@ public class AuthController {
 	@Transactional
 	@GetMapping("/validate/{idToken}")
 	public ResponseEntity validationCompte(@PathVariable String idToken) {
-
-		Optional<UserValidationToken> tokenType = userValidationTokenRepository.findByIdAndTokenType(idToken, CREATION_COMPTE);
-		if(tokenType.isPresent()){
-			UserValidationToken userValidationToken = tokenType.get();
-			if(userValidationToken.getExpiryDate().isAfter(LocalDateTime.now())){
-				userValidationToken.getUtilisateur().setCompteValide(true);
-				userRepository.save(userValidationToken.getUtilisateur());
-				userValidationTokenRepository.delete(userValidationToken);
-				return ResponseEntity.ok().build();
-			} else {
-				return ResponseEntity.badRequest().body("Token has expired.");
-			}
-		} else {
+		try {
+			authenticationService.validerCompte(idToken);
+			return ResponseEntity.ok().build();
+		} catch (TokenExpireException e) {
+			return ResponseEntity.badRequest().body("Token has expired.");
+		} catch (TokenNotFoundExcetpion tokenNotFoundExcetpion) {
 			return ResponseEntity.notFound().build();
 		}
-
 	}
 
 	@Transactional
@@ -110,9 +96,38 @@ public class AuthController {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Email is already in use!"));
-		} catch (EnvoiLienValidationException e) {
+		} catch (EnvoiLienException e) {
 			return ResponseEntity.status(INTERNAL_SERVER_ERROR)
 					.body("Failed to send activation link");
+		}
+	}
+
+	@Transactional
+	@PostMapping("/reset-password")
+	public ResponseEntity demandeRenouvellementPassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+		try {
+			authenticationService.envoyerMailChangementPassword(changePasswordRequest);
+			return ResponseEntity.ok(new MessageResponse("Reset link sent successfully!"));
+		} catch (UtilisateurNonTrouve utilisateurNonTrouve) {
+			return ResponseEntity.notFound().build();
+		} catch (EnvoiLienException e) {
+			return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+					.body("Failed to send activation link");
+		}
+	}
+
+	@Transactional
+	@PostMapping("/reset-password/{idToken}")
+	public ResponseEntity modifierPassword(
+			@PathVariable String idToken,
+			@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+		try {
+			authenticationService.changePassword(idToken, updatePasswordRequest);
+			return ResponseEntity.ok().build();
+		} catch (TokenExpireException e) {
+			return ResponseEntity.badRequest().body("Token has expired.");
+		} catch (TokenNotFoundExcetpion tokenNotFoundExcetpion) {
+			return ResponseEntity.notFound().build();
 		}
 	}
 }

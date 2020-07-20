@@ -2,6 +2,7 @@ package com.rocketmotordesign.security.services;
 
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.models.UserValidationToken;
+import com.rocketmotordesign.security.models.UserValidationTokenType;
 import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +10,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
+import static com.rocketmotordesign.security.models.UserValidationTokenType.RESET_PASSWORD;
 
 @Service
 public class UserTokenService {
@@ -37,7 +41,15 @@ public class UserTokenService {
                 "</body></html>", url);
     }
 
-    public void envoyerLienValidation(User utilisateur) throws EnvoiLienValidationException {
+    private String buildEmailResetPassword(UserValidationToken validationToken) {
+        String url = baseUrl+"/auth/reset-password/"+validationToken.getId();
+        return String.format("<html><body>" +
+                "<p>Click on the link below to reset your password.</p>" +
+                "<a href=\"%s\">%1$s</a>" +
+                "</body></html>", url);
+    }
+
+    public void envoyerLienValidation(User utilisateur) throws EnvoiLienException {
 
         UserValidationToken validationToken = new UserValidationToken(UUID.randomUUID().toString(), utilisateur, CREATION_COMPTE);
         userValidationTokenRepository.save(validationToken);
@@ -45,7 +57,33 @@ public class UserTokenService {
             mailService.sendHtmlMessage("METEOR : activate your account", buildValidationEmail(validationToken), utilisateur.getEmail());
         } catch (MessagingException e) {
             logger.error("Echec envoi mail validation pour utilisateur : "+utilisateur.getId(), e);
-            throw new EnvoiLienValidationException();
+            throw new EnvoiLienException();
         }
+    }
+
+    public void envoyerLienResetPassword(User utilisateur) throws EnvoiLienException {
+        UserValidationToken resetToken = new UserValidationToken(UUID.randomUUID().toString(), utilisateur, RESET_PASSWORD);
+        userValidationTokenRepository.save(resetToken);
+        try {
+            mailService.sendHtmlMessage("METEOR : reset your password", buildEmailResetPassword(resetToken), utilisateur.getEmail());
+        } catch (MessagingException e) {
+            logger.error("Echec envoi mail validation pour utilisateur : "+utilisateur.getId(), e);
+            throw new EnvoiLienException();
+        }
+    }
+
+    public Optional<UserValidationToken> checkToken(String idToken, UserValidationTokenType tokenType) throws TokenExpireException {
+        Optional<UserValidationToken> userToken = userValidationTokenRepository.findByIdAndTokenType(idToken, tokenType);
+        if(userToken.isPresent()){
+            UserValidationToken userValidationToken = userToken.get();
+            if(userValidationToken.getExpiryDate().isBefore(LocalDateTime.now())){
+                throw new TokenExpireException();
+            }
+        }
+        return userToken;
+    }
+
+    public void deleteToken(UserValidationToken userValidationToken) {
+        userValidationTokenRepository.delete(userValidationToken);
     }
 }
