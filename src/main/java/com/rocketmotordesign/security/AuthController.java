@@ -74,13 +74,13 @@ public class AuthController {
 	}
 
 	@Transactional
-	@GetMapping("/validate/{idToken}")
+	@PostMapping("/validate/{idToken}")
 	public ResponseEntity validationCompte(@PathVariable String idToken) {
 		try {
 			authenticationService.validerCompte(idToken);
 			return ResponseEntity.ok().build();
 		} catch (TokenExpireException e) {
-			return ResponseEntity.badRequest().body("Token has expired.");
+			return ResponseEntity.badRequest().body(new MessageResponse("Token has expired."));
 		} catch (TokenNotFoundExcetpion tokenNotFoundExcetpion) {
 			return ResponseEntity.notFound().build();
 		}
@@ -98,7 +98,7 @@ public class AuthController {
 					.body(new MessageResponse("Error: Email is already in use!"));
 		} catch (EnvoiLienException e) {
 			return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-					.body("Failed to send activation link");
+					.body(new MessageResponse("Failed to send activation link"));
 		}
 	}
 
@@ -112,7 +112,7 @@ public class AuthController {
 			return ResponseEntity.notFound().build();
 		} catch (EnvoiLienException e) {
 			return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-					.body("Failed to send activation link");
+					.body(new MessageResponse("Failed to send reset link"));
 		}
 	}
 
@@ -125,7 +125,7 @@ public class AuthController {
 			authenticationService.changePassword(idToken, updatePasswordRequest);
 			return ResponseEntity.ok().build();
 		} catch (TokenExpireException e) {
-			return ResponseEntity.badRequest().body("Token has expired.");
+			return ResponseEntity.badRequest().body(new MessageResponse("Token has expired."));
 		} catch (TokenNotFoundExcetpion tokenNotFoundExcetpion) {
 			return ResponseEntity.notFound().build();
 		}

@@ -31,7 +31,7 @@ class UserTokenServiceTest {
     void setUp() {
         mailService = mock(MailService.class);
         userValidationTokenRepository = mock(UserValidationTokenRepository.class);
-        userTokenService = new UserTokenService(mailService, "http://BaseURL.com", userValidationTokenRepository);
+        userTokenService = new UserTokenService(mailService, "http://BaseURL.com", 3600, userValidationTokenRepository);
     }
 
     @Test
@@ -50,12 +50,11 @@ class UserTokenServiceTest {
         assertThat(validationToken.getUtilisateur()).isEqualTo(utilisateur);
         assertThat(validationToken.getTokenType()).isEqualTo(CREATION_COMPTE);
 
+        String url = "http://BaseURL.com/validate?token=" + validationToken.getId() + "&tokenType=CREATION_COMPTE";
         verify(mailService, times(1))
                 .sendHtmlMessage("METEOR : activate your account",
                         "<html><body><p>Click on the link below to activate your account.</p><" +
-                                "a href=\"http://BaseURL.com/auth/validate/" + validationToken.getId() + "\">" +
-                                "http://BaseURL.com/auth/validate/" + validationToken.getId() +
-                                "</a></body></html>",
+                                "a href=\"" + url + "\">" + url + "</a></body></html>",
                         utilisateur.getEmail());
     }
 

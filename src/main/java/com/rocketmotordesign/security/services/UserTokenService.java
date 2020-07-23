@@ -24,17 +24,21 @@ public class UserTokenService {
 
     private final MailService mailService;
     private final String baseUrl;
+    private long tokenValidationExpirationInSeconde;
     private final UserValidationTokenRepository userValidationTokenRepository;
 
     public UserTokenService(MailService mailService,
-                            @Value("${application.base-url}") String baseUrl, UserValidationTokenRepository userValidationTokenRepository) {
+                            @Value("${meteor.base-url}") String baseUrl,
+                            @Value("${app.userTokenExpirationSeconde}") long tokenValidationExpirationInSeconde,
+                            UserValidationTokenRepository userValidationTokenRepository) {
         this.mailService = mailService;
         this.baseUrl = baseUrl;
+        this.tokenValidationExpirationInSeconde = tokenValidationExpirationInSeconde;
         this.userValidationTokenRepository = userValidationTokenRepository;
     }
 
     private String buildValidationEmail(UserValidationToken validationToken) {
-        String url = baseUrl+"/auth/validate/"+validationToken.getId();
+        String url = baseUrl+"/validate?token="+validationToken.getId()+"&tokenType="+validationToken.getTokenType();
         return String.format("<html><body>" +
                 "<p>Click on the link below to activate your account.</p>" +
                 "<a href=\"%s\">%1$s</a>" +
@@ -51,7 +55,7 @@ public class UserTokenService {
 
     public void envoyerLienValidation(User utilisateur) throws EnvoiLienException {
 
-        UserValidationToken validationToken = new UserValidationToken(UUID.randomUUID().toString(), utilisateur, CREATION_COMPTE);
+        UserValidationToken validationToken = new UserValidationToken(UUID.randomUUID().toString(), utilisateur, CREATION_COMPTE, tokenValidationExpirationInSeconde);
         userValidationTokenRepository.save(validationToken);
         try {
             mailService.sendHtmlMessage("METEOR : activate your account", buildValidationEmail(validationToken), utilisateur.getEmail());
@@ -62,7 +66,7 @@ public class UserTokenService {
     }
 
     public void envoyerLienResetPassword(User utilisateur) throws EnvoiLienException {
-        UserValidationToken resetToken = new UserValidationToken(UUID.randomUUID().toString(), utilisateur, RESET_PASSWORD);
+        UserValidationToken resetToken = new UserValidationToken(UUID.randomUUID().toString(), utilisateur, RESET_PASSWORD, tokenValidationExpirationInSeconde);
         userValidationTokenRepository.save(resetToken);
         try {
             mailService.sendHtmlMessage("METEOR : reset your password", buildEmailResetPassword(resetToken), utilisateur.getEmail());

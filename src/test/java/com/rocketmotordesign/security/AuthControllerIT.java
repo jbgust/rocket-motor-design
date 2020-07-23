@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.startsWith;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -233,7 +232,7 @@ class AuthControllerIT {
     private void validerCompte(String email) throws Exception {
         String tokenValidationCompte = recupererToken(email, CREATION_COMPTE);
 
-        mvc.perform(get("/auth/validate/{idToken}", tokenValidationCompte)
+        mvc.perform(post("/auth/validate/{idToken}", tokenValidationCompte)
                 .contentType(MediaType.APPLICATION_JSON));
     }
 

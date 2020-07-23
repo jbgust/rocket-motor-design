@@ -2,13 +2,12 @@ package com.rocketmotordesign.security.models;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 @Entity
 @Table(name = "user_validation_token")
 public class UserValidationToken {
-
-    public static final int VALIDITE_TOKEN_EN_MINUTE = 30;
 
     @Id
     private String id;
@@ -25,11 +24,11 @@ public class UserValidationToken {
     private UserValidationToken() {
     }
 
-    public UserValidationToken(String id, User utilisateur, UserValidationTokenType tokenType) {
+    public UserValidationToken(String id, User utilisateur, UserValidationTokenType tokenType, long expirationInSecodne) {
         this.id = id;
         this.utilisateur = utilisateur;
         this.tokenType = tokenType;
-        this.expiryDate = LocalDateTime.now().plus(VALIDITE_TOKEN_EN_MINUTE, ChronoUnit.MINUTES);
+        this.expiryDate = LocalDateTime.now().plus(expirationInSecodne, SECONDS);
     }
 
     public String getId() {

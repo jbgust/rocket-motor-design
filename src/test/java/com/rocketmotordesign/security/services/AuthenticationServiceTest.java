@@ -98,7 +98,7 @@ class AuthenticationServiceTest {
         //GIVEN
         String idToken = UUID.randomUUID().toString();
         User utilisateur = new User();
-        UserValidationToken userValidationToken = new UserValidationToken(idToken, utilisateur, CREATION_COMPTE);
+        UserValidationToken userValidationToken = new UserValidationToken(idToken, utilisateur, CREATION_COMPTE, 3600);
         given(userTokenService.checkToken(idToken, CREATION_COMPTE))
                 .willReturn(Optional.of(userValidationToken));
 
@@ -131,7 +131,7 @@ class AuthenticationServiceTest {
         updatePasswordRequest.setPassword("NewP@ssw0d!");
 
         User utilisateur = mock(User.class);
-        UserValidationToken userValidationToken = new UserValidationToken(idToken, utilisateur, RESET_PASSWORD);
+        UserValidationToken userValidationToken = new UserValidationToken(idToken, utilisateur, RESET_PASSWORD, 3600);
         given(userTokenService.checkToken(idToken, RESET_PASSWORD))
                 .willReturn(Optional.of(userValidationToken));
         given(encoder.encode("NewP@ssw0d!")).willReturn("newEncryptedPassword");
