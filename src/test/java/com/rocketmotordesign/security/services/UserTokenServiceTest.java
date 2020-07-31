@@ -59,6 +59,47 @@ class UserTokenServiceTest {
     }
 
     @Test
+    void doitRenvoyerLeMailDeValidation() throws EnvoiLienException, MessagingException {
+        //GIVEN
+        User utilisateur = new User("jojo@jeje.tz", "pass");
+        UserValidationToken ancienToken = new UserValidationToken(UUID.randomUUID().toString(), utilisateur, CREATION_COMPTE, 1);
+        given(userValidationTokenRepository.findByIdAndTokenType(ancienToken.getId(), CREATION_COMPTE))
+                .willReturn(Optional.of(ancienToken));
+
+        //WHEN
+        userTokenService.renvoyerActivation(ancienToken.getId());
+
+        //THEN
+        ArgumentCaptor<UserValidationToken> argumentCaptor = ArgumentCaptor.forClass(UserValidationToken.class);
+        verify(userValidationTokenRepository, times(1)).save(argumentCaptor.capture());
+        verify(userValidationTokenRepository, times(1)).delete(ancienToken);
+
+        UserValidationToken validationToken = argumentCaptor.getValue();
+        assertThat(validationToken.getUtilisateur()).isEqualTo(utilisateur);
+        assertThat(validationToken.getTokenType()).isEqualTo(CREATION_COMPTE);
+
+        String url = "http://BaseURL.com/validate?token=" + validationToken.getId() + "&tokenType=CREATION_COMPTE";
+        verify(mailService, times(1))
+                .sendHtmlMessage("METEOR : activate your account",
+                        "<html><body><p>Click on the link below to activate your account.</p><" +
+                                "a href=\"" + url + "\">" + url + "</a></body></html>",
+                        utilisateur.getEmail());
+    }
+
+    @Test
+    void doitEnvoyerExceptionSiTokenInexistant() {
+        //GIVEN
+        User utilisateur = new User("jojo@jeje.tz", "pass");
+        String fauxId = UUID.randomUUID().toString();
+        given(userValidationTokenRepository.findByIdAndTokenType(fauxId, CREATION_COMPTE))
+                .willReturn(Optional.empty());
+
+        //WHEN
+        assertThatThrownBy(() -> userTokenService.renvoyerActivation(fauxId))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     void envoiUneExceptionSiMailNonEnvoye() throws MessagingException {
         User utilisateur = new User("jojo@jeje.tz", "pass");
         doThrow(new MessagingException()).when(mailService).sendHtmlMessage(anyString(), anyString(), anyString());

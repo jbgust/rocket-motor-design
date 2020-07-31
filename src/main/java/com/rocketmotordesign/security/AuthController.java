@@ -87,6 +87,18 @@ public class AuthController {
 	}
 
 	@Transactional
+	@PostMapping("/resent-activation/{idToken}")
+	public ResponseEntity resenActivationLink(@PathVariable String idToken) {
+		try {
+			authenticationService.renvoyerActivation(idToken);
+			return ResponseEntity.ok().build();
+		} catch (EnvoiLienException e) {
+			return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+					.body(new MessageResponse("Failed to send activation link"));
+		}
+	}
+
+	@Transactional
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		try {

@@ -90,4 +90,14 @@ public class UserTokenService {
     public void deleteToken(UserValidationToken userValidationToken) {
         userValidationTokenRepository.delete(userValidationToken);
     }
+
+    public void renvoyerActivation(String idToken) throws EnvoiLienException {
+        Optional<UserValidationToken> oldToken = userValidationTokenRepository.findByIdAndTokenType(idToken, CREATION_COMPTE);
+        if(oldToken.isPresent()){
+            envoyerLienValidation(oldToken.get().getUtilisateur());
+            userValidationTokenRepository.delete(oldToken.get());
+        } else {
+            throw new IllegalArgumentException("Token ot found");
+        }
+    }
 }

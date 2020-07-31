@@ -1,5 +1,6 @@
 package com.rocketmotordesign.security;
 
+import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.models.UserValidationToken;
 import com.rocketmotordesign.security.models.UserValidationTokenType;
 import com.rocketmotordesign.security.repository.UserRepository;
@@ -18,10 +19,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.stream.StreamSupport;
 
 import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
 import static com.rocketmotordesign.security.models.UserValidationTokenType.RESET_PASSWORD;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.eq;
@@ -219,6 +222,30 @@ class AuthControllerIT {
         //THEN
         resultActions
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void doitRenvoyerUnLienActivation() throws Exception {
+        //GIVEN
+        User user = userRepository.save(new User("validation@test.fr", "passwd"));
+        UserValidationToken tokenExpire = userValidationTokenRepository.save(new UserValidationToken(randomUUID().toString(), user, CREATION_COMPTE, 0));
+
+        mvc.perform(post("/auth/validate/{idToken}", tokenExpire.getId()))
+                .andExpect(status().isBadRequest())
+                // Attention on se base sur ce message pour afficher le bouton
+                // de renvoi du lien d'activation sur METEOR
+                .andExpect(jsonPath("$.message", is("Token has expired.")));
+
+        //WHEN
+        ResultActions resultActions = mvc.perform(post("/auth/resent-activation/{idToken}", tokenExpire.getId()));
+
+        //THEN
+        resultActions.andExpect(status().isOk());
+
+        assertThat(userValidationTokenRepository.findByIdAndTokenType(tokenExpire.getId(), CREATION_COMPTE))
+                .isNotPresent();
+
+        assertThat(recupererToken(user.getEmail(), CREATION_COMPTE)).isNotNull();
     }
 
     private String recupererToken(String email, UserValidationTokenType tokenType) {

@@ -93,4 +93,8 @@ public class AuthenticationService {
             throw new TokenNotFoundExcetpion();
         }
     }
+
+    public void renvoyerActivation(String idToken) throws EnvoiLienException {
+        userTokenService.renvoyerActivation(idToken);
+    }
 }

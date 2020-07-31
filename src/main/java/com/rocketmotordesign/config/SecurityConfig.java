@@ -90,6 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/auth/signup", configuration);
         source.registerCorsConfiguration("/auth/reset-password", configuration);
         source.registerCorsConfiguration("/auth/validate/*", configuration);
+        source.registerCorsConfiguration("/auth/resent-activation/*", configuration);
         source.registerCorsConfiguration("/compute", configuration);
         source.registerCorsConfiguration("/compute/cslot", configuration);
         source.registerCorsConfiguration("/compute/endburner", configuration);

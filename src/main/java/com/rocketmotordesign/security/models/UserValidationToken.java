@@ -24,11 +24,11 @@ public class UserValidationToken {
     private UserValidationToken() {
     }
 
-    public UserValidationToken(String id, User utilisateur, UserValidationTokenType tokenType, long expirationInSecodne) {
+    public UserValidationToken(String id, User utilisateur, UserValidationTokenType tokenType, long expirationInSeconde) {
         this.id = id;
         this.utilisateur = utilisateur;
         this.tokenType = tokenType;
-        this.expiryDate = LocalDateTime.now().plus(expirationInSecodne, SECONDS);
+        this.expiryDate = LocalDateTime.now().plus(expirationInSeconde, SECONDS);
     }
 
     public String getId() {
