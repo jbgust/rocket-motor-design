@@ -100,10 +100,10 @@ class AuthControllerIT {
                 eq("user@titi.fr")
         );
 
+        String urlRenew = "http://test.meteor.gov/validate?token=" + tokenResetPassword + "&tokenType=RESET_PASSWORD";
         assertThat(argumentCaptor.getAllValues().get(1))
                 .isEqualTo("<html><body><p>Click on the link below to reset your password.</p>" +
-                        "<a href=\"http://test.meteor.gov/auth/reset-password/" + tokenResetPassword + "\">" +
-                        "http://test.meteor.gov/auth/reset-password/" + tokenResetPassword + "</a></body></html>");
+                        "<a href=\"" + urlRenew + "\">" + urlRenew + "</a></body></html>");
 
 
         //Changement de password

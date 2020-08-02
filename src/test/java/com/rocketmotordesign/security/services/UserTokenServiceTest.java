@@ -2,6 +2,7 @@ package com.rocketmotordesign.security.services;
 
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.models.UserValidationToken;
+import com.rocketmotordesign.security.models.UserValidationTokenType;
 import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class UserTokenServiceTest {
         assertThat(validationToken.getUtilisateur()).isEqualTo(utilisateur);
         assertThat(validationToken.getTokenType()).isEqualTo(CREATION_COMPTE);
 
-        String url = "http://BaseURL.com/validate?token=" + validationToken.getId() + "&tokenType=CREATION_COMPTE";
+        String url = buildUrlValidation(validationToken, CREATION_COMPTE);
         verify(mailService, times(1))
                 .sendHtmlMessage("METEOR : activate your account",
                         "<html><body><p>Click on the link below to activate your account.</p><" +
@@ -78,7 +79,7 @@ class UserTokenServiceTest {
         assertThat(validationToken.getUtilisateur()).isEqualTo(utilisateur);
         assertThat(validationToken.getTokenType()).isEqualTo(CREATION_COMPTE);
 
-        String url = "http://BaseURL.com/validate?token=" + validationToken.getId() + "&tokenType=CREATION_COMPTE";
+        String url = buildUrlValidation(validationToken, CREATION_COMPTE);
         verify(mailService, times(1))
                 .sendHtmlMessage("METEOR : activate your account",
                         "<html><body><p>Click on the link below to activate your account.</p><" +
@@ -89,7 +90,6 @@ class UserTokenServiceTest {
     @Test
     void doitEnvoyerExceptionSiTokenInexistant() {
         //GIVEN
-        User utilisateur = new User("jojo@jeje.tz", "pass");
         String fauxId = UUID.randomUUID().toString();
         given(userValidationTokenRepository.findByIdAndTokenType(fauxId, CREATION_COMPTE))
                 .willReturn(Optional.empty());
@@ -124,12 +124,11 @@ class UserTokenServiceTest {
         assertThat(validationToken.getUtilisateur()).isEqualTo(utilisateur);
         assertThat(validationToken.getTokenType()).isEqualTo(RESET_PASSWORD);
 
+        String url = buildUrlValidation(validationToken, RESET_PASSWORD);
         verify(mailService, times(1))
                 .sendHtmlMessage("METEOR : reset your password",
                         "<html><body><p>Click on the link below to reset your password.</p><" +
-                                "a href=\"http://BaseURL.com/auth/reset-password/" + validationToken.getId() + "\">" +
-                                "http://BaseURL.com/auth/reset-password/" + validationToken.getId() +
-                                "</a></body></html>",
+                                "a href=\"" + url + "\">" + url + "</a></body></html>",
                         utilisateur.getEmail());
     }
 
@@ -161,7 +160,7 @@ class UserTokenServiceTest {
     }
 
     @Test
-    void envoiUneExceptionSiTokenExpire() throws TokenExpireException {
+    void envoiUneExceptionSiTokenExpire() {
         String idToken = UUID.randomUUID().toString();
         UserValidationToken userValidationToken = mock(UserValidationToken.class);
         when(userValidationToken.getExpiryDate()).thenReturn(LocalDateTime.now());
@@ -173,5 +172,9 @@ class UserTokenServiceTest {
         assertThatThrownBy( () -> userTokenService.checkToken(idToken, CREATION_COMPTE))
                 .isInstanceOf(TokenExpireException.class);
 
+    }
+
+    private String buildUrlValidation(UserValidationToken validationToken, UserValidationTokenType tokenType) {
+        return "http://BaseURL.com/validate?token=" + validationToken.getId() + "&tokenType=" + tokenType;
     }
 }
