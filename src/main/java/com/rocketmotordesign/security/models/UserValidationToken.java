@@ -13,7 +13,7 @@ public class UserValidationToken {
     private String id;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "username")
+    @JoinColumn(nullable = false, name = "user_id")
     private User utilisateur;
 
     private LocalDateTime expiryDate;
