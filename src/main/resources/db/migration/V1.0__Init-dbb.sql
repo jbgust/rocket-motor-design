@@ -7,10 +7,10 @@ create table roles
 
 create table users
 (
-    id                 bigint,
+    id                 bigint AUTO_INCREMENT,
     compte_valide      boolean not null,
-    date_creation      timestamp,
-    derniere_connexion timestamp,
+    date_creation      datetime,
+    derniere_connexion datetime,
     email              varchar(50),
     password           varchar(120),
     primary key (id)

@@ -62,11 +62,15 @@ workflows:
       - build-and-test:
           filters:
             branches:
-              ignore: master
+              ignore:
+                - master
+                - securisation
       - package:
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - securisation
             tags:
               only: /^v.*/
       - deploy:
