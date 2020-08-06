@@ -24,7 +24,10 @@ INSERT INTO user_roles (user_id, role_id) values(@userDevId, 1);
 INSERT INTO user_roles (user_id, role_id) values(@userTokenId, 1);
 
 INSERT INTO user_validation_token(id, expiry_date, token_type, user_id)
-    values('TOKEN-validate', DATE_ADD(NOW(), INTERVAL 1 DAY), 'CREATION_COMPTE', @userTokenId);
+    values('TOKEN-validate', DATE_ADD(NOW(), INTERVAL 15 MINUTE), 'CREATION_COMPTE', @userTokenId);
 
 INSERT INTO user_validation_token(id, expiry_date, token_type, user_id)
-    values('TOKEN-reset-pwd', DATE_ADD(NOW(), INTERVAL 1 DAY), 'RESET_PASSWORD', @userTokenId);
+    values('TOKEN-reset-pwd', DATE_ADD(NOW(), INTERVAL 15 MINUTE), 'RESET_PASSWORD', @userTokenId);
+
+INSERT INTO user_validation_token(id, expiry_date, token_type, user_id)
+    values('expired-token', DATE_SUB(NOW(), INTERVAL 1 MINUTE), 'CREATION_COMPTE', @userDevId);
