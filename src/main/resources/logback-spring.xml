@@ -63,6 +63,12 @@
             <appender-ref ref="FILE-APPENDER" />
         </root>
     </springProfile>
+    <springProfile name="beta">
+        <root level="info">
+            <appender-ref ref="CONSOLE-APPENDER" />
+            <appender-ref ref="FILE-APPENDER" />
+        </root>
+    </springProfile>
     <springProfile name="prod">
         <root level="info">
             <appender-ref ref="CONSOLE-APPENDER" />
