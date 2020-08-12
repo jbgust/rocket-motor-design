@@ -64,7 +64,6 @@ workflows:
             branches:
               ignore:
                 - master
-                - securisation
       - package:
           filters:
             branches:

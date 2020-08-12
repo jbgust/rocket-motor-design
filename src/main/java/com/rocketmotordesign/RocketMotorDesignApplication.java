@@ -21,7 +21,7 @@ public class RocketMotorDesignApplication {
 		loggingFilter.setIncludeQueryString(true);
 		loggingFilter.setIncludePayload(true);
 		loggingFilter.setMaxPayloadLength(1200);
-		loggingFilter.setIncludeClientInfo(true);
+		loggingFilter.setIncludeClientInfo(false);
 		return loggingFilter;
 	}
 

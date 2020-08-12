@@ -1,6 +1,7 @@
 package com.rocketmotordesign.security;
 
 import com.rocketmotordesign.security.jwt.JwtUtils;
+import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.RoleRepository;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
@@ -65,11 +66,13 @@ public class AuthController {
 				.collect(Collectors.toList());
 
 		userRepository.logDateConnexion(userDetails.getEmail());
+		User user = userRepository.getOne(userDetails.getId());
 
 		return ResponseEntity.ok(new JwtResponse(jwt,
 				userDetails.getId(),
 				userDetails.getUsername(),
 				userDetails.getEmail(),
+				user.isDonator(),
 				roles));
 	}
 

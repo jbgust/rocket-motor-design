@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.stream.StreamSupport;
 
 import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
