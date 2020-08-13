@@ -35,9 +35,6 @@ public abstract class BasicComputationRequest {
 
     protected MeasureUnit measureUnit;
 
-    //Extra
-    protected  String computationHash;
-
     protected CustomPropellantRequest customPropellant;
 
     public BasicComputationRequest() {
@@ -99,14 +96,6 @@ public abstract class BasicComputationRequest {
 
     public final void setChamberLength(double chamberLength) {
         this.chamberLength = chamberLength;
-    }
-
-    public final String getComputationHash() {
-        return computationHash;
-    }
-
-    public final void setComputationHash(String computationHash) {
-        this.computationHash = computationHash;
     }
 
     public final void setSegmentLength(double segmentLength) {

@@ -82,7 +82,6 @@ public class EndBurnerGrainComputationRequest extends BasicComputationRequest{
                 ", segmentLength=" + segmentLength +
                 ", extraConfig=" + extraConfig +
                 ", measureUnit=" + measureUnit +
-                ", computationHash='" + computationHash + '\'' +
                 ", customPropellant=" + customPropellant +
                 '}';
     }

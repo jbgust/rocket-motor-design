@@ -94,7 +94,6 @@ public class RodTubeGrainComputationRequest extends BasicComputationRequest{
                 ", numberOfSegment=" + numberOfSegment +
                 ", extraConfig=" + extraConfig +
                 ", measureUnit=" + measureUnit +
-                ", computationHash='" + computationHash + '\'' +
                 ", customPropellant=" + customPropellant +
                 '}';
     }

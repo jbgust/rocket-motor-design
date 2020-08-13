@@ -89,7 +89,6 @@ public class HollowComputationRequest extends BasicComputationRequest{
     @Override
     public String toString() {
         return "ComputationRequest{" +
-                "computationHash=" + computationHash +
                 ", throatDiameter=" + throatDiameter +
                 ", outerDiameter=" + outerDiameter +
                 ", coreDiameter=" + coreDiameter +

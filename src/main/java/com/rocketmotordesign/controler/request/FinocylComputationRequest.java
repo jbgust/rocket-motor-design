@@ -117,7 +117,6 @@ public class FinocylComputationRequest  extends BasicComputationRequest{
                 ", numberOfSegment=" + numberOfSegment +
                 ", extraConfig=" + extraConfig +
                 ", measureUnit=" + measureUnit +
-                ", computationHash='" + computationHash + '\'' +
                 ", customPropellant=" + customPropellant +
                 '}';
     }
