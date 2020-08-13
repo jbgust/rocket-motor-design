@@ -3,7 +3,7 @@ version: "2.1"
 
 services:
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v2.11.1
     volumes:
       - ./prometheus-data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
@@ -11,7 +11,7 @@ services:
       - "9090:9090"
 
   gafana:
-    image: grafana/grafana
+    image: grafana/grafana:6.3.2
     ports:
       - "5000:3000"
     volumes:

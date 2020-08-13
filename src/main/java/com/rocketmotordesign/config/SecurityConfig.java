@@ -6,6 +6,7 @@ import com.rocketmotordesign.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.actuate.info.InfoEndpoint;
 import org.springframework.boot.actuate.metrics.export.prometheus.PrometheusScrapeEndpoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -71,7 +72,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/auth/**").permitAll()
-                .requestMatchers(EndpointRequest.to(PrometheusScrapeEndpoint.class)).permitAll()
+                .requestMatchers(EndpointRequest.to(
+                        InfoEndpoint.class,
+                        PrometheusScrapeEndpoint.class
+                )).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
