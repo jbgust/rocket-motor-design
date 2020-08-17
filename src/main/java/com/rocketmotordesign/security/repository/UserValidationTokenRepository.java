@@ -4,9 +4,12 @@ import com.rocketmotordesign.security.models.UserValidationToken;
 import com.rocketmotordesign.security.models.UserValidationTokenType;
 import org.springframework.data.repository.CrudRepository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface UserValidationTokenRepository extends CrudRepository<UserValidationToken, String> {
 
     Optional<UserValidationToken> findByIdAndTokenType(String id, UserValidationTokenType tokenType);
+
+    void deleteAllByExpiryDateBefore(LocalDateTime dateExpiration);
 }

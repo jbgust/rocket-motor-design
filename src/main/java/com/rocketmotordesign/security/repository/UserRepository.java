@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -16,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Modifying
 	@Query("update User u set u.derniereConnexion=current_timestamp where u.email=:email")
 	void logDateConnexion(@Param("email") String email);
+
+	void deleteAllByCompteValideFalseAndDateCreationBefore(LocalDateTime dateCreation);
 }
