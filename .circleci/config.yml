@@ -69,7 +69,6 @@ workflows:
             branches:
               only:
                 - master
-                - securisation
             tags:
               only: /^v.*/
       - deploy:
