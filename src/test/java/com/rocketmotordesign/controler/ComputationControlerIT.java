@@ -6,18 +6,14 @@ import com.rocketmotordesign.controler.request.BurnRatePressureData;
 import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.controler.request.FinocylComputationRequest;
 import com.rocketmotordesign.controler.request.HollowComputationRequest;
-import com.rocketmotordesign.service.ConfigRestricterService;
-import com.rocketmotordesign.service.JSRMService;
-import com.rocketmotordesign.service.MeasureUnitService;
-import com.rocketmotordesign.service.ResultService;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -34,8 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(ComputationControler.class)
-@Import({JSRMService.class, MeasureUnitService.class, ConfigRestricterService.class, ResultService.class})
+@SpringBootTest
+@AutoConfigureMockMvc
+@WithMockUser("spring") //TODO : a changer
 public class ComputationControlerIT {
 
     @Autowired
@@ -720,7 +717,7 @@ public class ComputationControlerIT {
         resultActions
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("Combustion chamber length should be >= than Grain total length")))
-                .andExpect(jsonPath("$.detail", isEmptyOrNullString()));
+                .andExpect(jsonPath("$.detail", is(emptyOrNullString())));
     }
 
     @Test
@@ -750,7 +747,7 @@ public class ComputationControlerIT {
         resultActions
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("Throat diameter should be <= than grain core diameter")))
-                .andExpect(jsonPath("$.detail", isEmptyOrNullString()));
+                .andExpect(jsonPath("$.detail", is(emptyOrNullString())));
     }
 
     @Test

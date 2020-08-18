@@ -8,11 +8,13 @@ import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.controler.response.ComputationResponse;
 import com.rocketmotordesign.controler.response.ErrorMessage;
+import com.rocketmotordesign.security.services.UserDetailsImpl;
 import com.rocketmotordesign.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -134,12 +136,22 @@ public class ComputationControler {
         LOGGER.info("METEOR[REQUEST|{}]", request.hashCode());
 
         LOGGER.info("METEOR[GRAIN|{}]", request.getGrainType());
-        LOGGER.info("METEOR[CLIENT-ID|{}]", request.getComputationHash());
+        LOGGER.info("METEOR[CLIENT-ID|{}]", getUserId());
         LOGGER.info("METEOR[UNITS|{}]", request.getMeasureUnit());
         Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
                 .collect(toMap(Enum::name, Function.identity()));
         LOGGER.info("METEOR[PROPELLANT|{}]", propellants.containsKey(request.getPropellantType()) ? request.getPropellantType() : "CUSTOM");
         LOGGER.info("METEOR[MOTORCLASS|{}]", response.getPerformanceResult().getMotorDescription().substring(0, 1));
+    }
+
+    private String getUserId() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetailsImpl) {
+            return ((UserDetailsImpl)principal).getId().toString();
+        } else {
+            return principal.toString();
+        }
     }
 
     private ResponseEntity retryWithSafeKN(BasicComputationRequest request) {

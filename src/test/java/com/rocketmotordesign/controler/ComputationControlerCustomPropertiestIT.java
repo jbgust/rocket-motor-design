@@ -1,37 +1,34 @@
 package com.rocketmotordesign.controler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rocketmotordesign.service.ConfigRestricterService;
-import com.rocketmotordesign.service.JSRMService;
-import com.rocketmotordesign.service.MeasureUnitService;
-import com.rocketmotordesign.service.ResultService;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
-
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static com.rocketmotordesign.utils.TestHelper.*;
+import static com.rocketmotordesign.utils.TestHelper.getDefaultRequest;
+import static com.rocketmotordesign.utils.TestHelper.getDefaultStarGrainRequest;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(ComputationControler.class)
-@Import({JSRMService.class, MeasureUnitService.class, ConfigRestricterService.class, ResultService.class})
+@SpringBootTest
+@AutoConfigureMockMvc
 @TestPropertySource(properties = {"computation.response.limit.size=4", "computation.star.enable= false"})
+@WithMockUser("spring") //TODO : a changer
 public class ComputationControlerCustomPropertiestIT {
 
     @Autowired
     private MockMvc mvc;
-    private ObjectMapper objectMapper;
 
     @Test
     void shoulReduceResultSize() throws Exception {
