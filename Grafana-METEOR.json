@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 4,
-  "iteration": 1583151521509,
+  "iteration": 1597997957906,
   "links": [],
   "panels": [
     {
@@ -233,7 +233,7 @@
       "pluginVersion": "6.3.2",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri!~\".*actuator.*\"}) by (uri)",
+          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri!~\".*actuator.*|.*auth.*\"}) by (uri)",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{uri}}",
@@ -290,7 +290,7 @@
       "pluginVersion": "6.3.2",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_sum{application=\"$application\", status=\"200\",uri!~\".*actuator.*\"}) by(uri) / sum(http_server_requests_seconds_count{application=\"$application\", status=\"200\", uri!~\".*actuator.*\"}) by(uri)",
+          "expr": "sum(http_server_requests_seconds_sum{application=\"$application\", status=\"200\",uri!~\".*actuator.*|.*auth.*\"}) by(uri) / sum(http_server_requests_seconds_count{application=\"$application\", status=\"200\", uri!~\".*actuator.*|.*auth.*\"}) by(uri)",
           "instant": false,
           "legendFormat": "{{uri}}",
           "refId": "A"
@@ -723,12 +723,186 @@
       "valueName": "current"
     },
     {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 0,
+        "y": 12
+      },
+      "id": 28,
+      "options": {
+        "displayMode": "gradient",
+        "fieldOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "defaults": {
+            "decimals": 0,
+            "mappings": [
+              {
+                "from": "",
+                "id": 1,
+                "operator": "",
+                "text": "",
+                "to": "",
+                "type": 1,
+                "value": ""
+              }
+            ],
+            "max": 200,
+            "min": 0,
+            "thresholds": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 30
+              },
+              {
+                "color": "red",
+                "value": 70
+              }
+            ],
+            "title": "",
+            "unit": "none"
+          },
+          "override": {},
+          "values": false
+        },
+        "orientation": "horizontal"
+      },
+      "pluginVersion": "6.3.2",
+      "targets": [
+        {
+          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri=~\".*auth.*\"}) by (uri)",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "{{uri}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Nb req Authentification",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 5,
+        "y": 12
+      },
+      "id": 29,
+      "options": {
+        "displayMode": "lcd",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "defaults": {
+            "decimals": 2,
+            "mappings": [],
+            "max": 20,
+            "min": 0,
+            "thresholds": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 6
+              },
+              {
+                "color": "red",
+                "value": 14
+              }
+            ],
+            "title": "",
+            "unit": "s"
+          },
+          "override": {},
+          "values": false
+        },
+        "orientation": "horizontal"
+      },
+      "pluginVersion": "6.3.2",
+      "targets": [
+        {
+          "expr": "sum(http_server_requests_seconds_sum{application=\"$application\", status=\"200\",uri=~\".*actuator.*|.*auth.*\"}) by(uri) / sum(http_server_requests_seconds_count{application=\"$application\", status=\"200\", uri=~\".*auth.*\"}) by(uri)",
+          "instant": false,
+          "legendFormat": "{{uri}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Temps moyen authent",
+      "type": "bargauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 10,
+        "y": 12
+      },
+      "id": 6,
+      "options": {
+        "displayMode": "gradient",
+        "fieldOptions": {
+          "calcs": [
+            "diff"
+          ],
+          "defaults": {
+            "mappings": [],
+            "max": 100,
+            "min": 0,
+            "thresholds": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "override": {},
+          "values": false
+        },
+        "orientation": "horizontal"
+      },
+      "pluginVersion": "6.3.2",
+      "targets": [
+        {
+          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\", uri!~\".*actuator.*\"}) by (status)",
+          "format": "time_series",
+          "instant": false,
+          "intervalFactor": 1,
+          "legendFormat": "status {{status}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Status code",
+      "type": "bargauge"
+    },
+    {
       "cacheTimeout": null,
       "datasource": "Prometheus",
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 0,
+        "w": 9,
+        "x": 15,
         "y": 12
       },
       "id": 9,
@@ -773,57 +947,6 @@
       "timeFrom": null,
       "timeShift": null,
       "title": "Méthodes",
-      "type": "bargauge"
-    },
-    {
-      "datasource": "Prometheus",
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 12
-      },
-      "id": 6,
-      "options": {
-        "displayMode": "gradient",
-        "fieldOptions": {
-          "calcs": [
-            "diff"
-          ],
-          "defaults": {
-            "mappings": [],
-            "max": 100,
-            "min": 0,
-            "thresholds": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "override": {},
-          "values": false
-        },
-        "orientation": "horizontal"
-      },
-      "pluginVersion": "6.3.2",
-      "targets": [
-        {
-          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\", uri!~\".*actuator.*\"}) by (status)",
-          "format": "time_series",
-          "instant": false,
-          "intervalFactor": 1,
-          "legendFormat": "status {{status}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Status code",
       "type": "bargauge"
     },
     {
@@ -1132,7 +1255,7 @@
       }
     }
   ],
-  "refresh": false,
+  "refresh": "5s",
   "schemaVersion": 19,
   "style": "dark",
   "tags": [],
@@ -1222,5 +1345,5 @@
   "timezone": "",
   "title": "METEOR  - Dasboard",
   "uid": "T9z13DoZz",
-  "version": 39
+  "version": 40
 }
