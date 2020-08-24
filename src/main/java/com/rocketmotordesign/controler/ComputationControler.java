@@ -102,11 +102,11 @@ public class ComputationControler {
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage(e.getMessage()));
             } else if (e.getCause() != null && e.getCause().getCause() instanceof CustomPropellantChamberPressureOutOfBoundException) {
-                LOGGER.error("CustomPropellantChamberPressureOutOfBoundException : " + request.toString(), e);
+                LOGGER.warn("CustomPropellantChamberPressureOutOfBoundException : " + request.toString(), e);
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getCause().getMessage()));
             } else if (e.getCause() != null && e.getCause() instanceof MotorClassificationOutOfBoundException) {
-                LOGGER.error("MotorClassificationOutOfBoundException : " + request.toString(), e);
+                LOGGER.warn("MotorClassificationOutOfBoundException : " + request.toString(), e);
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getMessage()));
             } else if (enableSafeKn){
@@ -163,11 +163,11 @@ public class ComputationControler {
         } catch (JSRMException e) {
             LOGGER.warn("METEOR[FAILED|{}]", e.getClass().getSimpleName());
             if (e.getCause() != null && e.getCause().getCause() instanceof CustomPropellantChamberPressureOutOfBoundException) {
-                LOGGER.error("CustomPropellantChamberPressureOutOfBoundException : " + request.toString(), e);
+                LOGGER.warn("CustomPropellantChamberPressureOutOfBoundException : " + request.toString(), e);
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getCause().getMessage()));
             } else if (e.getCause() != null && e.getCause() instanceof MotorClassificationOutOfBoundException) {
-                LOGGER.error("MotorClassificationOutOfBoundException : " + request.toString(), e);
+                LOGGER.warn("MotorClassificationOutOfBoundException : " + request.toString(), e);
                 return ResponseEntity.badRequest().body(
                         new ErrorMessage("METEOR can't run this computation due to the following error:", e.getCause().getMessage()));
             } else {

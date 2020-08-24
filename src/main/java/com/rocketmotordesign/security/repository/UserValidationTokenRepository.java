@@ -11,5 +11,5 @@ public interface UserValidationTokenRepository extends CrudRepository<UserValida
 
     Optional<UserValidationToken> findByIdAndTokenType(String id, UserValidationTokenType tokenType);
 
-    void deleteAllByExpiryDateBefore(LocalDateTime dateExpiration);
+    int deleteAllByExpiryDateBefore(LocalDateTime dateExpiration);
 }

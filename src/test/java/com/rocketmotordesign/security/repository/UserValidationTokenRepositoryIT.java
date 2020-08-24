@@ -43,13 +43,15 @@ class UserValidationTokenRepositoryIT {
 
 
         // WHEN
-        userValidationTokenRepository.deleteAllByExpiryDateBefore(parse("2020-08-10T13:15:12"));
+        int nbTokenSupprimes = userValidationTokenRepository.deleteAllByExpiryDateBefore(parse("2020-08-10T13:15:12"));
 
         //THEN
         assertThat(StreamSupport.stream(userValidationTokenRepository.findAll().spliterator(), false)
                 .filter(token -> token.getUtilisateur().getId() == user.getId())
                 .map(UserValidationToken::getId))
                 .containsExactlyInAnyOrder("2", "3", "5", "6");
+
+        assertThat(nbTokenSupprimes).isEqualTo(2);
     }
 
     @Test
