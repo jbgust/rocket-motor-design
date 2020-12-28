@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface MeteorPropellantVue {
     UUID getId();
 
-    String getTitle();
+    String getName();
 
     String getDescription();
 

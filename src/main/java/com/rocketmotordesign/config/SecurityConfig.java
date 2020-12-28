@@ -110,6 +110,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         source.registerCorsConfiguration("/propellants", configuration);
         source.registerCorsConfiguration("/propellants/*", configuration);
+        source.registerCorsConfiguration("/motors", configuration);
+        source.registerCorsConfiguration("/motors/*", configuration);
         return source;
     }
 }

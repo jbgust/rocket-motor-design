@@ -219,7 +219,7 @@ public class MeasureUnitService {
             CustomPropellantRequest customPropellantRequest = objectMapper.readValue(propellant.getJson(), CustomPropellantRequest.class);
             boolean si = request.getMeasureUnit() == SI;
 
-            CustomPropellant customPropellant = new CustomPropellant(
+            return new CustomPropellant(
                     si? customPropellantRequest.getCstar() : customPropellantRequest.getCstar()!=null? customPropellantRequest.getCstar() * 0.3048: null,
                     si? customPropellantRequest.getBurnRateCoefficient() : customPropellantRequest.getBurnRateCoefficient()!=null ? BurnRateCoefficientConverter.toMetrique(customPropellantRequest.getBurnRateCoefficient(), customPropellantRequest.getPressureExponent()): null,
                     customPropellantRequest.getPressureExponent(),
@@ -229,7 +229,6 @@ public class MeasureUnitService {
                     customPropellantRequest.getMolarMass(),
                     customPropellantRequest.getChamberTemperature(),
                     convertBurnRateDataToJSRM(request, customPropellantRequest));
-            return customPropellant;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new CustomPropellantProcessingException();

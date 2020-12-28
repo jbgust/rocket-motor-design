@@ -1,13 +1,11 @@
-package com.rocketmotordesign.propellant.entity;
-
-import org.hibernate.id.UUIDGenerationStrategy;
+package com.rocketmotordesign.motor.entity;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "propellant")
-public class MeteorPropellant {
+@Table(name = "motor")
+public class Motor {
 
     @Id
     @GeneratedValue
@@ -17,25 +15,17 @@ public class MeteorPropellant {
 
     private String description;
 
-    @Column(name = "json_propellant", columnDefinition = "JSON")
+    @Column(name = "json_motor", columnDefinition = "JSON")
     private String json;
 
-    public MeteorPropellant(UUID id, String name, String description, String json) {
+    public Motor(UUID id, String name, String description, String json) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.json = json;
     }
 
-    private MeteorPropellant() {
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
+    protected Motor() {
     }
 
     public String getName() {
@@ -60,5 +50,13 @@ public class MeteorPropellant {
 
     public void setJson(String json) {
         this.json = json;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }
