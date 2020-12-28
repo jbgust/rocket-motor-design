@@ -89,13 +89,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedOrigins(asList(allowedCORSDomains));
         configuration.setAllowedMethods(asList("*"));
         configuration.setAllowedHeaders(asList("*"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/auth/signin", configuration);
         source.registerCorsConfiguration("/auth/signup", configuration);
         source.registerCorsConfiguration("/auth/reset-password", configuration);
         source.registerCorsConfiguration("/auth/reset-password/*", configuration);
         source.registerCorsConfiguration("/auth/validate/*", configuration);
         source.registerCorsConfiguration("/auth/resent-activation/*", configuration);
+
         source.registerCorsConfiguration("/compute", configuration);
         source.registerCorsConfiguration("/compute/cslot", configuration);
         source.registerCorsConfiguration("/compute/endburner", configuration);
@@ -104,6 +107,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/compute/rodtube", configuration);
         source.registerCorsConfiguration("/compute/star", configuration);
         source.registerCorsConfiguration("/export/rasp", configuration);
+
+        source.registerCorsConfiguration("/propellants", configuration);
+        source.registerCorsConfiguration("/propellants/*", configuration);
         return source;
     }
 }

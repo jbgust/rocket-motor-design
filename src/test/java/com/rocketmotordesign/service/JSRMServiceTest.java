@@ -38,7 +38,8 @@ public class JSRMServiceTest {
         defaultRequest.getExtraConfig().setOptimalNozzleDesign(false);
         defaultRequest.getExtraConfig().setCombustionEfficiencyRatio(1);
         defaultRequest.getExtraConfig().setDensityRatio(1);
-        defaultRequest.setCustomPropellant(customPropellant);
+        //TODO
+        //defaultRequest.setCustomPropellant(customPropellant);
 
         JSRMResult jsrmResult = jsrmService.runComputation(defaultRequest).getResult();
         assertThat(100*1878/jsrmResult.getAverageThrustInNewton())

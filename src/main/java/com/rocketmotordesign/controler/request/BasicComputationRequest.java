@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.rocketmotordesign.service.MeasureUnit;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -35,7 +36,7 @@ public abstract class BasicComputationRequest {
 
     protected MeasureUnit measureUnit;
 
-    protected CustomPropellantRequest customPropellant;
+    protected UUID customPropellant;
 
     public BasicComputationRequest() {
     }
@@ -86,11 +87,11 @@ public abstract class BasicComputationRequest {
         this.chamberInnerDiameter = chamberInnerDiameter;
     }
 
-    public final CustomPropellantRequest getCustomPropellant() {
+    public final UUID getCustomPropellant() {
         return customPropellant;
     }
 
-    public final void setCustomPropellant(CustomPropellantRequest customPropellant) {
+    public final void setCustomPropellant(UUID customPropellant) {
         this.customPropellant = customPropellant;
     }
 

@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="RocketMotorDesignApplication DEV" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="RocketMotorDesign" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.rocketmotordesign.RocketMotorDesignApplication" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=dev" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
