@@ -1,6 +1,7 @@
 package com.rocketmotordesign.motor.repository;
 
 import com.rocketmotordesign.motor.entity.Motor;
+import com.rocketmotordesign.propellant.repository.MeteorPropellantVue;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -9,7 +10,7 @@ import org.springframework.security.access.prepost.PreFilter;
 
 import java.util.UUID;
 
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = MotorVue.class)
 public interface MotorRepository extends CrudRepository<Motor, UUID> {
 
     @Override
