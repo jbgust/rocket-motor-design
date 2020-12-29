@@ -14,5 +14,7 @@ create table motor
     name            varchar(256),
     description      varchar(1000),
     json_motor JSON,
-    primary key (id)
+    owner_id bigint  not null,
+    primary key (id),
+    foreign key (owner_id) references users (id)
 );

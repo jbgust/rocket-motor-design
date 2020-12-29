@@ -1,10 +1,15 @@
 package com.rocketmotordesign.motor.entity;
 
+import com.rocketmotordesign.security.models.User;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name = "motor")
+@EntityListeners(AuditingEntityListener.class)
 public class Motor {
 
     @Id
@@ -15,14 +20,20 @@ public class Motor {
 
     private String description;
 
+    @ManyToOne
+    @CreatedBy
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
     @Column(name = "json_motor", columnDefinition = "JSON")
     private String json;
 
-    public Motor(UUID id, String name, String description, String json) {
+    public Motor(UUID id, String name, String description, String json, User owner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.json = json;
+        this.owner = owner;
     }
 
     protected Motor() {
@@ -58,5 +69,13 @@ public class Motor {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }
