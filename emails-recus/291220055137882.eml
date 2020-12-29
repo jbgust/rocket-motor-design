@@ -1,0 +1,22 @@
+        Tue, 29 Dec 2020 17:51:37 +0100 (CET)
+Date: Tue, 29 Dec 2020 17:51:37 +0100 (CET)
+From: meteor@dev.fr
+To: dqsdqs@dqs.fr
+Message-ID: <1439946204.20.1609260697878@x14-44322>
+Subject: METEOR : reset your password
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_18_1403035720.1609260697877"
+
+------=_Part_18_1403035720.1609260697877
+Content-Type: multipart/related; 
+	boundary="----=_Part_19_815707792.1609260697877"
+
+------=_Part_19_815707792.1609260697877
+Content-Type: text/html;charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<html><body><p>Click on the link below to reset your password.</p><a href="http://localhost:8080/#/validate?token=109f6efa-a261-475d-90b4-d43975bc1d0b&tokenType=RESET_PASSWORD">http://localhost:8080/#/validate?token=109f6efa-a261-475d-90b4-d43975bc1d0b&tokenType=RESET_PASSWORD</a></body></html>
+------=_Part_19_815707792.1609260697877--
+
+------=_Part_18_1403035720.1609260697877--

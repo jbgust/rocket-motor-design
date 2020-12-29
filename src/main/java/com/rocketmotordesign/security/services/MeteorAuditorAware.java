@@ -24,8 +24,11 @@ public class MeteorAuditorAware implements AuditorAware<User> {
 
         if (authentication == null || !authentication.isAuthenticated()) {
             return Optional.empty();
+        } else if( authentication.getPrincipal() instanceof User) {
+            return Optional.ofNullable((User)authentication.getPrincipal());
+        } else {
+            return Optional.empty();
         }
 
-        return userRepository.findByEmail(((UserDetailsImpl)authentication.getPrincipal()).getEmail());
     }
 }

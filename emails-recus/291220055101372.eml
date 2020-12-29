@@ -1,0 +1,22 @@
+        Tue, 29 Dec 2020 17:51:01 +0100 (CET)
+Date: Tue, 29 Dec 2020 17:51:01 +0100 (CET)
+From: meteor@dev.fr
+To: dqsdqs@dqs.fr
+Message-ID: <346612764.5.1609260661363@x14-44322>
+Subject: METEOR : activate your account
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_3_1365882782.1609260661181"
+
+------=_Part_3_1365882782.1609260661181
+Content-Type: multipart/related; 
+	boundary="----=_Part_4_1584717282.1609260661181"
+
+------=_Part_4_1584717282.1609260661181
+Content-Type: text/html;charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<html><body><p>Click on the link below to activate your account.</p><a href="http://localhost:8080/#/validate?token=bf11348f-3aac-440a-9e25-894e26ed0311&tokenType=CREATION_COMPTE">http://localhost:8080/#/validate?token=bf11348f-3aac-440a-9e25-894e26ed0311&tokenType=CREATION_COMPTE</a></body></html>
+------=_Part_4_1584717282.1609260661181--
+
+------=_Part_3_1365882782.1609260661181--

@@ -8,7 +8,7 @@ import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.controler.response.ComputationResponse;
 import com.rocketmotordesign.controler.response.ErrorMessage;
-import com.rocketmotordesign.security.services.UserDetailsImpl;
+import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,8 +147,8 @@ public class ComputationControler {
     private String getUserId() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof UserDetailsImpl) {
-            return ((UserDetailsImpl)principal).getId().toString();
+        if (principal instanceof User) {
+            return ((User)principal).getId().toString();
         } else {
             return principal.toString();
         }
