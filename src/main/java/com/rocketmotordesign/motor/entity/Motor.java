@@ -5,10 +5,14 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
-@Table(name = "motor")
+@Table(
+        name = "motor",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "owner_id"})
+)
 @EntityListeners(AuditingEntityListener.class)
 public class Motor {
 
@@ -16,6 +20,7 @@ public class Motor {
     @GeneratedValue
     private UUID id;
 
+    @NotNull
     private String name;
 
     private String description;
@@ -28,12 +33,10 @@ public class Motor {
     @Column(name = "json_motor", columnDefinition = "JSON")
     private String json;
 
-    public Motor(UUID id, String name, String description, String json, User owner) {
-        this.id = id;
+    public Motor(String name, String description, String json) {
         this.name = name;
         this.description = description;
         this.json = json;
-        this.owner = owner;
     }
 
     protected Motor() {

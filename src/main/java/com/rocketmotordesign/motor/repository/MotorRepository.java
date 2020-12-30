@@ -16,6 +16,7 @@ public interface MotorRepository extends CrudRepository<Motor, UUID> {
     @Override
     @Query("select m from Motor m " +
             "join m.owner as o " +
-            "where o.email = ?#{principal.username}")
+            "where o.email = ?#{principal.username} " +
+            "order by m.name asc")
     Iterable<Motor> findAll();
 }
