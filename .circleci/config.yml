@@ -4,6 +4,8 @@ jobs:
     working_directory: ~/rocketMotorDesign
     machine: true
     steps:
+      - run: |
+            java -version
       - checkout # check out source code to working directory
       - restore_cache:
           key: rocketMotorDesign-v1-{{ .Branch }}-{{ checksum "pom.xml" }}
