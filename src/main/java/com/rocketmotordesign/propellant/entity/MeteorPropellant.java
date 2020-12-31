@@ -1,12 +1,18 @@
 package com.rocketmotordesign.propellant.entity;
 
-import org.hibernate.id.UUIDGenerationStrategy;
+import com.rocketmotordesign.security.models.User;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "propellant")
+@Table(
+        name = "propellant",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "owner_id"})
+)
+@EntityListeners(AuditingEntityListener.class)
 public class MeteorPropellant {
 
     @Id
@@ -20,8 +26,12 @@ public class MeteorPropellant {
     @Column(name = "json_propellant", columnDefinition = "JSON")
     private String json;
 
-    public MeteorPropellant(UUID id, String name, String description, String json) {
-        this.id = id;
+    @ManyToOne
+    @CreatedBy
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    public MeteorPropellant(String name, String description, String json) {
         this.name = name;
         this.description = description;
         this.json = json;
@@ -60,5 +70,13 @@ public class MeteorPropellant {
 
     public void setJson(String json) {
         this.json = json;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }
