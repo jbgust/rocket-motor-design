@@ -71,10 +71,9 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
                 Double.compare(that.numberOfSegment, numberOfSegment) == 0 &&
                 Double.compare(that.chamberInnerDiameter, chamberInnerDiameter) == 0 &&
                 Double.compare(that.chamberLength, chamberLength) == 0 &&
-                Objects.equals(propellantType, that.propellantType) &&
+                Objects.equals(propellantId, that.propellantId) &&
                 Objects.equals(extraConfig, that.extraConfig) &&
                 measureUnit == that.measureUnit &&
-                Objects.equals(customPropellant, that.customPropellant) &&
 
                 Double.compare(that.outerDiameter, outerDiameter) == 0 &&
                 Double.compare(that.innerDiameter, innerDiameter) == 0 &&
@@ -100,12 +99,11 @@ public class StarGrainComputationRequest extends BasicComputationRequest{
                 ", throatDiameter=" + throatDiameter +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
                 ", chamberLength=" + chamberLength +
-                ", propellantType='" + propellantType + '\'' +
+                ", propellantType='" + propellantId + '\'' +
                 ", segmentLength=" + segmentLength +
                 ", numberOfSegment=" + numberOfSegment +
                 ", extraConfig=" + extraConfig +
                 ", measureUnit=" + measureUnit +
-                ", customPropellant=" + customPropellant +
                 '}';
     }
 

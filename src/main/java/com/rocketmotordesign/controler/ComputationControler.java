@@ -140,7 +140,7 @@ public class ComputationControler {
         LOGGER.info("METEOR[UNITS|{}]", request.getMeasureUnit());
         Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
                 .collect(toMap(Enum::name, Function.identity()));
-        LOGGER.info("METEOR[PROPELLANT|{}]", propellants.containsKey(request.getPropellantType()) ? request.getPropellantType() : "CUSTOM");
+        LOGGER.info("METEOR[PROPELLANT|{}]", propellants.containsKey(request.getPropellantId()) ? request.getPropellantId() : "CUSTOM");
         LOGGER.info("METEOR[MOTORCLASS|{}]", response.getPerformanceResult().getMotorDescription().substring(0, 1));
     }
 

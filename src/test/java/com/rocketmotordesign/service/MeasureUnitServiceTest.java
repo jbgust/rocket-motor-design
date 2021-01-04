@@ -15,16 +15,20 @@ import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.controler.response.GraphResult;
 import com.rocketmotordesign.controler.response.PerformanceResult;
 import com.rocketmotordesign.propellant.BurnRateCoefficientConverter;
+import com.rocketmotordesign.propellant.repository.MeteorPropellantRepository;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tec.units.ri.unit.Units;
 
 import java.util.Locale;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
@@ -33,6 +37,7 @@ import static com.rocketmotordesign.utils.TestHelper.*;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 
@@ -45,6 +50,9 @@ public class MeasureUnitServiceTest {
 
     @Autowired
     private MeasureUnitService measureUnitService;
+
+    @MockBean
+    private MeteorPropellantRepository propellantRepository;
 
     @Test
     void shouldConvertMotorFromImperialUnitToJSRMUnit() {
@@ -101,9 +109,12 @@ public class MeasureUnitServiceTest {
         // GIVEN
         HollowComputationRequest request = getDefaultRequest();
         CustomPropellantRequest propellantRequest = createPropellantWithBasicInfo(KNSU);
-        //TODO
-        //request.setCustomPropellant(propellantRequest);
-        request.setPropellantType("CUSTOM_PROPELLANT");
+
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest)));
+
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
@@ -128,10 +139,12 @@ public class MeasureUnitServiceTest {
                 new BurnRatePressureData(3, 4, 24, 30)
         ));
 
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest)));
+
         HollowComputationRequest request = getDefaultRequest();
-        //TODO
-        //request.setCustomPropellant(propellantRequest);
-        request.setPropellantType("CUSTOM_PROPELLANT");
+        request.setPropellantId(customPropellantId.toString());
 
         // THEN
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
@@ -157,10 +170,12 @@ public class MeasureUnitServiceTest {
         propellantRequest.setCstar(912.38154);
         propellantRequest.setChamberTemperature(null);
 
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest)));
+
         HollowComputationRequest request = getDefaultRequest();
-        //TODO
-        //request.setCustomPropellant(propellantRequest);
-        request.setPropellantType("CUSTOM_PROPELLANT");
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
@@ -182,10 +197,12 @@ public class MeasureUnitServiceTest {
         propellantRequest.setPressureExponent(0.319);
         propellantRequest.setDensity(0.06824);
 
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest)));
+
         HollowComputationRequest request = getDefaultRequestImperial();
-        //TODO
-        //request.setCustomPropellant(propellantRequest);
-        request.setPropellantType("CUSTOM_PROPELLANT");
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
@@ -211,10 +228,12 @@ public class MeasureUnitServiceTest {
         double burnRateCoeff1Metrique = BurnRateCoefficientConverter.toMetrique(1, 2);
         double burnRateCoeff2Metrique = BurnRateCoefficientConverter.toMetrique(3, 4);
 
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest)));
+
         HollowComputationRequest request = getDefaultRequestImperial();
-        //TODO
-        //request.setCustomPropellant(propellantRequest);
-        request.setPropellantType("CUSTOM_PROPELLANT");
+        request.setPropellantId(customPropellantId.toString());
 
         // THEN
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
@@ -243,10 +262,13 @@ public class MeasureUnitServiceTest {
         propellantRequest.setCstar(912.38154 / 0.3048);      //converti de KNDX
         propellantRequest.setChamberTemperature(null);
 
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest)));
+
         HollowComputationRequest request = getDefaultRequestImperial();
-        //TODO
-        //request.setCustomPropellant(propellantRequest);
-        request.setPropellantType("CUSTOM_PROPELLANT");
+
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);

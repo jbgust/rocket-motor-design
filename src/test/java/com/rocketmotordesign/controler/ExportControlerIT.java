@@ -122,7 +122,7 @@ public class ExportControlerIT {
         lowKNRequest.setOuterSurface(INHIBITED);
         lowKNRequest.setEndsSurface(EXPOSED);
         lowKNRequest.setCoreSurface(EXPOSED);
-        lowKNRequest.setPropellantType(KNSU.name());
+        lowKNRequest.setPropellantId(KNSU.name());
         lowKNRequest.setChamberInnerDiameter(38);
         lowKNRequest.setChamberLength(500);
         lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());

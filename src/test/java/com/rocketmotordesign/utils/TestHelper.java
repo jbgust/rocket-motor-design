@@ -1,6 +1,12 @@
 package com.rocketmotordesign.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocketmotordesign.controler.request.*;
+import com.rocketmotordesign.propellant.entity.MeteorPropellant;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+
+import java.util.Random;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
@@ -10,6 +16,19 @@ import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.service.MeasureUnit.SI;
 
 public class TestHelper {
+
+    private static ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+
+    public static MeteorPropellant customPropellantToMeteorPropellant(CustomPropellantRequest customPropellant) {
+
+        int i = new Random().nextInt();
+        try {
+            return new MeteorPropellant("propellant-"+ i, "description-"+i, ""+objectMapper.writeValueAsString(customPropellant));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static HollowComputationRequest getDefaultRequest() {
         HollowComputationRequest hollowComputationRequest = new HollowComputationRequest();
@@ -21,7 +40,7 @@ public class TestHelper {
         hollowComputationRequest.setOuterSurface(INHIBITED);
         hollowComputationRequest.setEndsSurface(EXPOSED);
         hollowComputationRequest.setCoreSurface(EXPOSED);
-        hollowComputationRequest.setPropellantType(KNDX.name());
+        hollowComputationRequest.setPropellantId(KNDX.name());
         hollowComputationRequest.setChamberInnerDiameter(75);
         hollowComputationRequest.setChamberLength(470);
         hollowComputationRequest.setExtraConfig(getDefaultExtraConfiguration());
@@ -65,7 +84,7 @@ public class TestHelper {
         //BasicComputationRequest
         computationRequest.setThroatDiameter(6d);
         computationRequest.setSegmentLength(70d);
-        computationRequest.setPropellantType(KNSU.name());
+        computationRequest.setPropellantId(KNSU.name());
         computationRequest.setChamberInnerDiameter(40d);
         computationRequest.setChamberLength(75d);
         computationRequest.setMeasureUnit(SI);
@@ -167,7 +186,7 @@ public class TestHelper {
         computationRequest.setThroatDiameter(10d/25.4);
         computationRequest.setSegmentLength(70d/25.4);
         computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantType(KNSU.name());
+        computationRequest.setPropellantId(KNSU.name());
         computationRequest.setChamberInnerDiameter(40d/25.4);
         computationRequest.setChamberLength(150d/25.4);
         computationRequest.setMeasureUnit(IMPERIAL);
@@ -184,7 +203,7 @@ public class TestHelper {
         //BasicComputationRequest
         computationRequest.setThroatDiameter(6d/25.4);
         computationRequest.setSegmentLength(70d/25.4);
-        computationRequest.setPropellantType(KNSU.name());
+        computationRequest.setPropellantId(KNSU.name());
         computationRequest.setChamberInnerDiameter(40d/25.4);
         computationRequest.setChamberLength(75d/25.4);
         computationRequest.setMeasureUnit(IMPERIAL);
@@ -231,7 +250,7 @@ public class TestHelper {
         hollowComputationRequest.setOuterSurface(INHIBITED);
         hollowComputationRequest.setEndsSurface(EXPOSED);
         hollowComputationRequest.setCoreSurface(EXPOSED);
-        hollowComputationRequest.setPropellantType(KNDX.name());
+        hollowComputationRequest.setPropellantId(KNDX.name());
         hollowComputationRequest.setChamberInnerDiameter(75/25.4);
         hollowComputationRequest.setChamberLength(470/25.4);
         hollowComputationRequest.setExtraConfig(getDefaultImperialExtraConfiguration());
@@ -273,7 +292,7 @@ public class TestHelper {
         computationRequest.setThroatDiameter(10d);
         computationRequest.setSegmentLength(70d);
         computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantType(KNSU.name());
+        computationRequest.setPropellantId(KNSU.name());
         computationRequest.setChamberInnerDiameter(40d);
         computationRequest.setChamberLength(150d);
         computationRequest.setMeasureUnit(SI);

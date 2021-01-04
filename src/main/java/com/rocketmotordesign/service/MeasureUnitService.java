@@ -29,8 +29,8 @@ import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.quantity.Pressure;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -209,11 +209,11 @@ public class MeasureUnitService {
         Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
                 .collect(toMap(Enum::name, Function.identity()));
 
-        return propellants.computeIfAbsent(request.getPropellantType(), propellantType -> propellantToSIUnits(request));
+        return propellants.computeIfAbsent(request.getPropellantId(), propellantType -> propellantToSIUnits(request));
     }
 
     private SolidPropellant propellantToSIUnits(BasicComputationRequest request) {
-        MeteorPropellant propellant = propellantRepository.findById(request.getCustomPropellant()).orElseThrow(CustomPropellantNotFoundException::new);
+        MeteorPropellant propellant = propellantRepository.findById(UUID.fromString(request.getPropellantId())).orElseThrow(CustomPropellantNotFoundException::new);
 
         try {
             CustomPropellantRequest customPropellantRequest = objectMapper.readValue(propellant.getJson(), CustomPropellantRequest.class);
