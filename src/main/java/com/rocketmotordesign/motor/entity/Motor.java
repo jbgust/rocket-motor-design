@@ -23,6 +23,7 @@ public class Motor {
 
     @NotNull
     @Size(max = 256)
+    @Column(nullable = false)
     private String name;
 
     @Size(max = 1000)
@@ -30,10 +31,10 @@ public class Motor {
 
     @ManyToOne
     @CreatedBy
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @Column(name = "json_motor", columnDefinition = "JSON")
+    @Column(name = "json_motor", columnDefinition = "JSON", nullable = false)
     private String json;
 
     public Motor(String name, String description, String json) {

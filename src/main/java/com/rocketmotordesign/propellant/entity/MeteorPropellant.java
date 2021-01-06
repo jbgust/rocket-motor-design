@@ -1,6 +1,7 @@
 package com.rocketmotordesign.propellant.entity;
 
 import com.rocketmotordesign.security.models.User;
+import com.rocketmotordesign.service.MeasureUnit;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,23 +24,29 @@ public class MeteorPropellant {
 
     @NotNull
     @Size(max = 256)
+    @Column(nullable = false)
     private String name;
 
     @Size(max = 1000)
     private String description;
 
-    @Column(name = "json_propellant", columnDefinition = "JSON")
+    @Column(name = "json_propellant", columnDefinition = "JSON", nullable = false)
     private String json;
+
+    @Column(name = "unit", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MeasureUnit unit;
 
     @ManyToOne
     @CreatedBy
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    public MeteorPropellant(String name, String description, String json) {
+    public MeteorPropellant(String name, String description, String json, MeasureUnit unit) {
         this.name = name;
         this.description = description;
         this.json = json;
+        this.unit = unit;
     }
 
     private MeteorPropellant() {
@@ -83,5 +90,13 @@ public class MeteorPropellant {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public MeasureUnit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(MeasureUnit unit) {
+        this.unit = unit;
     }
 }

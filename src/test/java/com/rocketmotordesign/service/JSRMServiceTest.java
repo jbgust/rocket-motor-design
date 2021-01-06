@@ -14,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.utils.TestHelper.customPropellantToMeteorPropellant;
 import static com.rocketmotordesign.utils.TestHelper.getDefaultRequestImperial;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +43,7 @@ public class JSRMServiceTest {
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
-                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant)));
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
 
         HollowComputationRequest defaultRequest = getDefaultRequestImperial();
 

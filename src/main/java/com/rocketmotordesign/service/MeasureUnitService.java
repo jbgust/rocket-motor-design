@@ -217,7 +217,9 @@ public class MeasureUnitService {
 
         try {
             CustomPropellantRequest customPropellantRequest = objectMapper.readValue(propellant.getJson(), CustomPropellantRequest.class);
-            boolean si = request.getMeasureUnit() == SI;
+            // TODO : a améliorer ça pue
+            customPropellantRequest.setUnit(propellant.getUnit());
+            boolean si = customPropellantRequest.getUnit() == SI;
 
             return new CustomPropellant(
                     si? customPropellantRequest.getCstar() : customPropellantRequest.getCstar()!=null? customPropellantRequest.getCstar() * 0.3048: null,
@@ -228,15 +230,15 @@ public class MeasureUnitService {
                     customPropellantRequest.getK2ph(),
                     customPropellantRequest.getMolarMass(),
                     customPropellantRequest.getChamberTemperature(),
-                    convertBurnRateDataToJSRM(request, customPropellantRequest));
+                    convertBurnRateDataToJSRM(customPropellantRequest));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new CustomPropellantProcessingException();
         }
     }
 
-    private Set<BurnRatePressureData> convertBurnRateDataToJSRM(BasicComputationRequest request, CustomPropellantRequest propellantRequest) {
-        boolean si = request.getMeasureUnit() == SI;
+    private Set<BurnRatePressureData> convertBurnRateDataToJSRM(CustomPropellantRequest propellantRequest) {
+        boolean si = propellantRequest.getUnit() == SI;
 
         Set<BurnRatePressureData> burnRateDataSet = propellantRequest.getBurnRateDataSet();
         if(burnRateDataSet != null){
@@ -244,8 +246,8 @@ public class MeasureUnitService {
                     .map(burnRatePressureData -> new BurnRatePressureData(
                             si? burnRatePressureData.getBurnRateCoefficient() : BurnRateCoefficientConverter.toMetrique(burnRatePressureData.getBurnRateCoefficient(), burnRatePressureData.getPressureExponent()),
                             burnRatePressureData.getPressureExponent(),
-                            convertPressureToJSRM(request.getMeasureUnit().getPressureUnit(), burnRatePressureData.getFromPressureIncluded()),
-                            convertPressureToJSRM(request.getMeasureUnit().getPressureUnit(), burnRatePressureData.getToPressureExcluded())
+                            convertPressureToJSRM(propellantRequest.getUnit().getPressureUnit(), burnRatePressureData.getFromPressureIncluded()),
+                            convertPressureToJSRM(propellantRequest.getUnit().getPressureUnit(), burnRatePressureData.getToPressureExcluded())
                     ))
                     .collect(toSet());
             } else {

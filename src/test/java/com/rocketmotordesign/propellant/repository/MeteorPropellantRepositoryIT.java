@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static com.rocketmotordesign.service.MeasureUnit.SI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -34,11 +35,11 @@ class MeteorPropellantRepositoryIT {
     @WithUserDetails(value = "test@meteor.fr", userDetailsServiceBeanName = "userDetailsServiceImpl")
     void shouldListUserMotor() {
         //GIVEN
-        propellantRepository.save(new MeteorPropellant("propellant-1", "description", "json"));
-        propellantRepository.save(new MeteorPropellant("propellant-2", "description", "json"));
+        propellantRepository.save(new MeteorPropellant("propellant-1", "description", "json", SI));
+        propellantRepository.save(new MeteorPropellant("propellant-2", "description", "json", SI));
 
         User anotherUser = userRepository.findByEmail("another-user@meteor.fr").get();
-        MeteorPropellant meteorPropellant = propellantRepository.save(new MeteorPropellant("propellant-x", "description", "json"));
+        MeteorPropellant meteorPropellant = propellantRepository.save(new MeteorPropellant("propellant-x", "description", "json", SI));
         meteorPropellant.setOwner(anotherUser);
         propellantRepository.save(meteorPropellant);
 
@@ -58,13 +59,13 @@ class MeteorPropellantRepositoryIT {
     @WithUserDetails(value = "test@meteor.fr", userDetailsServiceBeanName = "userDetailsServiceImpl")
     void shouldNotSave2MotorWithSameNameByUser() {
         //GIVEN
-        propellantRepository.save(new MeteorPropellant("propellant-4", "description", "json"));
-        assertThatThrownBy(() -> propellantRepository.save(new MeteorPropellant("propellant-4", "description", "json")))
+        propellantRepository.save(new MeteorPropellant("propellant-4", "description", "json", SI));
+        assertThatThrownBy(() -> propellantRepository.save(new MeteorPropellant("propellant-4", "description", "json", SI)))
                 .isInstanceOf(DataIntegrityViolationException.class);
 
         User anotherUser = userRepository.findByEmail("another-user@meteor.fr").get();
 
-        MeteorPropellant propellant = propellantRepository.save(new MeteorPropellant("propellant-2", "description", "json"));
+        MeteorPropellant propellant = propellantRepository.save(new MeteorPropellant("propellant-2", "description", "json", SI));
         propellant.setOwner(anotherUser);
         propellant.setName("propellant-1");
         propellantRepository.save(propellant);

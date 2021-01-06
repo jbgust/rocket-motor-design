@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.propellant.entity.MeteorPropellant;
+import com.rocketmotordesign.service.MeasureUnit;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.util.Random;
@@ -21,9 +22,14 @@ public class TestHelper {
 
     public static MeteorPropellant customPropellantToMeteorPropellant(CustomPropellantRequest customPropellant) {
 
+        return customPropellantToMeteorPropellant(customPropellant, SI);
+    }
+
+    public static MeteorPropellant customPropellantToMeteorPropellant(CustomPropellantRequest customPropellant, MeasureUnit unit) {
+
         int i = new Random().nextInt();
         try {
-            return new MeteorPropellant("propellant-"+ i, "description-"+i, ""+objectMapper.writeValueAsString(customPropellant));
+            return new MeteorPropellant("propellant-"+ i, "description-"+i, ""+objectMapper.writeValueAsString(customPropellant), unit);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;

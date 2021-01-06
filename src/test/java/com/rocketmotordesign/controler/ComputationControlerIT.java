@@ -494,7 +494,7 @@ public class ComputationControlerIT {
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
-                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant)));
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
         request.setPropellantId(customPropellantId.toString());
 
         // WHEN
@@ -625,7 +625,43 @@ public class ComputationControlerIT {
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
-                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant)));
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
+        request.setPropellantId(customPropellantId.toString());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")));
+    }
+
+    @Test
+    void shouldUseComplexeCustomPropellantInImperialWithMotorInSI() throws Exception {
+        // GIVEN
+        HollowComputationRequest request = getDefaultRequest();
+
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
+        customPropellant.setBurnRateDataSet(Sets.newHashSet(
+                //data taken from SRM_2014
+                new BurnRatePressureData(0.0160236, 0.6193000, 14.63, 113),
+                new BurnRatePressureData(0.3105118, -0.0087000, 113, 373),
+                new BurnRatePressureData(0.0049213, 0.6882000, 373, 860),
+                new BurnRatePressureData(1.4155118, -0.1481000, 860, 1233),
+                new BurnRatePressureData(0.0208661, 0.4417000, 1233, 1625)
+        ));
+        customPropellant.setDensity(KNDX.getIdealMassDensity()/453.6*Math.pow(2.54, 3));
+        customPropellant.setChamberTemperature(KNDX.getChamberTemperature());
+        customPropellant.setK(KNDX.getK());
+        customPropellant.setK2ph(KNDX.getK2Ph());
+        customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
+
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
         request.setPropellantId(customPropellantId.toString());
 
         // WHEN
@@ -659,7 +695,7 @@ public class ComputationControlerIT {
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
-                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant)));
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
         request.setPropellantId(customPropellantId.toString());
 
         // WHEN
@@ -695,7 +731,7 @@ public class ComputationControlerIT {
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
-                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant)));
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
         request.setPropellantId(customPropellantId.toString());
 
         // WHEN

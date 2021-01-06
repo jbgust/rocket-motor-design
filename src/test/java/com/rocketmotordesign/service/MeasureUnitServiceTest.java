@@ -199,7 +199,7 @@ public class MeasureUnitServiceTest {
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
-                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest)));
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest, IMPERIAL)));
 
         HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantId(customPropellantId.toString());
@@ -230,7 +230,7 @@ public class MeasureUnitServiceTest {
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
-                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest)));
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest, IMPERIAL)));
 
         HollowComputationRequest request = getDefaultRequestImperial();
         request.setPropellantId(customPropellantId.toString());
@@ -264,7 +264,7 @@ public class MeasureUnitServiceTest {
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
-                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest)));
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(propellantRequest, IMPERIAL)));
 
         HollowComputationRequest request = getDefaultRequestImperial();
 
