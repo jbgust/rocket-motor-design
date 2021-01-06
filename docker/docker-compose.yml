@@ -18,9 +18,9 @@ services:
       - ./grafana:/var/lib/grafana
 
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     volumes:
-      - ./mysql5:/etc/mysql/conf.d
+      - ./mysql:/etc/mysql/conf.d
     ports:
       - "3308:3306"
     environment:

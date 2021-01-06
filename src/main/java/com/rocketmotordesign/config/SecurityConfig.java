@@ -19,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -46,6 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
+    }
+
+    @Bean
+    public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+        return new SecurityEvaluationContextExtension();
     }
 
     @Override
@@ -89,13 +95,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedOrigins(asList(allowedCORSDomains));
         configuration.setAllowedMethods(asList("*"));
         configuration.setAllowedHeaders(asList("*"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/auth/signin", configuration);
         source.registerCorsConfiguration("/auth/signup", configuration);
         source.registerCorsConfiguration("/auth/reset-password", configuration);
         source.registerCorsConfiguration("/auth/reset-password/*", configuration);
         source.registerCorsConfiguration("/auth/validate/*", configuration);
         source.registerCorsConfiguration("/auth/resent-activation/*", configuration);
+
         source.registerCorsConfiguration("/compute", configuration);
         source.registerCorsConfiguration("/compute/cslot", configuration);
         source.registerCorsConfiguration("/compute/endburner", configuration);
@@ -104,6 +113,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/compute/rodtube", configuration);
         source.registerCorsConfiguration("/compute/star", configuration);
         source.registerCorsConfiguration("/export/rasp", configuration);
+
+        source.registerCorsConfiguration("/propellants", configuration);
+        source.registerCorsConfiguration("/propellants/*", configuration);
+        source.registerCorsConfiguration("/motors", configuration);
+        source.registerCorsConfiguration("/motors/*", configuration);
         return source;
     }
 }

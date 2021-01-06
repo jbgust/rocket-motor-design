@@ -6,17 +6,22 @@ import com.rocketmotordesign.controler.request.BurnRatePressureData;
 import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.controler.request.FinocylComputationRequest;
 import com.rocketmotordesign.controler.request.HollowComputationRequest;
+import com.rocketmotordesign.propellant.repository.MeteorPropellantRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
@@ -25,6 +30,7 @@ import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType
 import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.utils.TestHelper.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +44,9 @@ public class ComputationControlerIT {
     @Autowired
     private MockMvc mvc;
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private MeteorPropellantRepository propellantRepository;
 
     @Test
     void shouldRunComputation() throws Exception {
@@ -445,7 +454,7 @@ public class ComputationControlerIT {
         lowKNRequest.setOuterSurface(INHIBITED);
         lowKNRequest.setEndsSurface(EXPOSED);
         lowKNRequest.setCoreSurface(EXPOSED);
-        lowKNRequest.setPropellantType(KNDX.name());
+        lowKNRequest.setPropellantId(KNDX.name());
         lowKNRequest.setChamberInnerDiameter(28);
         lowKNRequest.setChamberLength(98);
         lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
@@ -468,7 +477,7 @@ public class ComputationControlerIT {
     void shouldUseCustomPropellantInImperialUnits() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequestImperial();
-        request.setPropellantType("My propellant");
+        request.setPropellantId("My propellant");
         request.getExtraConfig().setNozzleExpansionRatio(8.0);
         request.getExtraConfig().setNozzleEfficiency(0.85);
         request.getExtraConfig().setOptimalNozzleDesign(false);
@@ -482,7 +491,11 @@ public class ComputationControlerIT {
         customPropellant.setDensity(0.06);
         customPropellant.setK(1.2768);
         customPropellant.setMolarMass(45.0);
-        request.setCustomPropellant(customPropellant);
+
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -503,7 +516,7 @@ public class ComputationControlerIT {
     void shouldUseCustomPropellantInSIUnits() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequest();
-        request.setPropellantType("To be defined");
+        request.setPropellantId("To be defined");
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setDensity(KNSU.getIdealMassDensity());
         customPropellant.setChamberTemperature(KNSU.getChamberTemperature());
@@ -513,7 +526,10 @@ public class ComputationControlerIT {
         customPropellant.setBurnRateCoefficient(KNSU.getBurnRateCoefficient(1));
         customPropellant.setPressureExponent(KNSU.getPressureExponent(1));
 
-        request.setCustomPropellant(customPropellant);
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant)));
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -531,14 +547,14 @@ public class ComputationControlerIT {
     void shouldUseCustomPropellantInSIUnitsWithMultipleBurnRateData() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequest();
-        request.setPropellantType("To be defined");
-        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
-        customPropellant.setDensity(KNDX.getIdealMassDensity());
-        customPropellant.setChamberTemperature(KNDX.getChamberTemperature());
-        customPropellant.setK(KNDX.getK());
-        customPropellant.setK2ph(KNDX.getK2Ph());
-        customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
-        customPropellant.setBurnRateDataSet(Sets.newHashSet(
+
+        CustomPropellantRequest customPropellantRequest = new CustomPropellantRequest();
+        customPropellantRequest.setDensity(KNDX.getIdealMassDensity());
+        customPropellantRequest.setChamberTemperature(KNDX.getChamberTemperature());
+        customPropellantRequest.setK(KNDX.getK());
+        customPropellantRequest.setK2ph(KNDX.getK2Ph());
+        customPropellantRequest.setMolarMass(KNDX.getEffectiveMolecularWeight());
+        customPropellantRequest.setBurnRateDataSet(Sets.newHashSet(
                 //data taken from SRM_2014
                 new BurnRatePressureData(8.87544496778536, 0.6193, 0.1, 0.779135),
                 new BurnRatePressureData(7.55278442387944, -0.0087, 0.779135, 2.571835),
@@ -547,7 +563,11 @@ public class ComputationControlerIT {
                 new BurnRatePressureData(4.77524086347659, 0.4417, 8.501535, 11.20)
         ));
 
-        request.setCustomPropellant(customPropellant);
+        // TODO : dette passer par le vrai repo (A faire dans tout les test de cette classe
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellantRequest)));
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -585,7 +605,7 @@ public class ComputationControlerIT {
     void shouldUseCustomPropellantInImperialUnitsWithMultipleBurnRateData() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequestImperial();
-        request.setPropellantType("To be defined");
+        request.setPropellantId("To be defined");
 
 
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
@@ -603,8 +623,46 @@ public class ComputationControlerIT {
         customPropellant.setK2ph(KNDX.getK2Ph());
         customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
 
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
+        request.setPropellantId(customPropellantId.toString());
 
-        request.setCustomPropellant(customPropellant);
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)));
+
+        //THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("L1672")));
+    }
+
+    @Test
+    void shouldUseComplexeCustomPropellantInImperialWithMotorInSI() throws Exception {
+        // GIVEN
+        HollowComputationRequest request = getDefaultRequest();
+
+        CustomPropellantRequest customPropellant = new CustomPropellantRequest();
+        customPropellant.setBurnRateDataSet(Sets.newHashSet(
+                //data taken from SRM_2014
+                new BurnRatePressureData(0.0160236, 0.6193000, 14.63, 113),
+                new BurnRatePressureData(0.3105118, -0.0087000, 113, 373),
+                new BurnRatePressureData(0.0049213, 0.6882000, 373, 860),
+                new BurnRatePressureData(1.4155118, -0.1481000, 860, 1233),
+                new BurnRatePressureData(0.0208661, 0.4417000, 1233, 1625)
+        ));
+        customPropellant.setDensity(KNDX.getIdealMassDensity()/453.6*Math.pow(2.54, 3));
+        customPropellant.setChamberTemperature(KNDX.getChamberTemperature());
+        customPropellant.setK(KNDX.getK());
+        customPropellant.setK2ph(KNDX.getK2Ph());
+        customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
+
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -621,7 +679,7 @@ public class ComputationControlerIT {
     void shouldSendErrorIfBurnRateDataAreOverlaping() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequestImperial();
-        request.setPropellantType("To be defined");
+        request.setPropellantId("To be defined");
 
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setBurnRateDataSet(Sets.newHashSet(
@@ -635,8 +693,10 @@ public class ComputationControlerIT {
         customPropellant.setK2ph(KNDX.getK2Ph());
         customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
 
-
-        request.setCustomPropellant(customPropellant);
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -656,7 +716,7 @@ public class ComputationControlerIT {
     void shouldSendErrorWhenPressureIsOutOfBound() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequestImperial();
-        request.setPropellantType("To be defined");
+        request.setPropellantId("To be defined");
 
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
         customPropellant.setBurnRateDataSet(Sets.newHashSet(
@@ -669,8 +729,10 @@ public class ComputationControlerIT {
         customPropellant.setK2ph(KNDX.getK2Ph());
         customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
 
-
-        request.setCustomPropellant(customPropellant);
+        UUID customPropellantId = UUID.randomUUID();
+        given(propellantRepository.findById(customPropellantId))
+                .willReturn(Optional.of(customPropellantToMeteorPropellant(customPropellant, IMPERIAL)));
+        request.setPropellantId(customPropellantId.toString());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -703,7 +765,7 @@ public class ComputationControlerIT {
         invalidMotorDesignRequest.setOuterSurface(INHIBITED);
         invalidMotorDesignRequest.setEndsSurface(EXPOSED);
         invalidMotorDesignRequest.setCoreSurface(EXPOSED);
-        invalidMotorDesignRequest.setPropellantType(KNDX.name());
+        invalidMotorDesignRequest.setPropellantId(KNDX.name());
         invalidMotorDesignRequest.setChamberInnerDiameter(75);
         invalidMotorDesignRequest.setChamberLength(47);
         invalidMotorDesignRequest.setExtraConfig(getDefaultExtraConfiguration());
@@ -733,7 +795,7 @@ public class ComputationControlerIT {
         invalidMotorDesignRequest.setOuterSurface(INHIBITED);
         invalidMotorDesignRequest.setEndsSurface(EXPOSED);
         invalidMotorDesignRequest.setCoreSurface(EXPOSED);
-        invalidMotorDesignRequest.setPropellantType(KNDX.name());
+        invalidMotorDesignRequest.setPropellantId(KNDX.name());
         invalidMotorDesignRequest.setChamberInnerDiameter(75);
         invalidMotorDesignRequest.setChamberLength(475);
         invalidMotorDesignRequest.setExtraConfig(getDefaultExtraConfiguration());
@@ -763,7 +825,7 @@ public class ComputationControlerIT {
         request.setOuterSurface(INHIBITED);
         request.setEndsSurface(INHIBITED);
         request.setCoreSurface(EXPOSED);
-        request.setPropellantType(KNSU.name());
+        request.setPropellantId(KNSU.name());
         request.setChamberInnerDiameter(400);
         request.setChamberLength(20000);
         request.setExtraConfig(getDefaultExtraConfiguration());

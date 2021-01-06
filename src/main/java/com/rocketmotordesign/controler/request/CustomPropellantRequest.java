@@ -1,8 +1,10 @@
 package com.rocketmotordesign.controler.request;
 
-import static java.util.stream.Collectors.joining;
+import com.rocketmotordesign.service.MeasureUnit;
 
 import java.util.Set;
+
+import static java.util.stream.Collectors.joining;
 
 public class CustomPropellantRequest {
 
@@ -23,6 +25,8 @@ public class CustomPropellantRequest {
     private Double chamberTemperature;
     private Double molarMass;
     private Set<BurnRatePressureData> burnRateDataSet;
+
+    private MeasureUnit unit;
 
     public CustomPropellantRequest() {
     }
@@ -98,6 +102,14 @@ public class CustomPropellantRequest {
 
     public Set<BurnRatePressureData> getBurnRateDataSet() {
         return burnRateDataSet;
+    }
+
+    public MeasureUnit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(MeasureUnit unit) {
+        this.unit = unit;
     }
 
     @Override

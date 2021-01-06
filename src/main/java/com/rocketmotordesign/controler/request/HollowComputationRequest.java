@@ -75,15 +75,14 @@ public class HollowComputationRequest extends BasicComputationRequest{
                 outerSurface == that.outerSurface &&
                 endsSurface == that.endsSurface &&
                 coreSurface == that.coreSurface &&
-                Objects.equals(propellantType, that.propellantType) &&
+                Objects.equals(propellantId, that.propellantId) &&
                 Objects.equals(extraConfig, that.extraConfig) &&
-                measureUnit == that.measureUnit &&
-                Objects.equals(customPropellant, that.customPropellant);
+                measureUnit == that.measureUnit;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(throatDiameter, outerDiameter, coreDiameter, segmentLength, numberOfSegment, outerSurface, endsSurface, coreSurface, propellantType, chamberInnerDiameter, chamberLength, extraConfig, measureUnit, customPropellant);
+        return Objects.hash(throatDiameter, outerDiameter, coreDiameter, segmentLength, numberOfSegment, outerSurface, endsSurface, coreSurface, propellantId, chamberInnerDiameter, chamberLength, extraConfig, measureUnit);
     }
 
     @Override
@@ -97,12 +96,11 @@ public class HollowComputationRequest extends BasicComputationRequest{
                 ", outerSurface=" + outerSurface +
                 ", endsSurface=" + endsSurface +
                 ", coreSurface=" + coreSurface +
-                ", propellantType='" + propellantType + '\'' +
+                ", propellantType='" + propellantId + '\'' +
                 ", chamberInnerDiameter=" + chamberInnerDiameter +
                 ", chamberLength=" + chamberLength +
                 ", extraConfig=" + extraConfig.toString() +
                 ", measureUnit=" + measureUnit +
-                ", customPropellant=" + (customPropellant != null ? customPropellant.toString() : "null") +
                 '}';
     }
 }

@@ -26,7 +26,7 @@ public abstract class BasicComputationRequest {
     protected double chamberInnerDiameter;
     protected double chamberLength;
 
-    protected String propellantType;
+    protected String propellantId;
 
     protected double segmentLength;
     protected int numberOfSegment;
@@ -35,17 +35,15 @@ public abstract class BasicComputationRequest {
 
     protected MeasureUnit measureUnit;
 
-    protected CustomPropellantRequest customPropellant;
-
     public BasicComputationRequest() {
     }
 
-    public final String getPropellantType() {
-        return propellantType;
+    public final String getPropellantId() {
+        return propellantId;
     }
 
-    public void setPropellantType(String propellantType) {
-        this.propellantType = propellantType;
+    public void setPropellantId(String propellantId) {
+        this.propellantId = propellantId;
     }
 
     public final MeasureUnit getMeasureUnit() {
@@ -84,14 +82,6 @@ public abstract class BasicComputationRequest {
 
     public final void setChamberInnerDiameter(double chamberInnerDiameter) {
         this.chamberInnerDiameter = chamberInnerDiameter;
-    }
-
-    public final CustomPropellantRequest getCustomPropellant() {
-        return customPropellant;
-    }
-
-    public final void setCustomPropellant(CustomPropellantRequest customPropellant) {
-        this.customPropellant = customPropellant;
     }
 
     public final void setChamberLength(double chamberLength) {

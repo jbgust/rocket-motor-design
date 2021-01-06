@@ -1,6 +1,6 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
-
+/emails-recus/
 ### STS ###
 .apt_generated
 .classpath

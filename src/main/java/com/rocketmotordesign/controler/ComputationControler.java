@@ -8,7 +8,7 @@ import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.controler.response.ComputationResponse;
 import com.rocketmotordesign.controler.response.ErrorMessage;
-import com.rocketmotordesign.security.services.UserDetailsImpl;
+import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,15 +140,15 @@ public class ComputationControler {
         LOGGER.info("METEOR[UNITS|{}]", request.getMeasureUnit());
         Map<String, SolidPropellant> propellants = Stream.of(PropellantType.values())
                 .collect(toMap(Enum::name, Function.identity()));
-        LOGGER.info("METEOR[PROPELLANT|{}]", propellants.containsKey(request.getPropellantType()) ? request.getPropellantType() : "CUSTOM");
+        LOGGER.info("METEOR[PROPELLANT|{}]", propellants.containsKey(request.getPropellantId()) ? request.getPropellantId() : "CUSTOM");
         LOGGER.info("METEOR[MOTORCLASS|{}]", response.getPerformanceResult().getMotorDescription().substring(0, 1));
     }
 
     private String getUserId() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof UserDetailsImpl) {
-            return ((UserDetailsImpl)principal).getId().toString();
+        if (principal instanceof User) {
+            return ((User)principal).getId().toString();
         } else {
             return principal.toString();
         }
