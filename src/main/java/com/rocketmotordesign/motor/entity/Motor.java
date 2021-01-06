@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
@@ -21,8 +22,10 @@ public class Motor {
     private UUID id;
 
     @NotNull
+    @Size(max = 256)
     private String name;
 
+    @Size(max = 1000)
     private String description;
 
     @ManyToOne

@@ -1,7 +1,7 @@
 create table propellant
 (
     id               binary(16),
-    name            varchar(256),
+    name            varchar(256) not null,
     description      varchar(1000),
     json_propellant JSON,
     owner_id bigint  not null,
