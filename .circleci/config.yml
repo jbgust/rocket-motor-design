@@ -23,7 +23,8 @@ jobs:
             - .m2
   package:
     working_directory: ~/rocketMotorDesign
-    machine: true
+    docker:
+      - image: maven:3.6.3-openjdk-11
     steps:
       - checkout
       - attach_workspace:
