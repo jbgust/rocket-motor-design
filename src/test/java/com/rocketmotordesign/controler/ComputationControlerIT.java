@@ -66,6 +66,10 @@ public class ComputationControlerIT {
                 .andExpect(jsonPath("$.performanceResult.convergenceCrossSectionDiameter", is(57.61)))
                 .andExpect(jsonPath("$.performanceResult.divergenceCrossSectionDiameter", closeTo(36.6355, 0.0001)))
 
+                .andExpect(jsonPath("$.performanceResult.portToThroatArea", is("4.18")))
+                .andExpect(jsonPath("$.performanceResult.portToThroatAreaWarning", is("NORMAL")))
+                .andExpect(jsonPath("$.performanceResult.maxThrust", is("2060.35")))
+
                 .andExpect(jsonPath("$.performanceResult.maxThrust", is("2060.35")))
                 .andExpect(jsonPath("$.performanceResult.totalImpulse", is("3603.07")))
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("130.65")))

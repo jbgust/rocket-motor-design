@@ -102,7 +102,9 @@ public class MeasureUnitService {
                 jsrmResult.getNumberOfKNCorrection(),
                 convertMassToMeteor(userUnits.getMassUnit(), jsrmResult.getGrainMassInKg()),
                 jsrmResult.getMotorClassification(),
-                userUnits);
+                userUnits,
+                jsrmResult.getPortToThroatArea(),
+                jsrmResult.getPortToThroatAreaWarning());
     }
 
     public GraphResult toGraphResult(MotorParameters motorParameters, MeasureUnit userUnits) {

@@ -1,6 +1,7 @@
 package com.rocketmotordesign.controler.response;
 
 import com.github.jbgust.jsrm.application.result.MotorClassification;
+import com.github.jbgust.jsrm.application.result.PortToThroatAreaWarning;
 import com.rocketmotordesign.service.MeasureUnit;
 
 import java.util.Locale;
@@ -25,6 +26,8 @@ public class PerformanceResult {
     private final String grainMass;
     private final boolean safeKN;
     private final int classPercentage;
+    private final String portToThroatArea;
+    private final PortToThroatAreaWarning portToThroatAreaWarning;
 
     public PerformanceResult(String motorDescription,
                              double maxThrust,
@@ -42,7 +45,9 @@ public class PerformanceResult {
                              long numberOfKNCorrection,
                              double grainMass,
                              MotorClassification motorClassification,
-                             MeasureUnit measureUnit) {
+                             MeasureUnit measureUnit,
+                             double portToThroatArea,
+                             PortToThroatAreaWarning portToThroatAreaWarning) {
 
         // ça n'a pas de sens d'avoir la même précision en SI et en IMPERIAL. En IMPERIAL on perd trop en précision sur avec 2 décimales.
         String formatPourlongueur = SI == measureUnit ? "%.2f" : "%.4f";
@@ -64,6 +69,9 @@ public class PerformanceResult {
         this.grainMass = format(grainMass, "%.3f");
         this.safeKN = numberOfKNCorrection > 0 ? true : false;
         this.classPercentage = (int)Math.ceil(100 * (totalImpulse - motorClassification.getTotalImpulseRangeInNewtowSecond().lowerEndpoint()) / (motorClassification.getTotalImpulseRangeInNewtowSecond().upperEndpoint()-motorClassification.getTotalImpulseRangeInNewtowSecond().lowerEndpoint()));
+
+        this.portToThroatArea = format(portToThroatArea);
+        this.portToThroatAreaWarning = portToThroatAreaWarning;
     }
 
     public static String format(Double aDouble) {
@@ -151,5 +159,13 @@ public class PerformanceResult {
 
     public boolean isSafeKN() {
         return safeKN;
+    }
+
+    public String getPortToThroatArea() {
+        return portToThroatArea;
+    }
+
+    public PortToThroatAreaWarning getPortToThroatAreaWarning() {
+        return portToThroatAreaWarning;
     }
 }

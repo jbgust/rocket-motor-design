@@ -6,10 +6,7 @@ import com.github.jbgust.jsrm.application.motor.grain.FinocylGrain;
 import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
 import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
-import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.github.jbgust.jsrm.application.result.MotorClassification;
-import com.github.jbgust.jsrm.application.result.MotorParameters;
-import com.github.jbgust.jsrm.application.result.Nozzle;
+import com.github.jbgust.jsrm.application.result.*;
 import com.google.common.collect.Sets;
 import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.controler.response.GraphResult;
@@ -32,6 +29,7 @@ import java.util.UUID;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.github.jbgust.jsrm.application.result.PortToThroatAreaWarning.NORMAL;
 import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.utils.TestHelper.*;
 import static java.util.Collections.emptyList;
@@ -340,7 +338,9 @@ public class MeasureUnitServiceTest {
                 nozzle,
                 15,
                 1.0,
-                0);
+                0,
+                NORMAL,
+                3.549D);
 
         PerformanceResult performanceResult = measureUnitService.toPerformanceResult(jsrmResult, getDefaultExtraConfiguration().isOptimalNozzleDesign(), IMPERIAL);
 
@@ -359,6 +359,8 @@ public class MeasureUnitServiceTest {
         assertThat(performanceResult.getOptimalNozzleExpansionRatio()).isEqualTo(format(nozzle.getOptimalNozzleExpansionRatio()));
         assertThat(performanceResult.isLowKNCorrection()).isFalse();
         assertThat(performanceResult.getGrainMass()).isEqualTo("2.205");
+        assertThat(performanceResult.getPortToThroatArea()).isEqualTo("3.55");
+        assertThat(performanceResult.getPortToThroatAreaWarning()).isEqualTo(NORMAL);
     }
 
     @Test
