@@ -62,6 +62,10 @@
             <appender-ref ref="CONSOLE-APPENDER" />
             <appender-ref ref="FILE-APPENDER" />
         </root>
+        <logger name="org.springframework.dao.DataIntegrityViolationException">
+            <appender-ref ref="FILE-APPENDER" />
+            <appender-ref ref="CONSOLE-APPENDER" />
+        </logger>
     </springProfile>
     <springProfile name="beta">
         <root level="info">
@@ -75,7 +79,12 @@
             <appender-ref ref="FILE-APPENDER" />
             <appender-ref ref="EMAIL" />
         </root>
+        <logger name="org.springframework.dao.DataIntegrityViolationException">
+            <appender-ref ref="FILE-APPENDER" />
+            <appender-ref ref="CONSOLE-APPENDER" />
+        </logger>
     </springProfile>
+
 
 </configuration>
 
