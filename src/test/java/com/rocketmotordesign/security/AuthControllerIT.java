@@ -23,6 +23,7 @@ import java.util.stream.StreamSupport;
 
 import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
 import static com.rocketmotordesign.security.models.UserValidationTokenType.RESET_PASSWORD;
+import static com.rocketmotordesign.utils.TestHelper.buildExpectedMail;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -38,6 +39,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class AuthControllerIT {
+
+    public static final String METEOR_TEST_BASE_URL = "http://test.meteor.gov";
+
     @Autowired
     private UserRepository userRepository;
 
@@ -76,10 +80,9 @@ class AuthControllerIT {
                 eq("tata@titi.fr")
         );
 
-        String urlRenew = "http://test.meteor.gov/validate?token=" + recupererToken("tata@titi.fr", CREATION_COMPTE) + "&tokenType=CREATION_COMPTE";
+        String urlRenew = METEOR_TEST_BASE_URL + "/validate?token=" + recupererToken("tata@titi.fr", CREATION_COMPTE) + "&tokenType=CREATION_COMPTE";
         assertThat(argumentCaptor.getAllValues().get(0))
-                .isEqualTo("<html><body><p>Click on the link below to activate your account.</p>" +
-                        "<a href=\"" + urlRenew + "\">" + urlRenew + "</a></body></html>");
+                .isEqualTo(buildExpectedMail("Welcome to METEOR", "Click on the link below to activate your account.", METEOR_TEST_BASE_URL, urlRenew));
     }
 
     @Test
@@ -111,10 +114,9 @@ class AuthControllerIT {
                 eq("user@titi.fr")
         );
 
-        String urlRenew = "http://test.meteor.gov/validate?token=" + tokenResetPassword + "&tokenType=RESET_PASSWORD";
+        String urlRenew = METEOR_TEST_BASE_URL + "/validate?token=" + tokenResetPassword + "&tokenType=RESET_PASSWORD";
         assertThat(argumentCaptor.getAllValues().get(1))
-                .isEqualTo("<html><body><p>Click on the link below to reset your password.</p>" +
-                        "<a href=\"" + urlRenew + "\">" + urlRenew + "</a></body></html>");
+                .isEqualTo(buildExpectedMail("METEOR", "Click on the link below to reset your password.", METEOR_TEST_BASE_URL, urlRenew));
 
 
         //Changement de password

@@ -75,8 +75,8 @@ class AdminControlerIT {
         // GIVEN
         MailRequest mailRequest = new MailRequest("mon sujet", "<html><body>test</body></html>");
         String request = jsonObjectMapper.writeValueAsString(mailRequest);
-        createValidUser("user1@domain.org", true);
-        createValidUser("user2@haha.fr", true);
+        createValidUser("user3@domain.org", true);
+        createValidUser("user4@haha.fr", true);
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/admin/newsletter/")
@@ -92,8 +92,8 @@ class AdminControlerIT {
 
         assertThat(receivers.getAllValues())
                 .containsExactlyInAnyOrder(
-                        "user1@domain.org",
-                        "user2@haha.fr"
+                        "user3@domain.org",
+                        "user4@haha.fr"
                 );
     }
 

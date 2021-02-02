@@ -6,7 +6,11 @@ import com.rocketmotordesign.security.models.UserValidationTokenType;
 import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.mail.MessagingException;
 
@@ -16,23 +20,27 @@ import java.util.UUID;
 
 import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
 import static com.rocketmotordesign.security.models.UserValidationTokenType.RESET_PASSWORD;
+import static com.rocketmotordesign.utils.TestHelper.buildExpectedMail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-
+@ExtendWith(SpringExtension.class)
 class UserTokenServiceTest {
 
     private MailService mailService;
     private UserValidationTokenRepository userValidationTokenRepository;
     private UserTokenService userTokenService;
 
+    @Value("classpath:templates/mailModel.html")
+    Resource mailModelResourceFile;
+
     @BeforeEach
     void setUp() {
         mailService = mock(MailService.class);
         userValidationTokenRepository = mock(UserValidationTokenRepository.class);
-        userTokenService = new UserTokenService(mailService, "http://BaseURL.com", 3600, userValidationTokenRepository);
+        userTokenService = new UserTokenService(mailService, "http://BaseURL.com", 3600, mailModelResourceFile, userValidationTokenRepository);
     }
 
     @Test
@@ -52,11 +60,14 @@ class UserTokenServiceTest {
         assertThat(validationToken.getTokenType()).isEqualTo(CREATION_COMPTE);
 
         String url = buildUrlValidation(validationToken, CREATION_COMPTE);
+
+        ArgumentCaptor<String> mailContentArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(mailService, times(1))
-                .sendHtmlMessage("METEOR : activate your account",
-                        "<html><body><p>Click on the link below to activate your account.</p><" +
-                                "a href=\"" + url + "\">" + url + "</a></body></html>",
-                        utilisateur.getEmail());
+                .sendHtmlMessage(eq("METEOR : activate your account"),
+                        mailContentArgumentCaptor.capture(),
+                        eq(utilisateur.getEmail()));
+        assertThat(mailContentArgumentCaptor.getValue())
+                .isEqualTo(buildExpectedMail("Welcome to METEOR", "Click on the link below to activate your account.", "http://BaseURL.com", url));
     }
 
     @Test
@@ -80,11 +91,13 @@ class UserTokenServiceTest {
         assertThat(validationToken.getTokenType()).isEqualTo(CREATION_COMPTE);
 
         String url = buildUrlValidation(validationToken, CREATION_COMPTE);
+        ArgumentCaptor<String> mailContentArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(mailService, times(1))
-                .sendHtmlMessage("METEOR : activate your account",
-                        "<html><body><p>Click on the link below to activate your account.</p><" +
-                                "a href=\"" + url + "\">" + url + "</a></body></html>",
-                        utilisateur.getEmail());
+                .sendHtmlMessage(eq("METEOR : activate your account"),
+                        mailContentArgumentCaptor.capture(),
+                        eq(utilisateur.getEmail()));
+        assertThat(mailContentArgumentCaptor.getValue())
+                .isEqualTo(buildExpectedMail("Welcome to METEOR", "Click on the link below to activate your account.", "http://BaseURL.com", url));
     }
 
     @Test
@@ -125,11 +138,14 @@ class UserTokenServiceTest {
         assertThat(validationToken.getTokenType()).isEqualTo(RESET_PASSWORD);
 
         String url = buildUrlValidation(validationToken, RESET_PASSWORD);
+
+        ArgumentCaptor<String> mailContentArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(mailService, times(1))
-                .sendHtmlMessage("METEOR : reset your password",
-                        "<html><body><p>Click on the link below to reset your password.</p><" +
-                                "a href=\"" + url + "\">" + url + "</a></body></html>",
-                        utilisateur.getEmail());
+                .sendHtmlMessage(eq("METEOR : reset your password"),
+                        mailContentArgumentCaptor.capture(),
+                        eq(utilisateur.getEmail()));
+        assertThat(mailContentArgumentCaptor.getValue())
+                .isEqualTo(buildExpectedMail("METEOR", "Click on the link below to reset your password.", "http://BaseURL.com", url));
     }
 
     @Test

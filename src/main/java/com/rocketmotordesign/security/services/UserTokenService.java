@@ -7,6 +7,7 @@ import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 import static com.rocketmotordesign.security.models.UserValidationTokenType.CREATION_COMPTE;
 import static com.rocketmotordesign.security.models.UserValidationTokenType.RESET_PASSWORD;
+import static com.rocketmotordesign.security.services.ResourceReader.asString;
 
 @Service
 public class UserTokenService {
@@ -24,25 +26,31 @@ public class UserTokenService {
 
     private final MailService mailService;
     private final String baseUrl;
-    private long tokenValidationExpirationInSeconde;
+    private final long tokenValidationExpirationInSeconde;
     private final UserValidationTokenRepository userValidationTokenRepository;
+    private final String mailTemplate;
 
     public UserTokenService(MailService mailService,
                             @Value("${meteor.base-url}") String baseUrl,
                             @Value("${app.userTokenExpirationSeconde}") long tokenValidationExpirationInSeconde,
+                            @Value("classpath:templates/mailModel.html") Resource mailModelResourceFile,
                             UserValidationTokenRepository userValidationTokenRepository) {
         this.mailService = mailService;
         this.baseUrl = baseUrl;
         this.tokenValidationExpirationInSeconde = tokenValidationExpirationInSeconde;
         this.userValidationTokenRepository = userValidationTokenRepository;
+
+        mailTemplate = asString(mailModelResourceFile);
     }
 
     private String buildValidationEmail(UserValidationToken validationToken, String message) {
         String url = baseUrl+"/validate?token="+validationToken.getId()+"&tokenType="+ validationToken.getTokenType();
-        return String.format("<html><body>" +
-                "<p>"+ message +"</p>" +
-                "<a href=\"%s\">%1$s</a>" +
-                "</body></html>", url);
+        return String.format("<div class=\"bloc\">\n" +
+                "    <p>\n" +
+                "        <b>" + message + "</b>\n" +
+                "    </p>\n" +
+                "    <a href=\"%s\">%1$s</a>\n" +
+                "</div>", url);
     }
 
     public void envoyerLienValidation(User utilisateur) throws EnvoiLienException {
@@ -50,7 +58,12 @@ public class UserTokenService {
         UserValidationToken validationToken = new UserValidationToken(UUID.randomUUID().toString(), utilisateur, CREATION_COMPTE, tokenValidationExpirationInSeconde);
         userValidationTokenRepository.save(validationToken);
         try {
-            mailService.sendHtmlMessage("METEOR : activate your account", buildValidationEmail(validationToken, "Click on the link below to activate your account."), utilisateur.getEmail());
+            String texte = mailTemplate
+                    .replace("${METEOR_BASE_URL}", baseUrl)
+                    .replace("${METEOR_TITLE}", "Welcome to METEOR")
+                    .replace("${MAIL_CONTENT}",
+                            buildValidationEmail(validationToken, "Click on the link below to activate your account."));
+            mailService.sendHtmlMessage("METEOR : activate your account", texte, utilisateur.getEmail());
         } catch (MessagingException e) {
             logger.error("Echec envoi mail validation pour utilisateur : "+utilisateur.getId(), e);
             throw new EnvoiLienException();
@@ -61,7 +74,12 @@ public class UserTokenService {
         UserValidationToken resetToken = new UserValidationToken(UUID.randomUUID().toString(), utilisateur, RESET_PASSWORD, tokenValidationExpirationInSeconde);
         userValidationTokenRepository.save(resetToken);
         try {
-            mailService.sendHtmlMessage("METEOR : reset your password", buildValidationEmail(resetToken, "Click on the link below to reset your password."), utilisateur.getEmail());
+            String texte = mailTemplate
+                    .replace("${METEOR_BASE_URL}", baseUrl)
+                    .replace("${METEOR_TITLE}", "METEOR")
+                    .replace("${MAIL_CONTENT}",
+                            buildValidationEmail(resetToken, "Click on the link below to reset your password."));
+            mailService.sendHtmlMessage("METEOR : reset your password", texte, utilisateur.getEmail());
         } catch (MessagingException e) {
             logger.error("Echec envoi mail validation pour utilisateur : "+utilisateur.getId(), e);
             throw new EnvoiLienException();
