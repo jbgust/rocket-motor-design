@@ -33,44 +33,61 @@ class UserRepositoryIT {
         //GIVEN
 
         //utilisateur a conserver
-        avecUtilisateurInvalide("user1@test.it", true);
+        avecToken(avecUtilisateurInvalide("user1@test.it"));
         avecUtilisateurValide("user2@test.it");
 
         //utilisateur a supprimer
-        User userASupprimer = avecUtilisateurInvalide("userASupprimer1@test.it", false);
+        User userASupprimer = avecUtilisateurInvalide("userASupprimer1@test.it");
 
         //WHEN
-        List<User> usersinvalideSansToken = userRepository.getUsersNonValideSansToken();
+        List<User> usersInvalideSansToken = userRepository.getUsersNonValideSansToken();
 
         //THEN
-        assertThat(usersinvalideSansToken)
+        assertThat(usersInvalideSansToken)
                 .extracting(User::getEmail)
                 .containsExactly(userASupprimer.getEmail());
 
     }
 
-    private User avecUtilisateurInvalide(String email, boolean avecToken) {
+    @Test
+    void shouldListUserForNewsletter() {
+        avecUtilisateur("newsletter1@test.it", true, true);
+
+        avecUtilisateur("newsletter2@test.it", true, false);
+        avecUtilisateur("newsletter3@test.it", false, true);
+        avecUtilisateur("newsletter4@test.it", false, true);
+
+        List<User> users = userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrue();
+
+        assertThat(users)
+                .extracting(User::getEmail)
+                .contains("newsletter1@test.it")
+                .doesNotContain(
+                        "newsletter2@test.it",
+                        "newsletter3@test.it",
+                        "newsletter4@test.it");
+    }
+
+    private User avecUtilisateur(String email, boolean valid, boolean newsletter) {
         Role role = testEntityManager.find(Role.class, 1);
 
         User user = new User(email, "passwd");
-        user.setCompteValide(false);
+        user.setCompteValide(valid);
+        user.setReceiveNewsletter(newsletter);
         user.setRoles(Collections.singleton(role));
         testEntityManager.persistAndFlush(user);
+        return user;
+    }
 
-        if(avecToken) {
+    private User avecUtilisateurInvalide(String email) {
+        return avecUtilisateur(email, false, true);
+    }
+
+    private User avecUtilisateurValide(String email) {
+        return avecUtilisateur(email, true, true);
+    }
+
+    private void avecToken(User user) {
             testEntityManager.persist(new UserValidationToken(UUID.randomUUID().toString(), user, CREATION_COMPTE, 10));
-        }
-        return user;
     }
-
-    private User avecUtilisateurValide( String email) {
-        Role role = testEntityManager.find(Role.class, 1);
-
-        User user = new User(email, "passwd");
-        user.setCompteValide(true);
-        user.setRoles(Collections.singleton(role));
-        testEntityManager.persistAndFlush(user);
-        return user;
-    }
-
 }

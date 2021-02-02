@@ -1,5 +1,7 @@
 package com.rocketmotordesign.admin;
 
+import com.rocketmotordesign.admin.service.NewsletterService;
+import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.services.MailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,14 +19,23 @@ public class AdminControler {
 
     private final MailService mailService;
     private final String adminMail;
+    private final UserRepository userRepository;
+    private final NewsletterService newsletterService;
 
-    public AdminControler(MailService mailService, @Value("${mail.sender}") String adminMail) {
+    public AdminControler(MailService mailService, @Value("${mail.sender}") String adminMail, UserRepository userRepository, NewsletterService newsletterService) {
         this.mailService = mailService;
         this.adminMail = adminMail;
+        this.userRepository = userRepository;
+        this.newsletterService = newsletterService;
     }
 
     @PostMapping("send-mail")
     public void senMail(@RequestBody MailRequest request) throws MessagingException {
         mailService.sendHtmlMessage(request.getSubject(), request.getHtmlContent(), adminMail);
+    }
+
+    @PostMapping("newsletter")
+    public void newsletter(@RequestBody MailRequest request) throws MessagingException {
+        newsletterService.sendNewsletter(request);
     }
 }

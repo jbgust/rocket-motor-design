@@ -46,6 +46,9 @@ public class User implements UserDetails {
 
 	private boolean donator = false;
 
+	@Column(name = "receive_newsletter")
+	private boolean receiveNewsletter = true;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(	name = "user_roles",
 				joinColumns = @JoinColumn(name = "user_id"),
@@ -144,6 +147,14 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return compteValide;
+	}
+
+	public boolean isReceiveNewsletter() {
+		return receiveNewsletter;
+	}
+
+	public void setReceiveNewsletter(boolean receiveNewsletter) {
+		this.receiveNewsletter = receiveNewsletter;
 	}
 
 	@Override
