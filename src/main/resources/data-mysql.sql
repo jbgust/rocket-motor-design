@@ -16,6 +16,7 @@ DELETE FROM users where email like 'cypress-%@meteor.fr';
 
 
 INSERT IGNORE INTO roles(id, name) VALUES(1, 'ROLE_USER');
+INSERT IGNORE INTO roles(id, name) VALUES(2, 'ROLE_ADMIN');
 
 INSERT INTO users(email, password, compte_valide) VALUES ('dev@meteor.fr', '$2a$10$hGtiUhI5Fycm.dSZLXqnNuZXx.ewaVPGfHU70f8tfs3rN5q/KJJDe', true);
 INSERT INTO users(email, password, compte_valide) VALUES ('token-test@meteor.fr', '$2y$12$RxGGw0RbonhHlf16sIsAVeLOf7L8cbZ5fpqoJxwok8yeEbTrvvDHW', false);
@@ -24,6 +25,8 @@ SET @userDevId = (SELECT  users.id FROM users WHERE users.email = 'dev@meteor.fr
 SET @userTokenId = (SELECT  users.id FROM users WHERE users.email = 'token-test@meteor.fr');
 
 INSERT INTO user_roles (user_id, role_id) values(@userDevId, 1);
+INSERT INTO user_roles (user_id, role_id) values(@userDevId, 2);
+
 INSERT INTO user_roles (user_id, role_id) values(@userTokenId, 1);
 
 INSERT INTO user_validation_token(id, expiry_date, token_type, user_id)

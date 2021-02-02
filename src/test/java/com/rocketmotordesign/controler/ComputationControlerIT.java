@@ -38,12 +38,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser("spring") //TODO : a changer
+@WithMockUser("spring")
 public class ComputationControlerIT {
 
     @Autowired
     private MockMvc mvc;
-    private ObjectMapper objectMapper;
+    private ObjectMapper jsonObjectMapper = Jackson2ObjectMapperBuilder.json().build();
 
     @MockBean
     private MeteorPropellantRepository propellantRepository;
@@ -51,7 +51,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunComputation() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultRequest());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultRequest());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -96,7 +96,7 @@ public class ComputationControlerIT {
         // GIVEN
         FinocylComputationRequest defaultFinocylRequest = getDefaultFinocylRequest();
         defaultFinocylRequest.getExtraConfig().setNumberOfCalculationLine(883);
-        String request = new ObjectMapper().writeValueAsString(defaultFinocylRequest);
+        String request = jsonObjectMapper.writeValueAsString(defaultFinocylRequest);
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/finocyl")
@@ -121,7 +121,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunFinocylComputation() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultFinocylRequest());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultFinocylRequest());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/finocyl")
@@ -145,7 +145,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunStarGrainComputation() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultStarGrainRequest());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultStarGrainRequest());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/star")
@@ -169,7 +169,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunStarGrainComputationInImperial() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultStarGrainRequestImperial());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultStarGrainRequestImperial());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/star")
@@ -193,7 +193,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunMoonBurnerGrainComputation() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultMoonBurnerGrainRequest());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultMoonBurnerGrainRequest());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/moonburner")
@@ -217,7 +217,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunMoonBurnerGrainComputationImperial() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultMoonBurnerGrainRequestImperial());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultMoonBurnerGrainRequestImperial());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/moonburner")
@@ -241,7 +241,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunCSlotGrainComputation() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultCSlotGrainRequest());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultCSlotGrainRequest());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/cslot")
@@ -265,7 +265,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunCSlotGrainComputationImperial() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultCSlotGrainRequestImperial());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultCSlotGrainRequestImperial());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/cslot")
@@ -289,7 +289,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunRodTubeGrainComputation() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultRodTubeGrainRequest());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultRodTubeGrainRequest());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/rodtube")
@@ -313,7 +313,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunRodTubeGrainComputationImperial() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultRodTubeGrainRequestImperial());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultRodTubeGrainRequestImperial());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/rodtube")
@@ -337,7 +337,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunEndBurnerGrainComputation() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultEndBurnerGrainRequest());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultEndBurnerGrainRequest());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/endburner")
@@ -361,7 +361,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunEndBurnerGrainComputationImperial() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultEndBurnerGrainRequestImperial());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultEndBurnerGrainRequestImperial());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/endburner")
@@ -385,7 +385,7 @@ public class ComputationControlerIT {
     @Test
     void shouldRunFinocylComputationImperial() throws Exception {
         // GIVEN
-        String request = new ObjectMapper().writeValueAsString(getDefaultFinocylRequestImperial());
+        String request = jsonObjectMapper.writeValueAsString(getDefaultFinocylRequestImperial());
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute/finocyl")
@@ -411,7 +411,7 @@ public class ComputationControlerIT {
         // GIVEN
         HollowComputationRequest defaultRequest = getDefaultRequestImperial();
 
-        String request = new ObjectMapper().writeValueAsString(defaultRequest);
+        String request = jsonObjectMapper.writeValueAsString(defaultRequest);
 
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
@@ -464,10 +464,9 @@ public class ComputationControlerIT {
         lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
 
         // WHEN
-        objectMapper = Jackson2ObjectMapperBuilder.json().build();
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(lowKNRequest)));
+                .content(jsonObjectMapper.writeValueAsString(lowKNRequest)));
 
         //THEN
         resultActions
@@ -504,7 +503,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)));
+                .content(jsonObjectMapper.writeValueAsString(request)));
 
         //THEN
         resultActions
@@ -538,7 +537,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)));
+                .content(jsonObjectMapper.writeValueAsString(request)));
 
         //THEN
         resultActions
@@ -576,7 +575,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)));
+                .content(jsonObjectMapper.writeValueAsString(request)));
 
         //THEN
         resultActions
@@ -635,7 +634,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)));
+                .content(jsonObjectMapper.writeValueAsString(request)));
 
         //THEN
         resultActions
@@ -671,7 +670,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)));
+                .content(jsonObjectMapper.writeValueAsString(request)));
 
         //THEN
         resultActions
@@ -705,7 +704,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)));
+                .content(jsonObjectMapper.writeValueAsString(request)));
 
         //THEN
         resultActions
@@ -741,7 +740,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)));
+                .content(jsonObjectMapper.writeValueAsString(request)));
 
         //THEN
         resultActions
@@ -777,7 +776,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(invalidMotorDesignRequest)));
+                .content(jsonObjectMapper.writeValueAsString(invalidMotorDesignRequest)));
 
         //THEN
         resultActions
@@ -807,7 +806,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(invalidMotorDesignRequest)));
+                .content(jsonObjectMapper.writeValueAsString(invalidMotorDesignRequest)));
 
         //THEN
         resultActions
@@ -840,7 +839,7 @@ public class ComputationControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/compute")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)));
+                .content(jsonObjectMapper.writeValueAsString(request)));
 
         //THEN
         resultActions
