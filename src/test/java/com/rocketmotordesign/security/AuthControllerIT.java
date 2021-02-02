@@ -68,6 +68,18 @@ class AuthControllerIT {
         assertThat(userRepository.findByEmail("tata@titi.fr"))
                 .isPresent()
                 .hasValueSatisfying(user -> assertThat(user.getDateCreation().toLocalDate()).isToday());
+
+        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(mailService, times(1)).sendHtmlMessage(
+                startsWith("METEOR : "),
+                argumentCaptor.capture(),
+                eq("tata@titi.fr")
+        );
+
+        String urlRenew = "http://test.meteor.gov/validate?token=" + recupererToken("tata@titi.fr", CREATION_COMPTE) + "&tokenType=CREATION_COMPTE";
+        assertThat(argumentCaptor.getAllValues().get(0))
+                .isEqualTo("<html><body><p>Click on the link below to activate your account.</p>" +
+                        "<a href=\"" + urlRenew + "\">" + urlRenew + "</a></body></html>");
     }
 
     @Test
@@ -82,7 +94,7 @@ class AuthControllerIT {
 
         validerCompte("user@titi.fr");
 
-        //demande de changepment de password
+        //demande de changement de password
         mvc.perform(post("/auth/reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
