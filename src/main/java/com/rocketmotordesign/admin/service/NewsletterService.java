@@ -1,13 +1,17 @@
 package com.rocketmotordesign.admin.service;
 
 import com.rocketmotordesign.admin.MailRequest;
+import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.services.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import javax.mail.MessagingException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class NewsletterService {
@@ -24,12 +28,19 @@ public class NewsletterService {
 
     public void sendNewsletter(MailRequest request) {
 
-        userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrue().forEach(user -> {
+        StopWatch stopWatch = new StopWatch("Envoi newsletter");
+        stopWatch.start();
+        List<User> users = userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrue();
+        AtomicInteger counter = new AtomicInteger(0);
+        users.forEach(user -> {
             try {
+                LOGGER.info("Sending mail {}/{}", counter.incrementAndGet(), users.size());
                 mailService.sendHtmlMessage(request.getSubject(), request.getHtmlContent(), user.getEmail());
             } catch (MessagingException e) {
                 LOGGER.error("failed to send newsletter to user("+user.getId()+")", e);
             }
         });
+        stopWatch.stop();
+        LOGGER.info(stopWatch.prettyPrint());
     }
 }

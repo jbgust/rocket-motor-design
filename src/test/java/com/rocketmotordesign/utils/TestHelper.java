@@ -343,6 +343,9 @@ public class TestHelper {
                 "</div>\n" +
                 "</div>\n" +
                 "<div class=\"bloc\">\n" +
+                "    <div>\n" +
+                "        <b>Jérôme</b>\n" +
+                "    </div>\n" +
                 "    <hr />\n" +
                 "    <p>Any question? Visit to the\n" +
                 "\n" +
@@ -355,7 +358,7 @@ public class TestHelper {
                 "        <a href=\"https://pages.donately.com/meteor/campaign/meteor/donate\">donately</a>\n" +
                 "    </p>\n" +
                 "    <div>\n" +
-                "        <b>Jérôme</b>\n" +
+                "        <p style=\"font-size: 9px\">To unsubscribe send a mail to : <b>meteor@open-sky.fr</b></p>\n" +
                 "    </div>\n" +
                 "</div>\n" +
                 "</body>\n" +
