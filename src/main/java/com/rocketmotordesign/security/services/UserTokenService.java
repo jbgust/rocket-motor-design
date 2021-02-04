@@ -33,7 +33,7 @@ public class UserTokenService {
     public UserTokenService(MailService mailService,
                             @Value("${meteor.base-url}") String baseUrl,
                             @Value("${app.userTokenExpirationSeconde}") long tokenValidationExpirationInSeconde,
-                            @Value("classpath:templates/mailModel.html") Resource mailModelResourceFile,
+                            @Value("classpath:mail/mailModel.html") Resource mailModelResourceFile,
                             UserValidationTokenRepository userValidationTokenRepository) {
         this.mailService = mailService;
         this.baseUrl = baseUrl;

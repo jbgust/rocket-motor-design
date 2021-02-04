@@ -1,7 +1,10 @@
 package com.rocketmotordesign.security.services;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -13,13 +16,18 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class MailService {
 
+    private static final String LOGO_METEOR_IMG_CONTENT_ID = "logoMeteorImg";
 
     private final String mailSenderAddress;
+    private final Resource logoMailResourceFile;
     private final JavaMailSender mailSender;
 
-    public MailService(JavaMailSender mailSender, @Value("${mail.sender}") String mailSenderAddress) {
+    public MailService(JavaMailSender mailSender,
+                       @Value("${mail.sender}") String mailSenderAddress,
+                       @Value("classpath:mail/rocket-launch.png") Resource logoMailResourceFile) {
         this.mailSender = mailSender;
         this.mailSenderAddress = mailSenderAddress;
+        this.logoMailResourceFile = logoMailResourceFile;
     }
 
     /**
@@ -49,7 +57,7 @@ public class MailService {
      * @param sujet
      * @param texte
      * @param destinataires (email séparé par ',')
-     * @param htmlContent true si html siono false
+     * @param htmlContent true si html sinon false
      */
     private void sendMessage(String sujet, String texte, String destinataires, boolean htmlContent) throws MessagingException {
         if(mailSender == null || StringUtils.isEmpty(destinataires)) {
@@ -63,9 +71,7 @@ public class MailService {
         messageHelper.setFrom(mailSenderAddress);
         messageHelper.setTo(InternetAddress.parse(destinataires));
         messageHelper.setText(texte, htmlContent);
-
-//        ByteArrayDataSource byteArrayDataSource = new ByteArrayDataSource(pieceJointe.getBlob(), pieceJointe.getFileType());
-//        messageHelper.addAttachment(pieceJointe.getFileName(), byteArrayDataSource);
+        messageHelper.addInline(LOGO_METEOR_IMG_CONTENT_ID, logoMailResourceFile);
 
         mailSender.send(message);
 

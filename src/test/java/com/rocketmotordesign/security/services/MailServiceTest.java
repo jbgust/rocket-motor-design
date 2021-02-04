@@ -1,11 +1,12 @@
 package com.rocketmotordesign.security.services;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.mail.MessagingException;
@@ -14,18 +15,25 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
 public class MailServiceTest {
 
-    @InjectMocks
+
     private MailService mailService;
 
-    @Mock
     private JavaMailSender mailSender;
+
+    @Value("classpath:mail/rocket-launch.png")
+    Resource logoMailResourceFile;
+
+    @BeforeEach
+    void setUp() {
+        mailSender = mock(JavaMailSender.class);
+        mailService = new MailService(mailSender, "sender@domain.org", logoMailResourceFile);
+    }
 
     @Test
     public void doitEnvoyerUnMail() throws MessagingException, IOException {

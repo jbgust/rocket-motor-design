@@ -33,7 +33,7 @@ class UserTokenServiceTest {
     private UserValidationTokenRepository userValidationTokenRepository;
     private UserTokenService userTokenService;
 
-    @Value("classpath:templates/mailModel.html")
+    @Value("classpath:mail/mailModel.html")
     Resource mailModelResourceFile;
 
     @BeforeEach
