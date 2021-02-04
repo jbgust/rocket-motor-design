@@ -33,11 +33,13 @@ class NewsletterServiceTest {
     @Test
     void shouldSendNewsletterToUsers() throws MessagingException {
         //GIVEN
-        MailRequest request = new MailRequest("sujet", "content");
-        given(userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrue())
+        MailRequest request = new MailRequest("sujet", "content", 2, 3);
+        given(userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrueOrderByIdAsc())
                 .willReturn(of(
                         new User("user1@domain.org", "pwd1"),
-                        new User("user2@haha.fr", "pwd2")));
+                        new User("user2@haha.fr", "pwd2"),
+                        new User("user3@domain.org", "pwd1"),
+                        new User("user4@haha.fr", "pwd2")));
 
         //WHEN
         newsletterService.sendNewsletter(request);
@@ -49,8 +51,8 @@ class NewsletterServiceTest {
 
         assertThat(receivers.getAllValues())
                 .containsExactlyInAnyOrder(
-                        "user1@domain.org",
-                        "user2@haha.fr"
+                        "user2@haha.fr",
+                        "user3@domain.org"
                 );
 
     }

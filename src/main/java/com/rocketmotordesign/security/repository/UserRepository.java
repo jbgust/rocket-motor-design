@@ -25,5 +25,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			nativeQuery = true)
 	List<User> getUsersNonValideSansToken();
 
-	List<User> findUserByReceiveNewsletterIsTrueAndCompteValideIsTrue();
+	List<User> findUserByReceiveNewsletterIsTrueAndCompteValideIsTrueOrderByIdAsc();
 }

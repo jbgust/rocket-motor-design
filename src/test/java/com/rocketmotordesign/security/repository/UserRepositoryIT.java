@@ -51,17 +51,20 @@ class UserRepositoryIT {
 
     @Test
     void shouldListUserForNewsletter() {
+        avecUtilisateur("newsletter11@test.it", true, true);
         avecUtilisateur("newsletter1@test.it", true, true);
+        avecUtilisateur("newsletter111@test.it", true, true);
 
         avecUtilisateur("newsletter2@test.it", true, false);
         avecUtilisateur("newsletter3@test.it", false, true);
         avecUtilisateur("newsletter4@test.it", false, true);
 
-        List<User> users = userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrue();
+        List<User> users = userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrueOrderByIdAsc();
 
         assertThat(users)
                 .extracting(User::getEmail)
-                .contains("newsletter1@test.it")
+                .containsSequence(
+                        "newsletter11@test.it", "newsletter1@test.it", "newsletter111@test.it")
                 .doesNotContain(
                         "newsletter2@test.it",
                         "newsletter3@test.it",

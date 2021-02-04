@@ -31,7 +31,7 @@ public class AdminControler {
 
     @PostMapping("send-mail")
     public void senMail(@RequestBody MailRequest request) throws MessagingException {
-        mailService.sendHtmlMessage(request.getSubject(), request.getHtmlContent(), adminMail);
+        mailService.sendHtmlMessage(request.getSubject(), request.getHtmlContent(), request.getReceiver());
     }
 
     @PostMapping("newsletter")

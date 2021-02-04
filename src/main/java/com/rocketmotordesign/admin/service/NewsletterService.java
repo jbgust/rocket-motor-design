@@ -30,16 +30,19 @@ public class NewsletterService {
 
         StopWatch stopWatch = new StopWatch("Envoi newsletter");
         stopWatch.start();
-        List<User> users = userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrue();
+        List<User> users = userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrueOrderByIdAsc();
         AtomicInteger counter = new AtomicInteger(0);
-        users.forEach(user -> {
-            try {
-                LOGGER.info("Sending mail {}/{}", counter.incrementAndGet(), users.size());
-                mailService.sendHtmlMessage(request.getSubject(), request.getHtmlContent(), user.getEmail());
-            } catch (MessagingException e) {
-                LOGGER.error("failed to send newsletter to user("+user.getId()+")", e);
-            }
-        });
+        users.stream()
+                .skip(request.getStart()-1)
+                .limit(request.getStart() + request.getPageSize())
+                .forEach(user -> {
+                    try {
+                        LOGGER.info("Sending mail {}/{}", counter.incrementAndGet(), request.getPageSize());
+                        mailService.sendHtmlMessage(request.getSubject(), request.getHtmlContent(), user.getEmail());
+                    } catch (MessagingException e) {
+                        LOGGER.error("failed to send newsletter to user("+user.getId()+")", e);
+                    }
+                });
         stopWatch.stop();
         LOGGER.info(stopWatch.prettyPrint());
     }

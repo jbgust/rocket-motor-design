@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -43,16 +42,11 @@ class AdminControlerIT {
     @MockBean
     private MailService mailService;
 
-    @Value("${mail.sender}")
-    String meteorAdminMail;
-
     private ObjectMapper jsonObjectMapper = Jackson2ObjectMapperBuilder.json().build();
 
     @Test
     void shouldSendEmailToAdmin() throws Exception {
         // GIVEN
-        MailRequest mailRequest = new MailRequest("mon sujet", "<html><body>test</body></html>");
-        String request = jsonObjectMapper.writeValueAsString(mailRequest);
         withUser("user1@domain.org", true);
         withUser("user2@haha.fr", true);
         withUserNotValid("notValid@domain.org", true);
@@ -61,19 +55,23 @@ class AdminControlerIT {
         // WHEN
         ResultActions resultActions = mvc.perform(post("/admin/send-mail")
                 .contentType(APPLICATION_JSON)
-                .content(request));
+                .content("{\n" +
+                        "  \"receiver\": \"receiver@test.info\",\n" +
+                        "  \"subject\": \"mon sujet\",\n" +
+                        "  \"htmlContent\": \"<html><body>test</body></html>\"\n" +
+                        "}"));
 
         // THEN
         resultActions.andExpect(status().isOk());
 
         verify(mailService, times(1))
-                .sendHtmlMessage(mailRequest.getSubject(), mailRequest.getHtmlContent(), meteorAdminMail);
+                .sendHtmlMessage("mon sujet", "<html><body>test</body></html>", "receiver@test.info");
     }
 
     @Test
     void shouldSendEmailToUsers() throws Exception {
         // GIVEN
-        MailRequest mailRequest = new MailRequest("mon sujet", "<html><body>test</body></html>");
+        MailRequest mailRequest = new MailRequest("mon sujet", "<html><body>test</body></html>", null, 1, 3);
         String request = jsonObjectMapper.writeValueAsString(mailRequest);
         createValidUser("user3@domain.org", true);
         createValidUser("user4@haha.fr", true);
