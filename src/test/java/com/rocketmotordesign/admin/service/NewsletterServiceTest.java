@@ -33,7 +33,7 @@ class NewsletterServiceTest {
     @Test
     void shouldSendNewsletterToUsers() throws MessagingException {
         //GIVEN
-        MailRequest request = new MailRequest("sujet", "content", 2, 3);
+        MailRequest request = new MailRequest("sujet", "content", 2, 4);
         given(userRepository.findUserByReceiveNewsletterIsTrueAndCompteValideIsTrueOrderByIdAsc())
                 .willReturn(of(
                         new User("user1@domain.org", "pwd1"),

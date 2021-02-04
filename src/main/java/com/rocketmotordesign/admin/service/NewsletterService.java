@@ -34,7 +34,7 @@ public class NewsletterService {
         AtomicInteger counter = new AtomicInteger(0);
         users.stream()
                 .skip(request.getStart()-1)
-                .limit(request.getStart() + request.getPageSize())
+                .limit(request.getPageSize())
                 .forEach(user -> {
                     try {
                         LOGGER.info("Sending mail {}/{}", counter.incrementAndGet(), request.getPageSize());

@@ -9,6 +9,6 @@ class MailRequestTest {
     @Test
     void shouldComputePageSize() {
         assertThat(new MailRequest("subject", "content", "receiver", 10, 20).getPageSize())
-                .isEqualTo(9);
+                .isEqualTo(10);
     }
 }

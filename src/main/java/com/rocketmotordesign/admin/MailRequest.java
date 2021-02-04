@@ -58,7 +58,7 @@ public class MailRequest {
     }
 
     public int getPageSize() {
-        return end - start -1;
+        return end - start;
     }
 
     public int getEnd() {
