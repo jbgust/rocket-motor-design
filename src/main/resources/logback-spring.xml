@@ -82,7 +82,7 @@
             <appender-ref ref="FILE-APPENDER" />
             <appender-ref ref="CONSOLE-APPENDER" />
         </logger>
-        <logger name="stripe" additivity="false">
+        <logger name="stripe">
             <appender-ref ref="STRIPE-FILE" />
             <appender-ref ref="CONSOLE-APPENDER" />
         </logger>
@@ -99,7 +99,7 @@
             <appender-ref ref="FILE-APPENDER" />
             <appender-ref ref="EMAIL" />
         </root>
-        <logger name="stripe" additivity="false">
+        <logger name="stripe">
             <appender-ref ref="STRIPE-FILE" />
             <appender-ref ref="CONSOLE-APPENDER" />
             <appender-ref ref="EMAIL" />

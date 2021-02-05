@@ -24,6 +24,7 @@ import static java.util.Optional.ofNullable;
 public class StripeService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("stripe");
+    public static final String UNKNOW_CUSTOMER = " unknow customer";
 
     private final String webhookSigningSecret;
     private final String mailAlertReceiver;
@@ -71,12 +72,22 @@ public class StripeService {
     }
 
     public void handleNewDonation(PaymentIntent paymentIntent) {
+        processNewDonation(paymentIntent.getAmount(), ofNullable(paymentIntent.getCustomerObject())
+                .map(Customer::getEmail)
+                .orElse(UNKNOW_CUSTOMER));
+    }
+
+    public void handleNewDonation(Charge charge) {
+        processNewDonation(charge.getAmount(), ofNullable(charge.getCustomerObject())
+                .map(Customer::getEmail)
+                .orElse(UNKNOW_CUSTOMER));
+    }
+
+    private void processNewDonation(Long amount, String email) {
         StringBuilder messageBuilder = new StringBuilder("You receive a new donation of ")
-                .append(new BigDecimal(paymentIntent.getAmount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP))
+                .append(new BigDecimal(amount).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP))
                 .append("$ from ")
-                .append(ofNullable(paymentIntent.getCustomerObject())
-                        .map(Customer::getEmail)
-                        .orElse(" unknow customer"));
+                .append(email);
 
         try {
             mailService.sendHtmlMessage("METEOR : New donation", messageBuilder.toString(), mailAlertReceiver);

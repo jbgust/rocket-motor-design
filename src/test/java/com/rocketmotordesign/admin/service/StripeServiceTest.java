@@ -3,6 +3,7 @@ package com.rocketmotordesign.admin.service;
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.services.MailService;
+import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,9 +59,27 @@ class StripeServiceTest {
     }
 
     @Test
-    void shoulSendMailOnNewDonation() throws MessagingException {
+    void shoulSendMailOnNewDonationFromPayementIntent() throws MessagingException {
         //GIVEN
         PaymentIntent paymentIntent = mock(PaymentIntent.class);
+        Customer customer = mock(Customer.class);
+
+        given(customer.getEmail()).willReturn("customer1@test.tt");
+        given(paymentIntent.getAmount()).willReturn(2059L);
+        given(paymentIntent.getCustomerObject()).willReturn(customer);
+
+        //WHEN
+        stripeService.handleNewDonation(paymentIntent);
+
+        //THEN
+        verify(mailService, times(1))
+                .sendHtmlMessage("METEOR : New donation", "You receive a new donation of 20.59$ from customer1@test.tt", "meteor@open-sky.fr");
+    }
+
+    @Test
+    void shoulSendMailOnNewDonationFromCharge() throws MessagingException {
+        //GIVEN
+        Charge paymentIntent = mock(Charge.class);
         Customer customer = mock(Customer.class);
 
         given(customer.getEmail()).willReturn("customer1@test.tt");

@@ -1,10 +1,7 @@
 package com.rocketmotordesign.admin;
 
 import com.rocketmotordesign.admin.service.StripeService;
-import com.stripe.model.Customer;
-import com.stripe.model.Event;
-import com.stripe.model.PaymentIntent;
-import com.stripe.model.StripeObject;
+import com.stripe.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +43,14 @@ public class StripeController {
                     LOGGER.info("New donator  id({})", customer.getId());
                     stripeService.registerNewDonator(customer);
                     break;
+                case "charge.succeeded":
+                    Charge charge = (Charge) stripeObject;
+                    LOGGER.info("New donation : {}$", charge.getAmount());
+                    stripeService.handleNewDonation(charge);
+                    break;
                 // ... handle other event types
                 default:
-                    LOGGER.trace("STRIPE : unhandled event type: " + event.getType());
+                    LOGGER.warn("STRIPE : unhandled event type: " + event.getType());
             }
             return ResponseEntity.ok().build();
         } catch (StripeException e) {
