@@ -35,7 +35,7 @@ public class StripeController {
             switch (event.getType()) {
                 case "payment_intent.succeeded":
                     PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
-                    LOGGER.info("New donation : {}$", paymentIntent.getAmount());
+                    LOGGER.info("New paymentIntent : {}$", paymentIntent.getAmount()/100);
                     stripeService.handleNewDonation(paymentIntent);
                     break;
                 case "customer.created":
@@ -45,7 +45,7 @@ public class StripeController {
                     break;
                 case "charge.succeeded":
                     Charge charge = (Charge) stripeObject;
-                    LOGGER.info("New donation : {}$", charge.getAmount());
+                    LOGGER.info("New charge : {}$", charge.getAmount()/100);
                     stripeService.handleNewDonation(charge);
                     break;
                 // ... handle other event types
