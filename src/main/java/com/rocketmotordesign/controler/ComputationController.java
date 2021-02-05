@@ -28,9 +28,9 @@ import static java.util.stream.Collectors.toMap;
 
 @RestController()
 @RequestMapping("compute")
-public class ComputationControler {
+public class ComputationController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ComputationControler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComputationController.class);
 
     private final JSRMService jsrmService;
     private final MeasureUnitService measureUnitService;
@@ -38,7 +38,7 @@ public class ComputationControler {
 
     private boolean enableStarGrain;
 
-    public ComputationControler(JSRMService jsrmService,
+    public ComputationController(JSRMService jsrmService,
                                 MeasureUnitService measureUnitService,
                                 ResultService resultService, @Value("${computation.star.enable:false}") boolean enableStarGrain) {
         this.jsrmService = jsrmService;

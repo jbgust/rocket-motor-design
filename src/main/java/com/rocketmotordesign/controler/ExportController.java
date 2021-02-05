@@ -29,7 +29,7 @@ import static com.rocketmotordesign.controler.response.PerformanceResult.format;
 
 @RestController()
 @RequestMapping("export")
-public class ExportControler {
+public class ExportController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExportControler.class);
 
