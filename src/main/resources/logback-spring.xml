@@ -24,6 +24,22 @@
                 <pattern>%d{HH:mm:ss.SSS} [%X{traceId}] %highlight(%-5level) %-30logger{0} : %msg%n</pattern>
             </encoder>
         </appender>
+        <appender name="STRIPE-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${METEOR_SERVICE}/log/stripe.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${METEOR_SERVICE}/log/stripe.%i.log.zip</fileNamePattern>
+                <minIndex>1</minIndex>
+                <maxIndex>3</maxIndex>
+            </rollingPolicy>
+
+            <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                <maxFileSize>5MB</maxFileSize>
+            </triggeringPolicy>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>%d{HH:mm:ss.SSS} [%X{traceId}] %highlight(%-5level) %-30logger{0} : %msg%n</pattern>
+            </encoder>
+        </appender>
+
 
         <appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
             <smtpHost>ssl0.ovh.net</smtpHost>
@@ -66,6 +82,10 @@
             <appender-ref ref="FILE-APPENDER" />
             <appender-ref ref="CONSOLE-APPENDER" />
         </logger>
+        <logger name="stripe" additivity="false">
+            <appender-ref ref="STRIPE-FILE" />
+            <appender-ref ref="CONSOLE-APPENDER" />
+        </logger>
     </springProfile>
     <springProfile name="beta">
         <root level="info">
@@ -79,9 +99,10 @@
             <appender-ref ref="FILE-APPENDER" />
             <appender-ref ref="EMAIL" />
         </root>
-        <logger name="org.springframework.dao.DataIntegrityViolationException">
-            <appender-ref ref="FILE-APPENDER" />
+        <logger name="stripe" additivity="false">
+            <appender-ref ref="STRIPE-FILE" />
             <appender-ref ref="CONSOLE-APPENDER" />
+            <appender-ref ref="EMAIL" />
         </logger>
     </springProfile>
 

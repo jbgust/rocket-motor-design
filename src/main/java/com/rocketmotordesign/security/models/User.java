@@ -157,6 +157,14 @@ public class User implements UserDetails {
 		this.receiveNewsletter = receiveNewsletter;
 	}
 
+	public void setDerniereConnexion(LocalDateTime derniereConnexion) {
+		this.derniereConnexion = derniereConnexion;
+	}
+
+	public void setDonator(boolean donator) {
+		this.donator = donator;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)

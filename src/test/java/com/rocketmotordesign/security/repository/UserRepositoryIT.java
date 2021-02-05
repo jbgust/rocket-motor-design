@@ -46,7 +46,6 @@ class UserRepositoryIT {
         assertThat(usersInvalideSansToken)
                 .extracting(User::getEmail)
                 .containsExactly(userASupprimer.getEmail());
-
     }
 
     @Test
