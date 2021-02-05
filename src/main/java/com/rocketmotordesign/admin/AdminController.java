@@ -15,14 +15,14 @@ import javax.mail.MessagingException;
 @RestController()
 @RequestMapping("admin")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
-public class AdminControler {
+public class AdminController {
 
     private final MailService mailService;
     private final String adminMail;
     private final UserRepository userRepository;
     private final NewsletterService newsletterService;
 
-    public AdminControler(MailService mailService, @Value("${mail.sender}") String adminMail, UserRepository userRepository, NewsletterService newsletterService) {
+    public AdminController(MailService mailService, @Value("${mail.sender}") String adminMail, UserRepository userRepository, NewsletterService newsletterService) {
         this.mailService = mailService;
         this.adminMail = adminMail;
         this.userRepository = userRepository;

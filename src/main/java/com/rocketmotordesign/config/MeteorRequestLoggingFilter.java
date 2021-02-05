@@ -15,7 +15,7 @@ public class MeteorRequestLoggingFilter extends CommonsRequestLoggingFilter {
 
     private static final String PREFIX_HTTP_STATUTS = "HTTP STATUT: ";
 
-    private static final Set<String> ignoredURI = Sets.newHashSet("/actuator", "/auth");
+    private static final Set<String> ignoredURI = Sets.newHashSet("/actuator", "/auth", "/stripe");
 
     @Override
     protected void beforeRequest(HttpServletRequest request, String message) {

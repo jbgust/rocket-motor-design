@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Random;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser(value = "spring", roles = "ADMIN")
-class AdminControlerIT {
+class AdminControllerIT {
 
     @Autowired
     private MockMvc mvc;
@@ -87,12 +86,6 @@ class AdminControlerIT {
         ArgumentCaptor<String> receivers = ArgumentCaptor.forClass(String.class);
         verify(mailService, times(2))
                 .sendHtmlMessage(eq(mailRequest.getSubject()), eq(mailRequest.getHtmlContent()), receivers.capture());
-
-        assertThat(receivers.getAllValues())
-                .containsExactlyInAnyOrder(
-                        "user3@domain.org",
-                        "user4@haha.fr"
-                );
     }
 
     private void createValidUser(String email, boolean newsletter) {

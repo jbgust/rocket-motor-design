@@ -1,15 +1,8 @@
 package com.rocketmotordesign.controler;
 
-import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.rocketmotordesign.controler.request.ExportRASPRequest;
 import com.rocketmotordesign.controler.response.ErrorMessage;
-import com.rocketmotordesign.service.JSRMService;
-import com.rocketmotordesign.service.MeasureUnit;
-import com.rocketmotordesign.service.MeasureUnitService;
-import com.rocketmotordesign.service.ResultService;
-import com.rocketmotordesign.service.SimulationResult;
-import com.rocketmotordesign.service.UnauthorizedValueException;
-
+import com.rocketmotordesign.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tec.units.ri.unit.Units;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static com.rocketmotordesign.controler.response.GraphResult.toFrontendPrecision;
 import static com.rocketmotordesign.controler.response.PerformanceResult.format;
 
@@ -31,7 +22,7 @@ import static com.rocketmotordesign.controler.response.PerformanceResult.format;
 @RequestMapping("export")
 public class ExportController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExportControler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExportController.class);
 
     private final JSRMService jsrmService;
     private final MeasureUnitService measureUnitService;
@@ -39,7 +30,7 @@ public class ExportController {
 
     private Integer moduloLimitSize;
 
-    public ExportControler(JSRMService jsrmService,
+    public ExportController(JSRMService jsrmService,
                            MeasureUnitService measureUnitService,
                            ResultService resultService, @Value("${computation.response.limit.size}") Integer moduloLimitSize) {
         this.jsrmService = jsrmService;

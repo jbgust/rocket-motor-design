@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser("spring") //TODO : a changer
-public class ExportControlerIT {
+public class ExportControllerIT {
 
     @Autowired
     private MockMvc mvc;

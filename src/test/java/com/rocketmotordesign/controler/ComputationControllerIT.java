@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser("spring")
-public class ComputationControlerIT {
+public class ComputationControllerIT {
 
     @Autowired
     private MockMvc mvc;
