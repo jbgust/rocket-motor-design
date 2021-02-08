@@ -5,8 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.propellant.entity.MeteorPropellant;
 import com.rocketmotordesign.service.MeasureUnit;
+import org.springframework.core.io.Resource;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.util.Random;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
@@ -15,6 +21,7 @@ import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.service.MeasureUnit.SI;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class TestHelper {
 
@@ -363,5 +370,13 @@ public class TestHelper {
                 "</div>\n" +
                 "</body>\n" +
                 "</html>";
+    }
+
+    public static String asString(Resource resource) {
+        try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
+            return FileCopyUtils.copyToString(reader);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }
