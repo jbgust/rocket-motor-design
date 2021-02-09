@@ -1,9 +1,8 @@
 package com.rocketmotordesign.security.services;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,7 +13,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 @Service
-public class MailService {
+@Profile("!NO_MAIL")
+public class MailService implements IMailService {
 
     private static final String LOGO_METEOR_IMG_CONTENT_ID = "logoMeteorImg";
 
@@ -36,6 +36,7 @@ public class MailService {
      * @param texte
      * @param destinataires (email séparé par ',')
      */
+    @Override
     public void sendMessage(String sujet, String texte, String destinataires) throws MessagingException {
         sendMessage(sujet, texte, destinataires, false);
 
@@ -47,6 +48,7 @@ public class MailService {
      * @param texte
      * @param destinataires (email séparé par ',')
      */
+    @Override
     public void sendHtmlMessage(String sujet, String texte, String destinataires) throws MessagingException {
         sendMessage(sujet, texte, destinataires, true);
 

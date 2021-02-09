@@ -24,13 +24,13 @@ public class UserTokenService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserTokenService.class);
 
-    private final MailService mailService;
+    private final IMailService mailService;
     private final String baseUrl;
     private final long tokenValidationExpirationInSeconde;
     private final UserValidationTokenRepository userValidationTokenRepository;
     private final String mailTemplate;
 
-    public UserTokenService(MailService mailService,
+    public UserTokenService(IMailService mailService,
                             @Value("${meteor.base-url}") String baseUrl,
                             @Value("${app.userTokenExpirationSeconde}") long tokenValidationExpirationInSeconde,
                             @Value("classpath:mail/mailModel.html") Resource mailModelResourceFile,

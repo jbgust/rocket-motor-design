@@ -2,7 +2,7 @@ package com.rocketmotordesign.admin;
 
 import com.rocketmotordesign.admin.service.NewsletterService;
 import com.rocketmotordesign.security.repository.UserRepository;
-import com.rocketmotordesign.security.services.MailService;
+import com.rocketmotordesign.security.services.IMailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,12 +17,12 @@ import javax.mail.MessagingException;
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
 
-    private final MailService mailService;
+    private final IMailService mailService;
     private final String adminMail;
     private final UserRepository userRepository;
     private final NewsletterService newsletterService;
 
-    public AdminController(MailService mailService, @Value("${mail.sender}") String adminMail, UserRepository userRepository, NewsletterService newsletterService) {
+    public AdminController(IMailService mailService, @Value("${mail.sender}") String adminMail, UserRepository userRepository, NewsletterService newsletterService) {
         this.mailService = mailService;
         this.adminMail = adminMail;
         this.userRepository = userRepository;

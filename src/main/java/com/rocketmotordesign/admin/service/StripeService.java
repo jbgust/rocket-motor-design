@@ -4,7 +4,7 @@ import com.google.gson.JsonSyntaxException;
 import com.rocketmotordesign.admin.StripeException;
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.UserRepository;
-import com.rocketmotordesign.security.services.MailService;
+import com.rocketmotordesign.security.services.IMailService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.*;
 import com.stripe.net.Webhook;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -29,13 +28,13 @@ public class StripeService {
     private final String webhookSigningSecret;
     private final String mailAlertReceiver;
     private final UserRepository userRepository;
-    private final MailService mailService;
+    private final IMailService mailService;
 
 
     public StripeService(@Value("${stripe.webhook.signing.secret}") String webhookSigningSecret,
                          @Value("${stripe.mail.alert.new.donation}") String mailAlertReceiver,
                          UserRepository userRepository,
-                         MailService mailService) {
+                         IMailService mailService) {
         this.webhookSigningSecret = webhookSigningSecret;
         this.mailAlertReceiver = mailAlertReceiver;
         this.userRepository = userRepository;

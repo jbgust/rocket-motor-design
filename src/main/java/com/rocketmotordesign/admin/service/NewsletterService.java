@@ -3,7 +3,7 @@ package com.rocketmotordesign.admin.service;
 import com.rocketmotordesign.admin.MailRequest;
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.UserRepository;
-import com.rocketmotordesign.security.services.MailService;
+import com.rocketmotordesign.security.services.IMailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ public class NewsletterService {
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsletterService.class);
 
     private final UserRepository userRepository;
-    private final MailService mailService;
+    private final IMailService mailService;
 
-    public NewsletterService(UserRepository userRepository, MailService mailService) {
+    public NewsletterService(UserRepository userRepository, IMailService mailService) {
         this.userRepository = userRepository;
         this.mailService = mailService;
     }
