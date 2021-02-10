@@ -1,6 +1,7 @@
 package com.rocketmotordesign;
 
 import com.rocketmotordesign.config.MeteorRequestLoggingFilter;
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableScheduling
+@EnableEncryptableProperties
 public class RocketMotorDesignApplication {
 
 	public static void main(String[] args) {

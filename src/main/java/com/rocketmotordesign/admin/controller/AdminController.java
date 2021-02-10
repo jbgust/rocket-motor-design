@@ -1,5 +1,6 @@
-package com.rocketmotordesign.admin;
+package com.rocketmotordesign.admin.controller;
 
+import com.rocketmotordesign.admin.MailRequest;
 import com.rocketmotordesign.admin.service.NewsletterService;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.services.IMailService;
