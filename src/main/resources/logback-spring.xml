@@ -21,7 +21,7 @@
             </rollingPolicy>
 
             <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-                <pattern>%d{HH:mm:ss.SSS} [%X{traceId}] %highlight(%-5level) %-30logger{0} : %msg%n</pattern>
+                <pattern>%d{YYYY-MM-DD HH:mm:ss.SSS} [%X{traceId}] %highlight(%-5level) %-30logger{0} : %msg%n</pattern>
             </encoder>
         </appender>
         <appender name="STRIPE-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
