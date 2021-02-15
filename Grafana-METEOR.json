@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 4,
-  "iteration": 1597997957906,
+  "iteration": 1613048878108,
   "links": [],
   "panels": [
     {
@@ -83,7 +83,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri!~\".*actuator.*\"})",
+          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri!~\".*actuator.*|.*auth.*|.*admin.*|.*stripe.*\"})",
           "refId": "A"
         }
       ],
@@ -233,9 +233,10 @@
       "pluginVersion": "6.3.2",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri!~\".*actuator.*|.*auth.*\"}) by (uri)",
+          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri!~\".*actuator.*|.*auth.*|.*admin.*|.*stripe.*\"}) by (uri)",
           "format": "time_series",
           "instant": false,
+          "intervalFactor": 1,
           "legendFormat": "{{uri}}",
           "refId": "A"
         }
@@ -290,7 +291,7 @@
       "pluginVersion": "6.3.2",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_sum{application=\"$application\", status=\"200\",uri!~\".*actuator.*|.*auth.*\"}) by(uri) / sum(http_server_requests_seconds_count{application=\"$application\", status=\"200\", uri!~\".*actuator.*|.*auth.*\"}) by(uri)",
+          "expr": "sum(http_server_requests_seconds_sum{application=\"$application\", status=\"200\",uri!~\".*actuator.*|.*auth.*|.*admin.*|.*stripe.*\"}) by(uri) / sum(http_server_requests_seconds_count{application=\"$application\", status=\"200\", uri!~\".*actuator.*|.*auth.*|.*admin.*|.*stripe.*\"}) by(uri)",
           "instant": false,
           "legendFormat": "{{uri}}",
           "refId": "A"
@@ -725,7 +726,7 @@
     {
       "datasource": "Prometheus",
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 5,
         "x": 0,
         "y": 12
@@ -735,7 +736,7 @@
         "displayMode": "gradient",
         "fieldOptions": {
           "calcs": [
-            "diff"
+            "changeCount"
           ],
           "defaults": {
             "decimals": 0,
@@ -777,7 +778,7 @@
       "pluginVersion": "6.3.2",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri=~\".*auth.*\"}) by (uri)",
+          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri=~\".*auth.*|.*admin.*|.*stripe.*\"}) by (uri)",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{uri}}",
@@ -786,13 +787,13 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Nb req Authentification",
+      "title": "Requetes administration",
       "type": "bargauge"
     },
     {
       "datasource": "Prometheus",
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 5,
         "x": 5,
         "y": 12
@@ -834,7 +835,7 @@
       "pluginVersion": "6.3.2",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_sum{application=\"$application\", status=\"200\",uri=~\".*actuator.*|.*auth.*\"}) by(uri) / sum(http_server_requests_seconds_count{application=\"$application\", status=\"200\", uri=~\".*auth.*\"}) by(uri)",
+          "expr": "sum(http_server_requests_seconds_sum{application=\"$application\", status=\"200\",uri=~\".*auth.*|.*admin.*|.*stripe.*\"}) by(uri) / sum(http_server_requests_seconds_count{application=\"$application\", status=\"200\", uri=~\".*auth.*|.*admin.*|.*stripe.*\"}) by(uri)",
           "instant": false,
           "legendFormat": "{{uri}}",
           "refId": "A"
@@ -848,7 +849,7 @@
     {
       "datasource": "Prometheus",
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 5,
         "x": 10,
         "y": 12
@@ -900,7 +901,7 @@
       "cacheTimeout": null,
       "datasource": "Prometheus",
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 9,
         "x": 15,
         "y": 12
@@ -960,7 +961,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 20
+        "y": 21
       },
       "id": 8,
       "legend": {
@@ -1049,7 +1050,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 20
+        "y": 21
       },
       "id": 2,
       "legend": {
@@ -1173,7 +1174,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 29
+        "y": 30
       },
       "id": 27,
       "legend": {
@@ -1345,5 +1346,5 @@
   "timezone": "",
   "title": "METEOR  - Dasboard",
   "uid": "T9z13DoZz",
-  "version": 40
+  "version": 47
 }

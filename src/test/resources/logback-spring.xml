@@ -6,6 +6,16 @@
         </encoder>
     </appender>
 
+    <appender name="STRIPE-APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{YYYY-MM-DD HH:mm:ss.SSS} [%X{traceId}] %highlight(%-5level) %-30logger{0} : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="stripe">
+        <appender-ref ref="STRIPE-APPENDER" additivity="false" />
+    </logger>
+
     <root level="info">
         <appender-ref ref="CONSOLE-APPENDER" />
     </root>

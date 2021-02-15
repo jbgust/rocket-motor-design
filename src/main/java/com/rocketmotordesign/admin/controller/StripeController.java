@@ -1,5 +1,6 @@
-package com.rocketmotordesign.admin;
+package com.rocketmotordesign.admin.controller;
 
+import com.rocketmotordesign.admin.StripeException;
 import com.rocketmotordesign.admin.service.StripeService;
 import com.stripe.model.*;
 import org.slf4j.Logger;

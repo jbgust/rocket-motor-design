@@ -77,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/auth/**", "/stripe/events").permitAll()
+                .authorizeRequests().antMatchers("/auth/**", "/stripe/events", "/donations").permitAll()
                 .requestMatchers(EndpointRequest.to(
                         InfoEndpoint.class,
                         PrometheusScrapeEndpoint.class
@@ -118,6 +118,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/propellants/*", configuration);
         source.registerCorsConfiguration("/motors", configuration);
         source.registerCorsConfiguration("/motors/*", configuration);
+
+        source.registerCorsConfiguration("/donations", configuration);
         return source;
     }
 }
