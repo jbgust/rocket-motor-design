@@ -1,12 +1,12 @@
 package com.rocketmotordesign.security.jwt;
 
 import com.rocketmotordesign.security.models.User;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -25,11 +25,15 @@ class JwtUtilsTest {
     @Test
     void doitGenererUnTokenJWT(){
         Authentication authentication = mock(Authentication.class);
-        given(authentication.getPrincipal()).willReturn(new User("email", "password"));
+        User user = new User("email", "password");
+        user.setDonator(true);
+        given(authentication.getPrincipal()).willReturn(user);
 
 
         String generateJwtToken = jwtUtils.generateJwtToken(authentication);
         assertThat(jwtUtils.validateJwtToken(generateJwtToken)).isTrue();
+        DefaultClaims claims = (DefaultClaims)Jwts.parser().setSigningKey(JWT_SECRET).parse(generateJwtToken).getBody();
+        assertThat(claims.get("donator")).isEqualTo(true);
     }
 
     @Test

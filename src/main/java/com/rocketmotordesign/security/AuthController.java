@@ -2,9 +2,7 @@ package com.rocketmotordesign.security;
 
 import com.rocketmotordesign.security.jwt.JwtUtils;
 import com.rocketmotordesign.security.models.User;
-import com.rocketmotordesign.security.repository.RoleRepository;
 import com.rocketmotordesign.security.repository.UserRepository;
-import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
 import com.rocketmotordesign.security.request.ChangePasswordRequest;
 import com.rocketmotordesign.security.request.LoginRequest;
 import com.rocketmotordesign.security.request.SignupRequest;
@@ -15,15 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -33,19 +27,13 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 	private final UserRepository userRepository;
-	private final RoleRepository roleRepository;
-    private final PasswordEncoder encoder;
 	private final JwtUtils jwtUtils;
-	private final UserValidationTokenRepository userValidationTokenRepository;
 	private final AuthenticationService authenticationService;
 
-	public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, UserValidationTokenRepository userValidationTokenRepository, AuthenticationService authenticationService) {
+	public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, JwtUtils jwtUtils, AuthenticationService authenticationService) {
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
-		this.encoder = encoder;
 		this.jwtUtils = jwtUtils;
-		this.userValidationTokenRepository = userValidationTokenRepository;
 		this.authenticationService = authenticationService;
 	}
 
@@ -61,19 +49,10 @@ public class AuthController {
 		String jwt = jwtUtils.generateJwtToken(authentication);
 
 		User userDetails = (User) authentication.getPrincipal();
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
 
 		userRepository.logDateConnexion(userDetails.getEmail());
-		User user = userRepository.getOne(userDetails.getId());
 
-		return ResponseEntity.ok(new JwtResponse(jwt,
-				userDetails.getId(),
-				userDetails.getUsername(),
-				userDetails.getEmail(),
-				user.isDonator(),
-				roles));
+		return ResponseEntity.ok(new JwtResponse(jwt));
 	}
 
 	@Transactional

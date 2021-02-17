@@ -6,10 +6,12 @@ import com.rocketmotordesign.security.models.UserValidationTokenType;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.repository.UserValidationTokenRepository;
 import com.rocketmotordesign.security.services.MailService;
+import com.rocketmotordesign.utils.JwtTokenMatcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -53,6 +55,9 @@ class AuthControllerIT {
 
     @MockBean
     private MailService mailService;
+
+    @Value("${app.jwtSecret}")
+    private String jwtSecret;
 
     @Test
     void doitEnregistrerUnUtilisateur() throws Exception {
@@ -163,6 +168,7 @@ class AuthControllerIT {
                         "}"));
 
         validerCompte("toto@titi.fr");
+        markAsDonator("toto@titi.fr");
 
         LocalDateTime avantConnexion = LocalDateTime.now();
         ResultActions resultActions = mvc.perform(post("/auth/signin")
@@ -176,7 +182,7 @@ class AuthControllerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", is("toto@titi.fr")));
+                .andExpect(jsonPath("$.accessToken", new JwtTokenMatcher(jwtSecret, "toto@titi.fr", true)));
 
         assertThat(userRepository.findByEmail("toto@titi.fr"))
                 .isPresent()
@@ -184,6 +190,12 @@ class AuthControllerIT {
                         assertThat(user.getDerniereConnexion()).isBetween(avantConnexion, apresConnexion);
                         assertThat(user.isCompteValide()).isTrue();
                 });
+    }
+
+    private void markAsDonator(String email) {
+        User user = userRepository.findByEmail(email).get();
+        user.setDonator(true);
+        userRepository.save(user);
     }
 
     @Test

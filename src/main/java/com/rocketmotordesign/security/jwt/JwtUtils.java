@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtUtils {
@@ -30,6 +31,7 @@ public class JwtUtils {
 				.setSubject((userPrincipal.getUsername()))
 				.setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+				.addClaims(Map.of("donator", userPrincipal.isDonator()))
 				.signWith(SignatureAlgorithm.HS512, jwtSecret)
 				.compact();
 	}
