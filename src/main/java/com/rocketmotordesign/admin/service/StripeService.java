@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Optional.ofNullable;
 
 @Service
@@ -83,16 +85,26 @@ public class StripeService {
     }
 
     private void processNewDonation(Long amount, String email) {
-        StringBuilder messageBuilder = new StringBuilder("You receive a new donation of ")
-                .append(new BigDecimal(amount).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP))
-                .append("$ from ")
-                .append(email);
+        Optional<User> byEmail = userRepository.findByEmail(email);
+        byEmail.ifPresentOrElse(
+                this::registerNewDonation,
+                () -> LOGGER.error("Can't update last donation date to {} because user not exists", email)
+        );
 
         try {
+            StringBuilder messageBuilder = new StringBuilder("You receive a new donation of ")
+                    .append(new BigDecimal(amount).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP))
+                    .append("$ from ")
+                    .append(email);
             mailService.sendHtmlMessage("METEOR : New donation", messageBuilder.toString(), mailAlertReceiver);
         } catch (MessagingException e) {
             LOGGER.error("Failed to send mail for new donation");
         }
+    }
+
+    private void registerNewDonation(User user) {
+        user.setLastDonation(now());
+        userRepository.save(user);
     }
 
     public void registerNewDonator(Customer customer) {

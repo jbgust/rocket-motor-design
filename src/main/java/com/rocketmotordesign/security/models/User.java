@@ -10,12 +10,15 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(	name = "users",
@@ -44,7 +47,15 @@ public class User implements UserDetails {
 
 	private boolean compteValide;
 
+	/**
+	 * Identify prime donators; Every user falg as true make a donation before
+	 * donattion reinforcment policy. So they will have a life access to all
+	 * donator features
+	 */
 	private boolean donator = false;
+
+	@Column(name = "last_donation")
+	private LocalDateTime lastDonation;
 
 	@Column(name = "receive_newsletter")
 	private boolean receiveNewsletter = true;
@@ -109,7 +120,7 @@ public class User implements UserDetails {
 	}
 
 	public void updateDerniereConnexion() {
-		this.derniereConnexion = LocalDateTime.now();
+		this.derniereConnexion = now();
 	}
 
 	public boolean isCompteValide() {
@@ -163,6 +174,32 @@ public class User implements UserDetails {
 
 	public void setDonator(boolean donator) {
 		this.donator = donator;
+	}
+
+	/**
+	 * Used to identify active donator. Active donator are user that are flagged as donator,
+	 * or user that make a donation after now-durationOfActiveDonation, or user that have created theri account in the last 7 days.
+	 * This is used in METEOR to show the donation popup before computation
+	 * @param durationOfActiveDonation time of active donation
+	 * @param now the current time
+	 * @return true if now-durationOfActiveDonation<lastDonation or if isDonator or dateCreation is in the lmast 7 days otherwise false
+	 */
+	public boolean isActiveDonator(Duration durationOfActiveDonation, LocalDateTime now) {
+		if(isDonator() || (dateCreation != null && Duration.between(now, dateCreation).toDays() <= 7)) {
+			return true;
+		} else if(lastDonation != null){
+			return Duration.between(lastDonation, now).toDays() <= durationOfActiveDonation.toDays() ;
+		} else {
+			return false;
+		}
+	}
+
+	public LocalDateTime getLastDonation() {
+		return lastDonation;
+	}
+
+	public void setLastDonation(LocalDateTime lastDonation) {
+		this.lastDonation = lastDonation;
 	}
 
 	@Override

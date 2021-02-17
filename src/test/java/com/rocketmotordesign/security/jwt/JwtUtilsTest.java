@@ -7,9 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 
+import java.time.Duration;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 class JwtUtilsTest {
 
@@ -19,14 +22,14 @@ class JwtUtilsTest {
 
     @BeforeEach
     void setUp() {
-        jwtUtils = new JwtUtils(JWT_SECRET, 86400000);
+        jwtUtils = new JwtUtils(JWT_SECRET, 86400000, 1L);
     }
 
     @Test
     void doitGenererUnTokenJWT(){
         Authentication authentication = mock(Authentication.class);
-        User user = new User("email", "password");
-        user.setDonator(true);
+        User user = mock(User.class);
+        given(user.isActiveDonator(any(), any())).willReturn(true);
         given(authentication.getPrincipal()).willReturn(user);
 
 
@@ -34,6 +37,7 @@ class JwtUtilsTest {
         assertThat(jwtUtils.validateJwtToken(generateJwtToken)).isTrue();
         DefaultClaims claims = (DefaultClaims)Jwts.parser().setSigningKey(JWT_SECRET).parse(generateJwtToken).getBody();
         assertThat(claims.get("donator")).isEqualTo(true);
+        verify(user, times(1)).isActiveDonator(eq(Duration.ofDays(1L)), any());
     }
 
     @Test
@@ -52,14 +56,14 @@ class JwtUtilsTest {
         given(authentication.getPrincipal()).willReturn(new User("email", "password"));
         String generateJwtToken = jwtUtils.generateJwtToken(authentication);
 
-        assertThat(new JwtUtils("fausse-cle", 86400000).validateJwtToken(generateJwtToken)).isFalse();
+        assertThat(new JwtUtils("fausse-cle", 86400000, 1L).validateJwtToken(generateJwtToken)).isFalse();
     }
 
     @Test
     void doitIdentifierUnTokenExpire(){
         Authentication authentication = mock(Authentication.class);
         given(authentication.getPrincipal()).willReturn(new User("email", "password"));
-        JwtUtils jwtUtils1 = new JwtUtils(JWT_SECRET, 0);
+        JwtUtils jwtUtils1 = new JwtUtils(JWT_SECRET, 0, 1L);
         String generateJwtToken = jwtUtils1.generateJwtToken(authentication);
 
         assertThat(jwtUtils1.validateJwtToken(generateJwtToken)).isFalse();

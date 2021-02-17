@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
+
+import static java.time.LocalDateTime.now;
 
 @Component
 public class JwtUtils {
@@ -17,10 +20,15 @@ public class JwtUtils {
 
 	private final String jwtSecret;
 	private final int jwtExpirationMs;
+	private final Duration durationOfActiveDonation;
 
-	public JwtUtils(@Value("${app.jwtSecret}") String jwtSecret, @Value("${app.jwtExpirationMs}")int jwtExpirationMs) {
+	public JwtUtils(
+			@Value("${app.jwtSecret}") String jwtSecret,
+			@Value("${app.jwtExpirationMs}")int jwtExpirationMs,
+			@Value("${donationvalidity.in.days}") long daysOfActiveDonation) {
 		this.jwtSecret = jwtSecret;
 		this.jwtExpirationMs = jwtExpirationMs;
+		durationOfActiveDonation = Duration.ofDays(daysOfActiveDonation);
 	}
 
 	public String generateJwtToken(Authentication authentication) {
@@ -31,7 +39,7 @@ public class JwtUtils {
 				.setSubject((userPrincipal.getUsername()))
 				.setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-				.addClaims(Map.of("donator", userPrincipal.isDonator()))
+				.addClaims(Map.of("donator", userPrincipal.isActiveDonator(durationOfActiveDonation, now())))
 				.signWith(SignatureAlgorithm.HS512, jwtSecret)
 				.compact();
 	}
