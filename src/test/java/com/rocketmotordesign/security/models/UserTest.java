@@ -87,16 +87,14 @@ class UserTest {
                 now))
                 .isTrue();
 
-        user.setDateCreation(now.plusDays(7));
         assertThat(user.isActiveDonator(
                 durationOfActiveDonation,
-                now))
+                now.plusDays(7)))
                 .isTrue();
 
-        user.setDateCreation(now.plusDays(8));
         assertThat(user.isActiveDonator(
                 durationOfActiveDonation,
-                now))
+                now.plusDays(8)))
                 .isFalse();
     }
 }

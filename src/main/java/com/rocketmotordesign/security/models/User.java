@@ -185,7 +185,7 @@ public class User implements UserDetails {
 	 * @return true if now-durationOfActiveDonation<lastDonation or if isDonator or dateCreation is in the lmast 7 days otherwise false
 	 */
 	public boolean isActiveDonator(Duration durationOfActiveDonation, LocalDateTime now) {
-		if(isDonator() || (dateCreation != null && Duration.between(now, dateCreation).toDays() <= 7)) {
+		if(isDonator() || (dateCreation != null && Duration.between(dateCreation, now).toDays() <= 7)) {
 			return true;
 		} else if(lastDonation != null){
 			return Duration.between(lastDonation, now).toDays() <= durationOfActiveDonation.toDays() ;
