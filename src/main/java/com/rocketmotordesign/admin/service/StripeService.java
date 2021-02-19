@@ -19,7 +19,6 @@ import java.math.RoundingMode;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
-import static java.util.Optional.ofNullable;
 
 @Service
 public class StripeService {
@@ -72,34 +71,28 @@ public class StripeService {
         }
     }
 
-    public void handleNewDonation(PaymentIntent paymentIntent) {
-        processNewDonation(paymentIntent.getAmount(), ofNullable(paymentIntent.getCustomerObject())
-                .map(Customer::getEmail)
-                .orElse(UNKNOW_CUSTOMER));
-    }
-
     public void handleNewDonation(Charge charge) {
-        processNewDonation(charge.getAmount(), ofNullable(charge.getCustomerObject())
-                .map(Customer::getEmail)
-                .orElse(UNKNOW_CUSTOMER));
-    }
-
-    private void processNewDonation(Long amount, String email) {
-        Optional<User> byEmail = userRepository.findByEmail(email);
-        byEmail.ifPresentOrElse(
-                this::registerNewDonation,
-                () -> LOGGER.error("Can't update last donation date to {} because user not exists", email)
-        );
+        Optional<User> byStripeCustomerId = userRepository.findByStripeCustomerId(charge.getCustomer());
+        byStripeCustomerId
+                .ifPresentOrElse(
+                        this::processNewDonation,
+                        () -> LOGGER.error("Can't update last donation date to customer {} because no user has this customerId", charge.getCustomer())
+                );
 
         try {
             StringBuilder messageBuilder = new StringBuilder("You receive a new donation of ")
-                    .append(new BigDecimal(amount).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP))
+                    .append(new BigDecimal(charge.getAmount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP))
                     .append("$ from ")
-                    .append(email);
+                    .append(byStripeCustomerId.map(User::getUsername).orElse("CustomerId:"+charge.getCustomer()));
             mailService.sendHtmlMessage("METEOR : New donation", messageBuilder.toString(), mailAlertReceiver);
         } catch (MessagingException e) {
             LOGGER.error("Failed to send mail for new donation");
         }
+    }
+
+    private void processNewDonation(User user) {
+        user.setLastDonation(now());
+        userRepository.save(user);
     }
 
     private void registerNewDonation(User user) {
@@ -110,12 +103,16 @@ public class StripeService {
     public void registerNewDonator(Customer customer) {
         userRepository.findByEmail(customer.getEmail())
                 .ifPresentOrElse(
-                        this::markAsDonator,
+                        user -> registerStripeCustomer(user, customer),
                         () -> LOGGER.error("Can't mark {} as donator because this mail is not in METEOR", customer.getEmail()));
     }
 
-    private void markAsDonator(User user) {
-        user.setDonator(true);
-        userRepository.save(user);
+    private void registerStripeCustomer(User user, Customer customer) {
+        if(customer.getId() != null) {
+            user.setStripeCustomerId(customer.getId());
+            userRepository.save(user);
+        } else {
+            LOGGER.error("No customer ID for user {}", customer.getId());
+        }
     }
 }

@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByEmail(String email);
+	Optional<User> findByStripeCustomerId(String stripeCustomerId);
 
 	@Modifying
 	@Query("update User u set u.derniereConnexion=current_timestamp where u.email=:email")

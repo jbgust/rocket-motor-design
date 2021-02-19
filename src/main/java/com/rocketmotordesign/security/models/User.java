@@ -66,6 +66,9 @@ public class User implements UserDetails {
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
+	@Column(name = "stripe_customer_id")
+	private String stripeCustomerId;
+
 	public User() {
 	}
 
@@ -217,5 +220,13 @@ public class User implements UserDetails {
 		return getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
 				.collect(Collectors.toList());
+	}
+
+	public String getStripeCustomerId() {
+		return stripeCustomerId;
+	}
+
+	public void setStripeCustomerId(String stripeCustomerId) {
+		this.stripeCustomerId = stripeCustomerId;
 	}
 }

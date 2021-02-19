@@ -32,13 +32,9 @@ public class StripeController {
             event = stripeService.retrieveEvent(request.getHeader("Stripe-Signature"), payload);
             StripeObject stripeObject = stripeService.getStripeObject(event);
 
+            LOGGER.info("Event type : {}", event.getType());
             // Handle the event
             switch (event.getType()) {
-                case "payment_intent.succeeded":
-                    PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
-                    LOGGER.info("New paymentIntent : {}$", paymentIntent.getAmount()/100);
-                    stripeService.handleNewDonation(paymentIntent);
-                    break;
                 case "customer.created":
                     Customer customer = (Customer) stripeObject;
                     LOGGER.info("New donator  id({})", customer.getId());

@@ -5,7 +5,6 @@ import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.services.MailService;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
-import com.stripe.model.PaymentIntent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +47,7 @@ class StripeServiceTest {
         //GIVEN
         User user = new User("new-donator@stripe.com", "pwd");
         Customer customer = mock(Customer.class);
-        given(customer.getEmail()).willReturn(user.getEmail());
+        given(customer.getId()).willReturn(user.getEmail(), "StripeCustomerID");
         given(userRepository.findByEmail(customer.getEmail()))
                 .willReturn(Optional.of(user));
 
@@ -59,43 +58,29 @@ class StripeServiceTest {
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository, times(1))
                 .save(userArgumentCaptor.capture());
-        assertThat(userArgumentCaptor.getValue().isDonator()).isTrue();
-    }
-
-    @Test
-    void shoulSendMailOnNewDonationFromPaymentIntent() throws MessagingException {
-        //GIVEN
-        PaymentIntent paymentIntent = mock(PaymentIntent.class);
-        Customer customer = mock(Customer.class);
-
-        given(customer.getEmail()).willReturn("customer1@test.tt");
-        given(paymentIntent.getAmount()).willReturn(2059L);
-        given(paymentIntent.getCustomerObject()).willReturn(customer);
-
-        //WHEN
-        stripeService.handleNewDonation(paymentIntent);
-
-        //THEN
-        verify(mailService, times(1))
-                .sendHtmlMessage("METEOR : New donation", "You receive a new donation of 20.59$ from customer1@test.tt", "meteor@open-sky.fr");
+        User donator = userArgumentCaptor.getValue();
+        assertThat(donator)
+                .extracting(User::getStripeCustomerId, User::isDonator, User::getLastDonation)
+                .containsExactly("StripeCustomerID", false, null);
     }
 
     @Test
     void shoulSendMailOnNewDonationFromCharge() throws MessagingException {
         //GIVEN
         Charge charge = mock(Charge.class);
-        Customer customer = mock(Customer.class);
 
-        given(customer.getEmail()).willReturn("customer1@test.tt");
+        given(charge.getCustomer()).willReturn("cus_IyFWZ6cmcXsZEY");
         given(charge.getAmount()).willReturn(2059L);
-        given(charge.getCustomerObject()).willReturn(customer);
+
+        given(userRepository.findByStripeCustomerId("cus_IyFWZ6cmcXsZEY"))
+                .willReturn(Optional.of(new User("customer1@test.com", "pwd")));
 
         //WHEN
         stripeService.handleNewDonation(charge);
 
         //THEN
         verify(mailService, times(1))
-                .sendHtmlMessage("METEOR : New donation", "You receive a new donation of 20.59$ from customer1@test.tt", "meteor@open-sky.fr");
+                .sendHtmlMessage("METEOR : New donation", "You receive a new donation of 20.59$ from customer1@test.com", "meteor@open-sky.fr");
     }
 
     @Test
@@ -119,51 +104,27 @@ class StripeServiceTest {
     void shoulAddLastDonationDateOnNewDonationFromCharge() throws MessagingException {
         //GIVEN
         Charge charge = mock(Charge.class);
-        Customer customer = mock(Customer.class);
         LocalDateTime startOfTest = now();
 
-        given(customer.getEmail()).willReturn("customer1@test.tt");
+        given(charge.getCustomer()).willReturn("cus_IyFWZ6cmcXsZEY");
         given(charge.getAmount()).willReturn(2059L);
-        given(charge.getCustomerObject()).willReturn(customer);
-        given(userRepository.findByEmail("customer1@test.tt"))
-                .willReturn(Optional.of(new User("customer1@test.tt", "pwd")));
+
+        given(userRepository.findByStripeCustomerId("cus_IyFWZ6cmcXsZEY"))
+                .willReturn(Optional.of(new User("customer1@test.com", "pwd")));
 
         //WHEN
         stripeService.handleNewDonation(charge);
 
         //THEN
-        verify(mailService, times(1))
-                .sendHtmlMessage("METEOR : New donation", "You receive a new donation of 20.59$ from customer1@test.tt", "meteor@open-sky.fr");
-
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
-        assertThat(userArgumentCaptor.getValue().getLastDonation()).isAfter(startOfTest);
+        verify(userRepository, times(1))
+                .save(userArgumentCaptor.capture());
 
-        assertThat(userArgumentCaptor.getValue().isActiveDonator(Duration.ofSeconds(10), now())).isTrue();
-    }
+        User donator = userArgumentCaptor.getValue();
+        assertThat(donator)
+                .extracting(User::getEmail, User::isDonator)
+                .containsExactly("customer1@test.com", false);
 
-    @Test
-    void shoulAddLastDonationDateOnNewDonationFromPaymentIntent() throws MessagingException {
-        //GIVEN
-        PaymentIntent paymentIntent = mock(PaymentIntent.class);
-        Customer customer = mock(Customer.class);
-        LocalDateTime startOfTest = now();
-
-        given(customer.getEmail()).willReturn("customer1@test.tt");
-        given(paymentIntent.getAmount()).willReturn(2059L);
-        given(paymentIntent.getCustomerObject()).willReturn(customer);
-        given(userRepository.findByEmail("customer1@test.tt"))
-                .willReturn(Optional.of(new User("customer1@test.tt", "pwd")));
-
-        //WHEN
-        stripeService.handleNewDonation(paymentIntent);
-
-        //THEN
-        verify(mailService, times(1))
-                .sendHtmlMessage("METEOR : New donation", "You receive a new donation of 20.59$ from customer1@test.tt", "meteor@open-sky.fr");
-
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userRepository, times(1)).save(userArgumentCaptor.capture());
         assertThat(userArgumentCaptor.getValue().getLastDonation()).isAfter(startOfTest);
         assertThat(userArgumentCaptor.getValue().isActiveDonator(Duration.ofSeconds(10), now())).isTrue();
     }
@@ -172,13 +133,10 @@ class StripeServiceTest {
     void shoulNotAddLastDonationDateOnNewDonationFromChargeWhenUserNotFound() throws MessagingException {
         //GIVEN
         Charge charge = mock(Charge.class);
-        Customer customer = mock(Customer.class);
-        LocalDateTime startOfTest = now();
 
-        given(customer.getEmail()).willReturn("customer1@test.tt");
+        given(charge.getCustomer()).willReturn("unknowCustomerId");
         given(charge.getAmount()).willReturn(2059L);
-        given(charge.getCustomerObject()).willReturn(customer);
-        given(userRepository.findByEmail("customer1@test.tt"))
+        given(userRepository.findByStripeCustomerId("unknowCustomerId"))
                 .willReturn(empty());
 
         //WHEN
@@ -186,31 +144,7 @@ class StripeServiceTest {
 
         //THEN
         verify(mailService, times(1))
-                .sendHtmlMessage("METEOR : New donation", "You receive a new donation of 20.59$ from customer1@test.tt", "meteor@open-sky.fr");
-
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userRepository, never()).save(userArgumentCaptor.capture());
-    }
-
-    @Test
-    void shoulNotAddLastDonationDateOnNewDonationFromPaymentIntentWhenUserNotFound() throws MessagingException {
-        //GIVEN
-        PaymentIntent paymentIntent = mock(PaymentIntent.class);
-        Customer customer = mock(Customer.class);
-        LocalDateTime startOfTest = now();
-
-        given(customer.getEmail()).willReturn("customer1@test.tt");
-        given(paymentIntent.getAmount()).willReturn(2059L);
-        given(paymentIntent.getCustomerObject()).willReturn(customer);
-        given(userRepository.findByEmail("customer1@test.tt"))
-                .willReturn(empty());
-
-        //WHEN
-        stripeService.handleNewDonation(paymentIntent);
-
-        //THEN
-        verify(mailService, times(1))
-                .sendHtmlMessage("METEOR : New donation", "You receive a new donation of 20.59$ from customer1@test.tt", "meteor@open-sky.fr");
+                .sendHtmlMessage("METEOR : New donation", "You receive a new donation of 20.59$ from CustomerId:unknowCustomerId", "meteor@open-sky.fr");
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository, never()).save(userArgumentCaptor.capture());

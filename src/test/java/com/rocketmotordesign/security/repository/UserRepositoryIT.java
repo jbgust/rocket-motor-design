@@ -27,7 +27,6 @@ class UserRepositoryIT {
     @Autowired
     private TestEntityManager testEntityManager;
 
-
     @Test
     void doitSupprimerLesUtilisateursNonValide() {
         //GIVEN

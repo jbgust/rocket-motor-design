@@ -19,9 +19,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.rocketmotordesign.utils.TestHelper.asString;
+import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -77,8 +80,8 @@ class StripeControllerIT {
                 .save(userArgumentCaptor.capture());
 
         assertThat(userArgumentCaptor.getValue())
-                .extracting(User::getEmail, User::isDonator)
-                .containsExactly("customer1@test.com", true);
+                .extracting(User::getEmail, User::isDonator, User::getStripeCustomerId, User::getLastDonation)
+                .containsExactly("customer1@test.com", false, "cus_IyFWZ6cmcXsZEY", null);
 
     }
 
@@ -87,9 +90,10 @@ class StripeControllerIT {
         //GIVEN
         long timestamp = Webhook.Util.getTimeNow();
         String payload = asString(chargeSucceededRequest);
+        LocalDateTime startOfTest = now();
 
         User customer1 = new User("customer1@test.com", "pwd");
-        given(userRepository.findByEmail(customer1.getEmail()))
+        given(userRepository.findByStripeCustomerId("cus_IyFWZ6cmcXsZEY"))
                 .willReturn(Optional.of(customer1));
 
         // WHEN
@@ -100,10 +104,23 @@ class StripeControllerIT {
 
         // THEN
         resultActions.andExpect(status().isOk());
+
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository, times(1))
+                .save(userArgumentCaptor.capture());
+
+        User donator = userArgumentCaptor.getValue();
+        assertThat(donator)
+                .extracting(User::getEmail, User::isDonator)
+                .containsExactly("customer1@test.com", false);
+
+        assertThat(userArgumentCaptor.getValue().getLastDonation()).isAfter(startOfTest);
+        assertThat(userArgumentCaptor.getValue().isActiveDonator(Duration.ofSeconds(10), now())).isTrue();
+
         verify(mailService, times(1))
                 .sendHtmlMessage(
                         "METEOR : New donation",
-                        "You receive a new donation of 1.00$ from  unknow customer",
+                        "You receive a new donation of 1.00$ from customer1@test.com",
                         "meteor@open-sky.fr");
 
     }
