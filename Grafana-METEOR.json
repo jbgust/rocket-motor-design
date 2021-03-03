@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 4,
-  "iteration": 1613048878108,
+  "iteration": 1614772840811,
   "links": [],
   "panels": [
     {
@@ -83,7 +83,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri!~\".*actuator.*|.*auth.*|.*admin.*|.*stripe.*\"})",
+          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri=~\".*compute.*|.*export.*\"})",
           "refId": "A"
         }
       ],
@@ -101,7 +101,7 @@
           "value": "null"
         }
       ],
-      "valueName": "diff"
+      "valueName": "delta"
     },
     {
       "cacheTimeout": null,
@@ -201,7 +201,7 @@
         "displayMode": "gradient",
         "fieldOptions": {
           "calcs": [
-            "diff"
+            "changeCount"
           ],
           "defaults": {
             "decimals": 0,
@@ -233,7 +233,7 @@
       "pluginVersion": "6.3.2",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri!~\".*actuator.*|.*auth.*|.*admin.*|.*stripe.*\"}) by (uri)",
+          "expr": "sum(http_server_requests_seconds_count{application=~\"$application\", instance=~\"$instance\",status=\"200\", uri=~\".*compute.*|.*export.*\"}) by (uri)",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -291,7 +291,7 @@
       "pluginVersion": "6.3.2",
       "targets": [
         {
-          "expr": "sum(http_server_requests_seconds_sum{application=\"$application\", status=\"200\",uri!~\".*actuator.*|.*auth.*|.*admin.*|.*stripe.*\"}) by(uri) / sum(http_server_requests_seconds_count{application=\"$application\", status=\"200\", uri!~\".*actuator.*|.*auth.*|.*admin.*|.*stripe.*\"}) by(uri)",
+          "expr": "sum(http_server_requests_seconds_sum{application=\"$application\", status=\"200\",uri=~\".*compute.*|.*export.*\"}) by(uri) / sum(http_server_requests_seconds_count{application=\"$application\", status=\"200\", uri=~\".*compute.*|.*export.*\"}) by(uri)",
           "instant": false,
           "legendFormat": "{{uri}}",
           "refId": "A"
@@ -1346,5 +1346,5 @@
   "timezone": "",
   "title": "METEOR  - Dasboard",
   "uid": "T9z13DoZz",
-  "version": 47
+  "version": 51
 }
