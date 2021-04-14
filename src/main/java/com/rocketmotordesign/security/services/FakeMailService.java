@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 
 @Service
-@Profile("NO_MAIL")
+@Profile("dev")
 public class FakeMailService implements IMailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FakeMailService.class);

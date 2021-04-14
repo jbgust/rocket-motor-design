@@ -13,7 +13,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 @Service
-@Profile("!NO_MAIL")
+@Profile("!dev")
 public class MailService implements IMailService {
 
     private static final String LOGO_METEOR_IMG_CONTENT_ID = "logoMeteorImg";

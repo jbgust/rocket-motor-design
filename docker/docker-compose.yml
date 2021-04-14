@@ -26,3 +26,4 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=pass
       - MYSQL_DATABASE=meteor_dev
+      - TZ=Europe/Paris
