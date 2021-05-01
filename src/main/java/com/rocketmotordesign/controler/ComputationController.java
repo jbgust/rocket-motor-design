@@ -116,7 +116,8 @@ public class ComputationController {
             } else {
                 LOGGER.warn("Computation failed, safe KN retry NOT ALLOWED");
                 return ResponseEntity.badRequest().body(
-                        new ErrorMessage("METEOR can't run this computation due to the following error:", "This often occurs when the ratio between the burning area and the throat area is too low. Try to increase your grain core diameter and/or decrease the throat diameter."));
+                        new ErrorMessage("METEOR can't run this computation due to the following error:",
+                                "This often occurs when the pressure is too low on combustion chamber. Try to increase your KN and/or decrease the throat diameter to reach a sufficient pressure."));
             }
         } catch (BurnRateDataException e) {
             return ResponseEntity.badRequest().body(
@@ -173,7 +174,8 @@ public class ComputationController {
             } else {
                 LOGGER.warn("Computation failed : CAUSE : {}", e.getCause().getMessage());
                 return ResponseEntity.badRequest().body(
-                        new ErrorMessage("METEOR can't run this computation due to the following error:", "This often occurs when the ratio between the burning area and the throat area is too low. Try to increase your grain core diameter and/or decrease the throat diameter."));
+                        new ErrorMessage("METEOR can't run this computation due to the following error:",
+                                "This often occurs when the pressure is too low on combustion chamber. Try to increase your KN and/or decrease the throat diameter to reach a sufficient pressure."));
             }
         } catch (Exception e) {
             LOGGER.error("Unknown computation error with request : " + request.toString(), e);

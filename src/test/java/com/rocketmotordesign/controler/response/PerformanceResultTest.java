@@ -30,7 +30,7 @@ public class PerformanceResultTest {
 
     @Test
     void neDoitPasIndiquerUnProblemeDeKN() {
-        int lowKNCorrection = 200;
+        int lowKNCorrection = 100;
         PerformanceResult result = createPerformanceResult(lowKNCorrection);
 
         assertThat(result.isLowKNCorrection()).isFalse();

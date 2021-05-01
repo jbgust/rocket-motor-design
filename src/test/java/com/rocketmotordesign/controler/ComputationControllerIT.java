@@ -447,7 +447,7 @@ public class ComputationControllerIT {
     }
 
     @Test
-    void shouldRunComputationForLowKNMotor() throws Exception {
+    void shouldFailedComputationWhenTooManySafeCorrections() throws Exception {
         // GIVEN
         HollowComputationRequest lowKNRequest = new HollowComputationRequest();
         lowKNRequest.setThroatDiameter(8);
@@ -470,10 +470,39 @@ public class ComputationControllerIT {
 
         //THEN
         resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("METEOR can't run this computation due to the following error:")))
+                .andExpect(jsonPath("$.detail", is("This often occurs when the pressure is too low on combustion chamber. Try to increase your KN and/or decrease the throat diameter to reach a sufficient pressure.")));
+    }
+
+    @Test
+    void shouldRunComputationForLowKNMotor() throws Exception {
+        // GIVEN
+        HollowComputationRequest lowKNRequest = new HollowComputationRequest();
+        lowKNRequest.setThroatDiameter(4);
+        lowKNRequest.setCoreDiameter(4.5);
+        lowKNRequest.setOuterDiameter(28);
+        lowKNRequest.setSegmentLength(90);
+        lowKNRequest.setNumberOfSegment(1);
+        lowKNRequest.setOuterSurface(INHIBITED);
+        lowKNRequest.setEndsSurface(EXPOSED);
+        lowKNRequest.setCoreSurface(EXPOSED);
+        lowKNRequest.setPropellantId(KNDX.name());
+        lowKNRequest.setChamberInnerDiameter(28);
+        lowKNRequest.setChamberLength(90);
+        lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
+
+        // WHEN
+        ResultActions resultActions = mvc.perform(post("/compute")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonObjectMapper.writeValueAsString(lowKNRequest)));
+
+        //THEN
+        resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.performanceResult.safeKN", is(true)))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(true)))
-                .andExpect(jsonPath("$.performanceResult.motorDescription", is("G106")));
+                .andExpect(jsonPath("$.performanceResult.motorDescription", is("G136")));
     }
 
     @Test

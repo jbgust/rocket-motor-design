@@ -154,7 +154,7 @@ public class PerformanceResult {
      * @return
      */
     private boolean isLowKNCorrection(long lowKNCorrection) {
-        return lowKNCorrection > 200 ? true : false;
+        return lowKNCorrection > 100 ? true : false;
     }
 
     public boolean isSafeKN() {

@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.rocketmotordesign.utils.TestHelper.*;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.startsWith;
@@ -114,17 +114,17 @@ public class ExportControllerIT {
     void shouldRunComputationForLowKNMotor() throws Exception {
         // GIVEN
         HollowComputationRequest lowKNRequest = new HollowComputationRequest();
-        lowKNRequest.setThroatDiameter(19);
-        lowKNRequest.setOuterDiameter(37);
-        lowKNRequest.setCoreDiameter(20);
-        lowKNRequest.setSegmentLength(10);
-        lowKNRequest.setNumberOfSegment(5);
+        lowKNRequest.setThroatDiameter(4);
+        lowKNRequest.setCoreDiameter(4.5);
+        lowKNRequest.setOuterDiameter(28);
+        lowKNRequest.setSegmentLength(90);
+        lowKNRequest.setNumberOfSegment(1);
         lowKNRequest.setOuterSurface(INHIBITED);
         lowKNRequest.setEndsSurface(EXPOSED);
         lowKNRequest.setCoreSurface(EXPOSED);
-        lowKNRequest.setPropellantId(KNSU.name());
-        lowKNRequest.setChamberInnerDiameter(38);
-        lowKNRequest.setChamberLength(500);
+        lowKNRequest.setPropellantId(KNDX.name());
+        lowKNRequest.setChamberInnerDiameter(28);
+        lowKNRequest.setChamberLength(90);
         lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
 
         ExportRASPRequest exportRequest = new ExportRASPRequest();
@@ -145,9 +145,9 @@ public class ExportControllerIT {
         //THEN
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(header().stringValues(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=meteor_motorTest_H134.eng"))
+                .andExpect(header().stringValues(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=meteor_motorTest_G136.eng"))
                 .andExpect(content().string(startsWith(
-                        "H134 72.0 500.0 P 0.068 3.200 METEOR")));
+                        "G136 72.0 500.0 P 0.096 3.200 METEOR")));
     }
 
     @Test
