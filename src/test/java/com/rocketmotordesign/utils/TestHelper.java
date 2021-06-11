@@ -233,7 +233,7 @@ public class TestHelper {
         extraConfig.setCombustionEfficiencyRatio(0.97);
         extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
         extraConfig.setNozzleEfficiency(0.85);
-        extraConfig.setNozzleErosion(0);
+        extraConfig.setNozzleErosionInMillimeter(0);
         extraConfig.setErosiveBurningVelocityCoefficient(0);
         extraConfig.setNozzleExpansionRatio(8d);
         extraConfig.setOptimalNozzleDesign(false);
@@ -279,7 +279,7 @@ public class TestHelper {
         extraConfig.setCombustionEfficiencyRatio(0.95);
         extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
         extraConfig.setNozzleEfficiency(0.85);
-        extraConfig.setNozzleErosion(0);
+        extraConfig.setNozzleErosionInMillimeter(0);
         extraConfig.setErosiveBurningVelocityCoefficient(0);
         extraConfig.setNozzleExpansionRatio(null);
         extraConfig.setOptimalNozzleDesign(true);
@@ -293,7 +293,7 @@ public class TestHelper {
         extraConfig.setCombustionEfficiencyRatio(0.95);
         extraConfig.setErosiveBurningAreaRatioThreshold(6.0);
         extraConfig.setNozzleEfficiency(0.85);
-        extraConfig.setNozzleErosion(0);
+        extraConfig.setNozzleErosionInMillimeter(0);
         extraConfig.setErosiveBurningVelocityCoefficient(0);
         extraConfig.setNozzleExpansionRatio(null);
         extraConfig.setOptimalNozzleDesign(true);

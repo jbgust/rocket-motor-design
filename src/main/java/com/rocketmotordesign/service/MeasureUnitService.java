@@ -69,7 +69,7 @@ public class MeasureUnitService {
                 .withErosiveBurningAreaRatioThreshold(extraConfig.getErosiveBurningAreaRatioThreshold())
                 .withErosiveBurningVelocityCoefficient(extraConfig.getErosiveBurningVelocityCoefficient())
                 .withNozzleEfficiency(extraConfig.getNozzleEfficiency())
-                .withNozzleErosionInMillimeter(convertLengthToJSRM(userUnits.getLenghtUnit(), extraConfig.getNozzleErosion()))
+                .withNozzleErosionInMillimeter(convertLengthToJSRM(userUnits.getLenghtUnit(), extraConfig.getNozzleErosionInMillimeter()))
                 .withOptimalNozzleDesign(extraConfig.isOptimalNozzleDesign())
                 .withSafeKNFailure(safeKNRun);
 

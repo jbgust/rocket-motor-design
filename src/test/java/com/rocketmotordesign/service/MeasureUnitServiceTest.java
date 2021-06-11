@@ -286,7 +286,7 @@ public class MeasureUnitServiceTest {
         ExtraConfiguration defaultExtraConfigSIUnit = getDefaultExtraConfiguration();
 
         ExtraConfiguration defaultImperialExtraConfiguration = getDefaultImperialExtraConfiguration();
-        defaultImperialExtraConfiguration.setNozzleErosion(5);
+        defaultImperialExtraConfiguration.setNozzleErosionInMillimeter(5);
 
         JSRMConfig jsrmConfig = measureUnitService.toJSRMConfig(defaultImperialExtraConfiguration, IMPERIAL, true);
 
