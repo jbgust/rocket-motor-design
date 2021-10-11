@@ -74,6 +74,8 @@
         <appender-ref ref="CONSOLE-APPENDER" />
     </logger>
 
+    <logger name="org.hibernate.engine.jdbc.spi.SqlExceptionHelper" level="OFF" />
+
     <springProfile name="dev">
         <root level="info">
             <appender-ref ref="CONSOLE-APPENDER" />
