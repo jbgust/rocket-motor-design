@@ -3,7 +3,7 @@ jobs:
   build-and-test:
     working_directory: ~/rocketMotorDesign
     docker:
-      - image: maven:3.6.3-openjdk-11
+      - image: maven:3.8.4-openjdk-17
     steps:
       - run: |
             java -version
@@ -24,7 +24,7 @@ jobs:
   package:
     working_directory: ~/rocketMotorDesign
     docker:
-      - image: maven:3.6.3-openjdk-11
+      - image: maven:3.8.4-openjdk-17
     steps:
       - checkout
       - attach_workspace:
