@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler 
+public class RestResponseEntityExceptionHandler
   extends ResponseEntityExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -19,5 +19,17 @@ public class RestResponseEntityExceptionHandler
     protected ResponseEntity handleConflict(DataIntegrityViolationException exception) {
         logger.warn("DataIntegrityViolationException", exception);
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+
+    @ExceptionHandler(value = NullPointerException.class)
+    protected ResponseEntity handleConflict(NullPointerException exception) {
+        if(exception.getMessage().contains("Error processing request"))
+        {
+            logger.warn("Error processing request", exception);
+        } else {
+            logger.error("Nul pointer exception", exception);
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }
