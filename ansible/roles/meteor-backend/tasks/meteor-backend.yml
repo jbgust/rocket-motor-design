@@ -1,3 +1,6 @@
+- name: Activation page maintenance
+  shell: "/root/scripts/meteor-maintenance.sh {{serviceName}} stopBack"
+
 - name: Stop METEOR {{serviceName}}
   service:
     name: "{{serviceName}}"
@@ -12,3 +15,6 @@
   service:
     name: "{{serviceName}}"
     state: started
+
+- name: Desactivation page maintenance
+  shell: "sleep 35 && /root/scripts/meteor-maintenance.sh {{serviceName}} startBack"
