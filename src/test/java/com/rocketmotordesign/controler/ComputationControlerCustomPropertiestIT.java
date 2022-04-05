@@ -58,7 +58,7 @@ public class ComputationControlerCustomPropertiestIT {
                 .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
-                .andExpect(jsonPath("$.performanceResult.grainMass", is("2.812")))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("2812")))
 
                 .andExpect(jsonPath("$.motorParameters", hasSize(221)));
     }

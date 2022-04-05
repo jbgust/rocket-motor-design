@@ -80,7 +80,7 @@ public class ComputationControllerIT {
                 .andExpect(jsonPath("$.performanceResult.averagePressure", is("49.06")))
                 .andExpect(jsonPath("$.performanceResult.optimalNozzleExpansionRatio", is("9.65")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
-                .andExpect(jsonPath("$.performanceResult.grainMass", is("2.812")))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("2812")))
                 .andExpect(jsonPath("$.performanceResult.classPercentage", is(41)))
 
                 .andExpect(jsonPath("$.motorParameters", hasSize(883)))
@@ -113,7 +113,7 @@ public class ComputationControllerIT {
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.00")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
-                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.147")))
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("146")))
 
                 .andExpect(jsonPath("$.motorParameters", hasSize(847)));
     }
@@ -139,7 +139,7 @@ public class ComputationControllerIT {
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("126.86")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
-                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.147")));
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("146")));
     }
 
     @Test
@@ -163,7 +163,7 @@ public class ComputationControllerIT {
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("124.17")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
-                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.166")));
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("165")));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class ComputationControllerIT {
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("116.24")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
-                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.160")));
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("159")));
     }
 
     @Test
@@ -259,7 +259,7 @@ public class ComputationControllerIT {
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("114.08")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
-                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.149")));
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("148")));
     }
 
     @Test
@@ -307,7 +307,7 @@ public class ComputationControllerIT {
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("127.40")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("28.28")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
-                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.120")));
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("119")));
     }
 
     @Test
@@ -355,7 +355,7 @@ public class ComputationControllerIT {
                 .andExpect(jsonPath("$.performanceResult.specificImpulse", is("106.66")))
                 .andExpect(jsonPath("$.performanceResult.nozzleExitDiameter", is("16.97")))
                 .andExpect(jsonPath("$.performanceResult.lowKNCorrection", is(false)))
-                .andExpect(jsonPath("$.performanceResult.grainMass", is("0.088")));
+                .andExpect(jsonPath("$.performanceResult.grainMass", is("88")));
     }
 
     @Test
