@@ -66,7 +66,11 @@ public class PerformanceResult {
         this.divergenceCrossSectionDiameter = divergenceCrossSectionDiameter;
         this.optimalNozzleExpansionRatio = format(optimalNozzleExpansionRatio);
         this.lowKNCorrection = isLowKNCorrection(numberOfKNCorrection);
-        this.grainMass = format(grainMass, "%.3f");
+        if(SI == measureUnit) {
+            this.grainMass = format(Double.valueOf(grainMass).intValue(), "%d");
+        } else {
+            this.grainMass = format(grainMass, "%.3f");
+        }
         this.safeKN = numberOfKNCorrection > 0 ? true : false;
         this.classPercentage = (int)Math.ceil(100 * (totalImpulse - motorClassification.getTotalImpulseRangeInNewtowSecond().lowerEndpoint()) / (motorClassification.getTotalImpulseRangeInNewtowSecond().upperEndpoint()-motorClassification.getTotalImpulseRangeInNewtowSecond().lowerEndpoint()));
 
@@ -80,6 +84,9 @@ public class PerformanceResult {
 
     public static String format(Double aDouble, String format) {
         return String.format(Locale.ENGLISH, format, aDouble);
+    }
+    public static String format(int aInt, String format) {
+        return String.format(Locale.ENGLISH, format, aInt);
     }
 
     public String getMotorDescription() {

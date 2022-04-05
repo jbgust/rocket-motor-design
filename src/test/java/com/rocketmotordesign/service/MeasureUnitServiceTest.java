@@ -342,7 +342,8 @@ public class MeasureUnitServiceTest {
                 NORMAL,
                 3.549D);
 
-        PerformanceResult performanceResult = measureUnitService.toPerformanceResult(jsrmResult, getDefaultExtraConfiguration().isOptimalNozzleDesign(), IMPERIAL);
+        PerformanceResult performanceResult = measureUnitService
+                .toPerformanceResult(jsrmResult, getDefaultExtraConfiguration().isOptimalNozzleDesign(), IMPERIAL);
 
         assertThat(performanceResult.getMotorDescription()).isEqualTo("A15");
         assertThat(performanceResult.getMaxThrust()).isEqualTo(format(jsrmResult.getMaxThrustInNewton()));
@@ -366,7 +367,7 @@ public class MeasureUnitServiceTest {
     @Test
     void shouldConvertGraphResultFromJSRMUnitToImperialUnit() {
 
-        MotorParameters motorParameters = new MotorParameters(23.6, 45.6, 234.12, 5.12, 23.12);
+        MotorParameters motorParameters = new MotorParameters(23.6, 45.6, 234.12, 5.12, 23.12, 1D);
 
         GraphResult graphResult = measureUnitService.toGraphResult(motorParameters, IMPERIAL);
 

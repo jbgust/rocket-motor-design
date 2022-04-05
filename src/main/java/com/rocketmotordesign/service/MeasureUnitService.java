@@ -100,7 +100,7 @@ public class MeasureUnitService {
                 convertLengthToMeteor(userUnits.getLenghtUnit(), jsrmResult.getNozzle().getNozzleExitDiameterInMillimeter() - jsrmResult.getNozzle().getNozzleThroatDiameterInMillimeter()),
                 jsrmResult.getNozzle().getOptimalNozzleExpansionRatio(),
                 jsrmResult.getNumberOfKNCorrection(),
-                convertMassToMeteor(userUnits.getMassUnit(), jsrmResult.getGrainMassInKg()),
+                convertGrainMassToMeteor(userUnits.getGrainMassUnit(), jsrmResult.getGrainMassInKg()),
                 jsrmResult.getMotorClassification(),
                 userUnits,
                 jsrmResult.getPortToThroatArea(),
@@ -113,8 +113,8 @@ public class MeasureUnitService {
                 motorParameters.getThrustInNewton(),
                 motorParameters.getKn(),
                 convertPressureToMeteor(userUnits.getResultPressureUnit(), motorParameters.getChamberPressureInMPa()),
-                convertMassToMeteor(userUnits.getMassUnit(), motorParameters.getMassFlowRateInKgPerSec())
-        );
+                convertMassToMeteor(userUnits.getMassUnit(), motorParameters.getMassFlowRateInKgPerSec()),
+                convertGrainMassToMeteor(userUnits.getGrainMassUnit(), motorParameters.getGrainMassInKg()));
     }
 
     private CombustionChamber toCombustionChamber(BasicComputationRequest request) {
@@ -275,6 +275,10 @@ public class MeasureUnitService {
 
     private double convertMassToMeteor(Unit<Mass> massUnit, double mass) {
         return Quantities.getQuantity(mass, JSRM_UNITS.getMassUnit()).to(massUnit).getValue().doubleValue();
+    }
+
+    private double convertGrainMassToMeteor(Unit<Mass> grainMass, double mass) {
+        return Quantities.getQuantity(mass, JSRM_UNITS.getGrainMassUnit()).to(grainMass).getValue().doubleValue();
     }
 
     public double convertMass(Unit<Mass> fromMassUnit, Unit<Mass> toMassUnit, double mass) {
