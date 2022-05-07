@@ -35,6 +35,11 @@ public class JSRMService {
 
         SolidRocketMotor solidRocketMotor = measureUnitService.toSolidRocketMotor(request);
 
+        if(solidRocketMotor.getCombustionChamber().getChamberLengthInMillimeter() > 1200 ||
+            solidRocketMotor.getCombustionChamber().getChamberInnerDiameterInMillimeter() > 500) {
+            throw new UnauthorizedValueException("Combustion chamber parameters are out of max range.");
+        }
+
         JSRMResult jsrmResult = new JSRMSimulation(solidRocketMotor).run(customConfig);
         if(jsrmResult.getNumberOfKNCorrection() > maxSafeCorrection) {
             throw new SimulationFailedException(new Exception("Safe correction exceeded"));
