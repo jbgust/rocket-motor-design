@@ -404,6 +404,6 @@ public class ExportControllerIT {
 
         //THEN
         resultActions
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 }

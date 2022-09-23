@@ -874,7 +874,7 @@ public class ComputationControllerIT {
         resultActions
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("METEOR can't run this computation due to the following error:")))
-                .andExpect(jsonPath("$.detail", is("The total impulse of this motor is not in [A;V] classes")));
+                .andExpect(jsonPath("$.detail", is("Combustion chamber parameters are out of max range.")));
     }
 
 }

@@ -16,6 +16,7 @@ import java.util.Optional;
         @JsonSubTypes.Type(value = RodTubeGrainComputationRequest.class, name = "ROD_TUBE"),
         @JsonSubTypes.Type(value = CSlotGrainComputationRequest.class, name = "C_SLOT"),
         @JsonSubTypes.Type(value = FinocylComputationRequest.class, name = "FINOCYL"),
+        @JsonSubTypes.Type(value = StarGrainComputationRequest.class, name = "STAR"),
         @JsonSubTypes.Type(value = EndBurnerGrainComputationRequest.class, name = "END_BURNER")
 })
 public abstract class BasicComputationRequest {
