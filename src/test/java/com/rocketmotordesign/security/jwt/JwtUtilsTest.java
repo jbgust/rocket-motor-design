@@ -1,8 +1,8 @@
 package com.rocketmotordesign.security.jwt;
 
 import com.rocketmotordesign.security.models.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.impl.DefaultClaims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
@@ -16,8 +16,7 @@ import static org.mockito.Mockito.*;
 
 class JwtUtilsTest {
 
-
-    private static final String JWT_SECRET = "your-512-bit-secret";
+    private static final String JWT_SECRET = "your512BitSecret".repeat(20);
     private JwtUtils jwtUtils;
 
     @BeforeEach
@@ -35,7 +34,7 @@ class JwtUtilsTest {
 
         String generateJwtToken = jwtUtils.generateJwtToken(authentication);
         assertThat(jwtUtils.validateJwtToken(generateJwtToken)).isTrue();
-        DefaultClaims claims = (DefaultClaims)Jwts.parser().setSigningKey(JWT_SECRET).parse(generateJwtToken).getBody();
+        Claims claims = (Claims)Jwts.parser().setSigningKey(JWT_SECRET).parse(generateJwtToken).getBody();
         assertThat(claims.get("donator")).isEqualTo(true);
         verify(user, times(1)).isActiveDonator(eq(Duration.ofDays(1L)), any());
     }
@@ -56,7 +55,7 @@ class JwtUtilsTest {
         given(authentication.getPrincipal()).willReturn(new User("email", "password"));
         String generateJwtToken = jwtUtils.generateJwtToken(authentication);
 
-        assertThat(new JwtUtils("fausse-cle", 86400000, 1L).validateJwtToken(generateJwtToken)).isFalse();
+        assertThat(new JwtUtils("faussecle".repeat(30), 86400000, 1L).validateJwtToken(generateJwtToken)).isFalse();
     }
 
     @Test

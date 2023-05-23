@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	void logDateConnexion(@Param("email") String email);
 
 	@Query(
-			value = "select * FROM users u " +
+			value = "select u.* FROM users u " +
 					"LEFT JOIN user_validation_token t on t.user_id=u.id " +
 					"WHERE t.id is null and compte_valide=false",
 			nativeQuery = true)

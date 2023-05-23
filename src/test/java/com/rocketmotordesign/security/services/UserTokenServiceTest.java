@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

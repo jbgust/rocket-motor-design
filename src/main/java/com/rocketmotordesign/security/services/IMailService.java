@@ -1,6 +1,6 @@
 package com.rocketmotordesign.security.services;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 public interface IMailService {
 

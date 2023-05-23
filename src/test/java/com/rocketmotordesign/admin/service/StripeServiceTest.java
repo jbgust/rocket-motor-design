@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;

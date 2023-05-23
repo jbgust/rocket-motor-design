@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 @RestController()
 @RequestMapping("admin")
@@ -36,7 +36,7 @@ public class AdminController {
     }
 
     @PostMapping("newsletter")
-    public void newsletter(@RequestBody MailRequest request) throws MessagingException {
+    public void newsletter(@RequestBody MailRequest request) {
         newsletterService.sendNewsletter(request);
     }
 }

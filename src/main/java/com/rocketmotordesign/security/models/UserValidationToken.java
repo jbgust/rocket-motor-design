@@ -1,6 +1,6 @@
 package com.rocketmotordesign.security.models;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 import static java.time.temporal.ChronoUnit.SECONDS;

@@ -76,7 +76,7 @@ class AdminControllerIT {
         createValidUser("user4@haha.fr", true);
 
         // WHEN
-        ResultActions resultActions = mvc.perform(post("/admin/newsletter/")
+        ResultActions resultActions = mvc.perform(post("/admin/newsletter")
                 .contentType(APPLICATION_JSON)
                 .content(request));
 

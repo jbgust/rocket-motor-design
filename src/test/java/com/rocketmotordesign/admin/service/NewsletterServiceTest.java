@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;

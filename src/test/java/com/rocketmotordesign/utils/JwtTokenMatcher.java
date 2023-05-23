@@ -1,7 +1,7 @@
 package com.rocketmotordesign.utils;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.impl.DefaultClaims;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
@@ -24,7 +24,7 @@ public class JwtTokenMatcher implements Matcher {
 
     @Override
     public boolean matches(Object accessToken) {
-        DefaultClaims claims = (DefaultClaims) Jwts.parser()
+        Claims claims = (Claims) Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parse((String) accessToken).getBody();
         if (extractEmail(claims).equals(email) &&
@@ -35,17 +35,17 @@ public class JwtTokenMatcher implements Matcher {
         }
     }
 
-    private boolean extractDonator(DefaultClaims claims) {
+    private boolean extractDonator(Claims claims) {
         return (boolean) claims.get("donator");
     }
 
-    private String extractEmail(DefaultClaims claims) {
+    private String extractEmail(Claims claims) {
         return (String) claims.get("sub");
     }
 
     @Override
     public void describeMismatch(Object accessToken, Description description) {
-        DefaultClaims claims = (DefaultClaims) Jwts.parser()
+        Claims claims = (Claims) Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parse((String) accessToken).getBody();
         description.appendText("jwt claims contains : [email: " + extractEmail(claims) + ", donator: " + extractDonator(claims) + "]");
