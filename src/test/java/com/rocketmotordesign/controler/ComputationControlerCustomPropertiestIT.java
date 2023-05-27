@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {"computation.response.limit.size=4", "computation.star.enable= false"})
 @WithMockUser("spring") //TODO : a changer
-public class ComputationControlerCustomPropertiestIT {
+public class ComputationControlerCustomPropertiestIT extends LegacySRMPropellant {
 
     @Autowired
     private MockMvc mvc;

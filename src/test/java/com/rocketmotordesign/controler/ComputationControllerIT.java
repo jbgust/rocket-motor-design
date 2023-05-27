@@ -6,6 +6,7 @@ import com.rocketmotordesign.controler.request.BurnRatePressureData;
 import com.rocketmotordesign.controler.request.CustomPropellantRequest;
 import com.rocketmotordesign.controler.request.FinocylComputationRequest;
 import com.rocketmotordesign.controler.request.HollowComputationRequest;
+import com.rocketmotordesign.propellant.entity.MeteorPropellant;
 import com.rocketmotordesign.propellant.repository.MeteorPropellantRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,14 +40,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser("spring")
-public class ComputationControllerIT {
+public class ComputationControllerIT extends LegacySRMPropellant {
 
+    private final CustomPropellantRequest knsuFromSRM2014 = buildKNSUFromSRM2014();
+    private final CustomPropellantRequest kndxFromSRM2014 = buildKNDXFromSRM2014();
     @Autowired
     private MockMvc mvc;
     private ObjectMapper jsonObjectMapper = Jackson2ObjectMapperBuilder.json().build();
-
-    @MockBean
-    private MeteorPropellantRepository propellantRepository;
 
     @Test
     void shouldRunComputation() throws Exception {
@@ -487,7 +487,7 @@ public class ComputationControllerIT {
         lowKNRequest.setOuterSurface(INHIBITED);
         lowKNRequest.setEndsSurface(EXPOSED);
         lowKNRequest.setCoreSurface(EXPOSED);
-        lowKNRequest.setPropellantId(KNDX.name());
+        lowKNRequest.setPropellantId(KNDX_SRM_2014_UUID.toString());
         lowKNRequest.setChamberInnerDiameter(28);
         lowKNRequest.setChamberLength(90);
         lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
@@ -550,13 +550,13 @@ public class ComputationControllerIT {
         HollowComputationRequest request = getDefaultRequest();
         request.setPropellantId("To be defined");
         CustomPropellantRequest customPropellant = new CustomPropellantRequest();
-        customPropellant.setDensity(KNSU.getIdealMassDensity());
-        customPropellant.setChamberTemperature(KNSU.getChamberTemperature());
-        customPropellant.setK(KNSU.getK());
-        customPropellant.setK2ph(KNSU.getK2Ph());
-        customPropellant.setMolarMass(KNSU.getEffectiveMolecularWeight());
-        customPropellant.setBurnRateCoefficient(KNSU.getBurnRateCoefficient(1));
-        customPropellant.setPressureExponent(KNSU.getPressureExponent(1));
+        customPropellant.setDensity(knsuFromSRM2014.getDensity());
+        customPropellant.setChamberTemperature(knsuFromSRM2014.getChamberTemperature());
+        customPropellant.setK(knsuFromSRM2014.getK());
+        customPropellant.setK2ph(knsuFromSRM2014.getK2ph());
+        customPropellant.setMolarMass(knsuFromSRM2014.getMolarMass());
+        customPropellant.setBurnRateCoefficient(knsuFromSRM2014.getBurnRateCoefficient());
+        customPropellant.setPressureExponent(knsuFromSRM2014.getPressureExponent());
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
@@ -579,13 +579,12 @@ public class ComputationControllerIT {
     void shouldUseCustomPropellantInSIUnitsWithMultipleBurnRateData() throws Exception {
         // GIVEN
         HollowComputationRequest request = getDefaultRequest();
-
         CustomPropellantRequest customPropellantRequest = new CustomPropellantRequest();
-        customPropellantRequest.setDensity(KNDX.getIdealMassDensity());
-        customPropellantRequest.setChamberTemperature(KNDX.getChamberTemperature());
-        customPropellantRequest.setK(KNDX.getK());
-        customPropellantRequest.setK2ph(KNDX.getK2Ph());
-        customPropellantRequest.setMolarMass(KNDX.getEffectiveMolecularWeight());
+        customPropellantRequest.setDensity(kndxFromSRM2014.getDensity());
+        customPropellantRequest.setChamberTemperature(kndxFromSRM2014.getChamberTemperature());
+        customPropellantRequest.setK(kndxFromSRM2014.getK());
+        customPropellantRequest.setK2ph(kndxFromSRM2014.getK2ph());
+        customPropellantRequest.setMolarMass(kndxFromSRM2014.getMolarMass());
         customPropellantRequest.setBurnRateDataSet(Sets.newHashSet(
                 //data taken from SRM_2014
                 new BurnRatePressureData(8.87544496778536, 0.6193, 0.1, 0.779135),
@@ -649,11 +648,11 @@ public class ComputationControllerIT {
                 new BurnRatePressureData(1.4155118, -0.1481000, 860, 1233),
                 new BurnRatePressureData(0.0208661, 0.4417000, 1233, 1625)
         ));
-        customPropellant.setDensity(KNDX.getIdealMassDensity()/453.6*Math.pow(2.54, 3));
-        customPropellant.setChamberTemperature(KNDX.getChamberTemperature());
-        customPropellant.setK(KNDX.getK());
-        customPropellant.setK2ph(KNDX.getK2Ph());
-        customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
+        customPropellant.setDensity(kndxFromSRM2014.getDensity()/453.6*Math.pow(2.54, 3));
+        customPropellant.setChamberTemperature(kndxFromSRM2014.getChamberTemperature());
+        customPropellant.setK(kndxFromSRM2014.getK());
+        customPropellant.setK2ph(kndxFromSRM2014.getK2ph());
+        customPropellant.setMolarMass(kndxFromSRM2014.getMolarMass());
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))
@@ -685,11 +684,11 @@ public class ComputationControllerIT {
                 new BurnRatePressureData(1.4155118, -0.1481000, 860, 1233),
                 new BurnRatePressureData(0.0208661, 0.4417000, 1233, 1625)
         ));
-        customPropellant.setDensity(KNDX.getIdealMassDensity()/453.6*Math.pow(2.54, 3));
-        customPropellant.setChamberTemperature(KNDX.getChamberTemperature());
-        customPropellant.setK(KNDX.getK());
-        customPropellant.setK2ph(KNDX.getK2Ph());
-        customPropellant.setMolarMass(KNDX.getEffectiveMolecularWeight());
+        customPropellant.setDensity(kndxFromSRM2014.getDensity()/453.6*Math.pow(2.54, 3));
+        customPropellant.setChamberTemperature(kndxFromSRM2014.getChamberTemperature());
+        customPropellant.setK(kndxFromSRM2014.getK());
+        customPropellant.setK2ph(kndxFromSRM2014.getK2ph());
+        customPropellant.setMolarMass(kndxFromSRM2014.getMolarMass());
 
         UUID customPropellantId = UUID.randomUUID();
         given(propellantRepository.findById(customPropellantId))

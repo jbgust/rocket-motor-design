@@ -2,6 +2,9 @@ package com.rocketmotordesign.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.jbgust.jsrm.infra.propellant.BurnRateData;
+import com.google.common.collect.ImmutableRangeMap;
+import com.rocketmotordesign.controler.LegacySRMPropellant;
 import com.rocketmotordesign.controler.request.*;
 import com.rocketmotordesign.propellant.entity.MeteorPropellant;
 import com.rocketmotordesign.service.MeasureUnit;
@@ -14,11 +17,15 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.Random;
+import java.util.Set;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.google.common.collect.Range.*;
+import static com.rocketmotordesign.controler.LegacySRMPropellant.KNDX_SRM_2014_UUID;
+import static com.rocketmotordesign.controler.LegacySRMPropellant.KNSU_SRM_2014_UUID;
 import static com.rocketmotordesign.service.MeasureUnit.IMPERIAL;
 import static com.rocketmotordesign.service.MeasureUnit.SI;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -43,6 +50,58 @@ public class TestHelper {
         }
     }
 
+    private static MeteorPropellant customPropellantToMeteorPropellant(CustomPropellantRequest customPropellant, String name) {
+
+        int i = new Random().nextInt();
+        try {
+            return new MeteorPropellant(name, "description-"+i, ""+objectMapper.writeValueAsString(customPropellant), SI);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static MeteorPropellant getKNDXFromSRM2014() {
+        CustomPropellantRequest oldKNDX = buildKNDXFromSRM2014();
+
+        return customPropellantToMeteorPropellant(oldKNDX, "KNDX-SRM-2014") ;
+    }
+
+    public static CustomPropellantRequest buildKNDXFromSRM2014() {
+        CustomPropellantRequest oldKNDX = new CustomPropellantRequest();
+        oldKNDX.setDensity(KNDX.getIdealMassDensity());
+        oldKNDX.setChamberTemperature(KNDX.getChamberTemperature());
+        oldKNDX.setK(KNDX.getK());
+        oldKNDX.setK2ph(1.043);
+        oldKNDX.setMolarMass(42.39);
+        oldKNDX.setBurnRateDataSet(Set.of(
+                new BurnRatePressureData(8.87544496778536, 0.6193, -1000, 0.779135),
+                new BurnRatePressureData(7.55278442387944, -0.0087, 0.779135, 2.571835),
+                new BurnRatePressureData(3.84087990499602, 0.6882, 2.571835, 5.9297),
+                new BurnRatePressureData(17.2041864098062, -0.1481, 5.9297, 8.501535),
+                new BurnRatePressureData(4.77524086347659, 0.4417, 8.501535, 1000)
+        ));
+        return oldKNDX;
+    }
+
+    public static MeteorPropellant getKNSUFromSRM2014() {
+        CustomPropellantRequest oldKNSU = buildKNSUFromSRM2014();
+
+        return customPropellantToMeteorPropellant(oldKNSU, "KNDX-SRM-2014") ;
+    }
+
+    public static CustomPropellantRequest buildKNSUFromSRM2014() {
+        CustomPropellantRequest oldKNSU = new CustomPropellantRequest();
+        oldKNSU.setDensity(KNSU.getIdealMassDensity());
+        oldKNSU.setChamberTemperature(KNSU.getChamberTemperature());
+        oldKNSU.setK(KNSU.getK());
+        oldKNSU.setK2ph(1.044);
+        oldKNSU.setMolarMass(41.98);
+        oldKNSU.setBurnRateCoefficient(8.26);
+        oldKNSU.setPressureExponent(0.319);
+        return oldKNSU;
+    }
+
     public static HollowComputationRequest getDefaultRequest() {
         HollowComputationRequest hollowComputationRequest = new HollowComputationRequest();
         hollowComputationRequest.setThroatDiameter(17.39);
@@ -53,7 +112,7 @@ public class TestHelper {
         hollowComputationRequest.setOuterSurface(INHIBITED);
         hollowComputationRequest.setEndsSurface(EXPOSED);
         hollowComputationRequest.setCoreSurface(EXPOSED);
-        hollowComputationRequest.setPropellantId(KNDX.name());
+        hollowComputationRequest.setPropellantId(KNDX_SRM_2014_UUID.toString());
         hollowComputationRequest.setChamberInnerDiameter(75);
         hollowComputationRequest.setChamberLength(470);
         hollowComputationRequest.setExtraConfig(getDefaultExtraConfiguration());
@@ -97,7 +156,7 @@ public class TestHelper {
         //BasicComputationRequest
         computationRequest.setThroatDiameter(6d);
         computationRequest.setSegmentLength(70d);
-        computationRequest.setPropellantId(KNSU.name());
+        computationRequest.setPropellantId(KNSU_SRM_2014_UUID.toString());
         computationRequest.setChamberInnerDiameter(40d);
         computationRequest.setChamberLength(75d);
         computationRequest.setMeasureUnit(SI);
@@ -199,7 +258,7 @@ public class TestHelper {
         computationRequest.setThroatDiameter(10d/25.4);
         computationRequest.setSegmentLength(70d/25.4);
         computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantId(KNSU.name());
+        computationRequest.setPropellantId(KNSU_SRM_2014_UUID.toString());
         computationRequest.setChamberInnerDiameter(40d/25.4);
         computationRequest.setChamberLength(150d/25.4);
         computationRequest.setMeasureUnit(IMPERIAL);
@@ -216,7 +275,7 @@ public class TestHelper {
         //BasicComputationRequest
         computationRequest.setThroatDiameter(6d/25.4);
         computationRequest.setSegmentLength(70d/25.4);
-        computationRequest.setPropellantId(KNSU.name());
+        computationRequest.setPropellantId(KNSU_SRM_2014_UUID.toString());
         computationRequest.setChamberInnerDiameter(40d/25.4);
         computationRequest.setChamberLength(75d/25.4);
         computationRequest.setMeasureUnit(IMPERIAL);
@@ -263,7 +322,7 @@ public class TestHelper {
         hollowComputationRequest.setOuterSurface(INHIBITED);
         hollowComputationRequest.setEndsSurface(EXPOSED);
         hollowComputationRequest.setCoreSurface(EXPOSED);
-        hollowComputationRequest.setPropellantId(KNDX.name());
+        hollowComputationRequest.setPropellantId(KNDX_SRM_2014_UUID.toString());
         hollowComputationRequest.setChamberInnerDiameter(75/25.4);
         hollowComputationRequest.setChamberLength(470/25.4);
         hollowComputationRequest.setExtraConfig(getDefaultImperialExtraConfiguration());
@@ -305,7 +364,7 @@ public class TestHelper {
         computationRequest.setThroatDiameter(10d);
         computationRequest.setSegmentLength(70d);
         computationRequest.setNumberOfSegment(2);
-        computationRequest.setPropellantId(KNSU.name());
+        computationRequest.setPropellantId(KNSU_SRM_2014_UUID.toString());
         computationRequest.setChamberInnerDiameter(40d);
         computationRequest.setChamberLength(150d);
         computationRequest.setMeasureUnit(SI);

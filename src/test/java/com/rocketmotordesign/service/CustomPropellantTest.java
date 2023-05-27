@@ -4,6 +4,8 @@ import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.google.common.collect.Sets;
 import com.rocketmotordesign.controler.request.BurnRatePressureData;
 
+import com.rocketmotordesign.controler.request.CustomPropellantRequest;
+import com.rocketmotordesign.utils.TestHelper;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
@@ -65,19 +67,19 @@ public class CustomPropellantTest {
     @Test
     void shouldResolveChamberTemperature() {
 
-        PropellantType propellant = KNDX;
-        double k = propellant.getK();
+        CustomPropellantRequest kndxFromSRM2014 = TestHelper.buildKNDXFromSRM2014();
+        double k = kndxFromSRM2014.getK();
 
         CustomPropellant customPropellant = new CustomPropellant(
                 912.38154,
                 2d,
                 3d,
-                propellant.getIdealMassDensity(),
+                kndxFromSRM2014.getDensity(),
                 k,
-                null, propellant.getEffectiveMolecularWeight(), null, null);
+                null, kndxFromSRM2014.getMolarMass(), null, null);
 
-        assertThat(customPropellant.getRat()).isCloseTo(UNIVERSAL_GAS_CONSTANT / KNDX.getEffectiveMolecularWeight(), Offset.offset(0.0001d));
-        assertThat(customPropellant.getChamberTemperature()).isCloseTo(propellant.getChamberTemperature(), Offset.offset(0.0001d));
+        assertThat(customPropellant.getRat()).isCloseTo(UNIVERSAL_GAS_CONSTANT / kndxFromSRM2014.getMolarMass(), Offset.offset(0.0001d));
+        assertThat(customPropellant.getChamberTemperature()).isCloseTo(kndxFromSRM2014.getChamberTemperature(), Offset.offset(0.0001d));
 
     }
 

@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser("spring") //TODO : a changer
-public class ExportControllerIT {
+public class ExportControllerIT extends LegacySRMPropellant{
 
     @Autowired
     private MockMvc mvc;
@@ -122,7 +122,7 @@ public class ExportControllerIT {
         lowKNRequest.setOuterSurface(INHIBITED);
         lowKNRequest.setEndsSurface(EXPOSED);
         lowKNRequest.setCoreSurface(EXPOSED);
-        lowKNRequest.setPropellantId(KNDX.name());
+        lowKNRequest.setPropellantId(KNDX_SRM_2014_UUID.toString());
         lowKNRequest.setChamberInnerDiameter(28);
         lowKNRequest.setChamberLength(90);
         lowKNRequest.setExtraConfig(getDefaultExtraConfiguration());
