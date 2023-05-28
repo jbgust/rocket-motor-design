@@ -32,7 +32,6 @@ class MeteorPropellantRepositoryIT {
         propellantRepository.deleteAll();
     }
 
-    @Disabled("Due to fail because of H2 upgrade")
     @Test
     @WithUserDetails(value = "test@meteor.fr", userDetailsServiceBeanName = "userDetailsServiceImpl")
     void shouldListUserMotor() {
@@ -57,7 +56,6 @@ class MeteorPropellantRepositoryIT {
                 );
     }
 
-    @Disabled("Due to fail because of H2 upgrade")
     @Test
     @WithUserDetails(value = "test@meteor.fr", userDetailsServiceBeanName = "userDetailsServiceImpl")
     void shouldNotSave2MotorWithSameNameByUser() {
