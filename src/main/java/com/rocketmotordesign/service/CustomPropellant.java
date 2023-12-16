@@ -7,12 +7,12 @@ import com.google.common.collect.ImmutableRangeMap;
 import com.google.common.collect.RangeMap;
 import com.rocketmotordesign.controler.request.BurnRatePressureData;
 
+import java.util.Optional;
+import java.util.Set;
+
 import static com.github.jbgust.jsrm.infra.JSRMConstant.UNIVERSAL_GAS_CONSTANT;
 import static com.google.common.collect.Range.all;
 import static com.google.common.collect.Range.closedOpen;
-
-import java.util.Optional;
-import java.util.Set;
 
 public class CustomPropellant implements SolidPropellant {
 
@@ -88,12 +88,12 @@ public class CustomPropellant implements SolidPropellant {
 
     @Override
     public double getBurnRateCoefficient(double chamberPressure) throws ChamberPressureOutOfBoundException {
-        return getBurnRateData(chamberPressure, "burn rate coefficient").getBurnRateCoefficient();
+        return getBurnRateData(chamberPressure, "burn rate coefficient").burnRateCoefficient();
     }
 
     @Override
     public double getPressureExponent(double chamberPressure) throws ChamberPressureOutOfBoundException {
-        return  getBurnRateData(chamberPressure, "pressure exponent").getPressureExponent();
+        return  getBurnRateData(chamberPressure, "pressure exponent").pressureExponent();
     }
 
     private BurnRateData getBurnRateData(double chamberPressure, String errorType) {
