@@ -4,6 +4,7 @@ version: "2.1"
 services:
   prometheus:
     image: prom/prometheus:v2.11.1
+    user: "${UID}:${GID}"
     volumes:
       - ./prometheus-data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
@@ -12,6 +13,7 @@ services:
 
   gafana:
     image: grafana/grafana:6.3.2
+    user: "${UID}:${GID}"
     ports:
       - "5000:3000"
     volumes:
