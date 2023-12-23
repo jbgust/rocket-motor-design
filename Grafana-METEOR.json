@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 4,
-  "iteration": 1614772840811,
+  "iteration": 1703099318657,
   "links": [],
   "panels": [
     {
@@ -101,7 +101,7 @@
           "value": "null"
         }
       ],
-      "valueName": "delta"
+      "valueName": "diff"
     },
     {
       "cacheTimeout": null,
@@ -191,7 +191,7 @@
     {
       "datasource": "Prometheus",
       "gridPos": {
-        "h": 12,
+        "h": 9,
         "w": 5,
         "x": 6,
         "y": 0
@@ -201,7 +201,7 @@
         "displayMode": "gradient",
         "fieldOptions": {
           "calcs": [
-            "changeCount"
+            "diff"
           ],
           "defaults": {
             "decimals": 0,
@@ -643,6 +643,63 @@
     },
     {
       "cacheTimeout": null,
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 3,
+        "y": 7
+      },
+      "id": 32,
+      "links": [],
+      "options": {
+        "fieldOptions": {
+          "calcs": [
+            "last"
+          ],
+          "defaults": {
+            "mappings": [],
+            "max": 100,
+            "min": 0,
+            "thresholds": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 10
+              },
+              {
+                "color": "green",
+                "value": 25
+              }
+            ],
+            "unit": "percent"
+          },
+          "override": {},
+          "values": false
+        },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "6.3.2",
+      "targets": [
+        {
+          "expr": "100*disk_free_bytes/disk_total_bytes",
+          "format": "time_series",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Free disk space",
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "cacheTimeout": null,
       "colorBackground": false,
       "colorValue": true,
       "colors": [
@@ -659,10 +716,10 @@
         "thresholdMarkers": true
       },
       "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 3,
-        "y": 7
+        "h": 3,
+        "w": 5,
+        "x": 6,
+        "y": 9
       },
       "id": 21,
       "interval": null,
@@ -932,7 +989,7 @@
           "override": {},
           "values": false
         },
-        "orientation": "vertical"
+        "orientation": "horizontal"
       },
       "pluginVersion": "6.3.2",
       "targets": [
@@ -1133,7 +1190,7 @@
           {
             "evaluator": {
               "params": [
-                25000000
+                80000000
               ],
               "type": "lt"
             },
@@ -1212,13 +1269,106 @@
           "fill": true,
           "line": true,
           "op": "lt",
-          "value": 25000000
+          "value": 80000000
         }
       ],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "JVM HEAP size usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 30,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "hikaricp_connections_active",
+          "refId": "A"
+        },
+        {
+          "expr": "hikaricp_connections_idle",
+          "refId": "B"
+        },
+        {
+          "expr": "hikaricp_connections_pending",
+          "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Connection active Hikari",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1344,7 +1494,5 @@
     ]
   },
   "timezone": "",
-  "title": "METEOR  - Dasboard",
-  "uid": "T9z13DoZz",
-  "version": 51
+  "title": "METEOR - Dashboard"
 }
