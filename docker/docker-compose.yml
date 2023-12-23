@@ -3,7 +3,7 @@ version: "2.1"
 
 services:
   prometheus:
-    image: prom/prometheus:v2.11.1
+    image: prom/prometheus:v2.48.1
     user: "${UID}:${GID}"
     volumes:
       - ./prometheus-data:/prometheus
@@ -12,7 +12,7 @@ services:
       - "9090:9090"
 
   gafana:
-    image: grafana/grafana:6.3.2
+    image: grafana/grafana:10.2.3
     user: "${UID}:${GID}"
     ports:
       - "5000:3000"
