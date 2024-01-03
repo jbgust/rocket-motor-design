@@ -596,6 +596,7 @@
             "type": "prometheus",
             "uid": "000000001"
           },
+          "editorMode": "code",
           "expr": "sum(system_cpu_usage{application=\"$application\"})*100",
           "instant": true,
           "refId": "A"
@@ -752,7 +753,8 @@
             "type": "prometheus",
             "uid": "000000001"
           },
-          "expr": "100*disk_free_bytes/disk_total_bytes",
+          "editorMode": "code",
+          "expr": "100*disk_free_bytes{application=\"$application\"}/disk_total_bytes{application=\"$application\"}",
           "format": "time_series",
           "instant": true,
           "refId": "A"
@@ -1436,15 +1438,7 @@
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "lt",
-          "value": 80000000
-        }
-      ],
+      "thresholds": [],
       "timeRegions": [],
       "title": "JVM HEAP size usage",
       "tooltip": {
@@ -1628,8 +1622,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
-                "value": null
+                "color": "red"
               },
               {
                 "color": "orange",
