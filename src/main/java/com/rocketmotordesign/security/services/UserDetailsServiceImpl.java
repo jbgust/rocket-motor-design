@@ -2,6 +2,7 @@ package com.rocketmotordesign.security.services;
 
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.UserRepository;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,8 +18,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return userRepository.findByEmail(username)
+		User user = userRepository.findByEmail(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+		MDC.put("userId", user.getId().toString());
+		return user;
 	}
 
 }
