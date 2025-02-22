@@ -21,6 +21,8 @@ jobs:
           paths:
             - rocketMotorDesign
             - .m2
+      - store_test_results:
+          path: target/surefire-reports
   package:
     working_directory: ~/rocketMotorDesign
     docker:
@@ -29,7 +31,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/
-      - run: mvn package
+      - run: mvn package -DskipTests
       - store_artifacts:
           path: target/RocketMotorDesign.jar
       - persist_to_workspace:
@@ -65,12 +67,10 @@ workflows:
   version: 2
   build-test-and-approval-package:
     jobs:
-      - build-and-test:
-          filters:
-            branches:
-              ignore:
-                - master
+      - build-and-test
       - package:
+          requires:
+            - build-and-test
           filters:
             branches:
               only:

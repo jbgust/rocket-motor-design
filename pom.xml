@@ -197,6 +197,9 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<reportsDirectory>target/surefire-reports</reportsDirectory>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
