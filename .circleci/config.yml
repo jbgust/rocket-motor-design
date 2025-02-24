@@ -2,6 +2,7 @@ version: 2.1
 jobs:
   build-and-test:
     working_directory: ~/rocketMotorDesign
+    resource_class: large
     docker:
       - image: maven:3.8.4-openjdk-17
     steps:
