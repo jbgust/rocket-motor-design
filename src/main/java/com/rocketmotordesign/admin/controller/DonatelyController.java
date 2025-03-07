@@ -65,4 +65,8 @@ public class DonatelyController {
         return donationResponse;
     }
 
+    public void clearCache() {
+        cachedResponses.clear();
+    }
+
 }

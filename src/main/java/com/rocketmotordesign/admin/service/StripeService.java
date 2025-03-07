@@ -2,6 +2,7 @@ package com.rocketmotordesign.admin.service;
 
 import com.google.gson.JsonSyntaxException;
 import com.rocketmotordesign.admin.StripeException;
+import com.rocketmotordesign.admin.controller.DonatelyController;
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.services.IMailService;
@@ -31,15 +32,18 @@ public class StripeService {
     private final UserRepository userRepository;
     private final IMailService mailService;
 
+    private final DonatelyController donatelyController;
+
 
     public StripeService(@Value("${stripe.webhook.signing.secret}") String webhookSigningSecret,
                          @Value("${stripe.mail.alert.new.donation}") String mailAlertReceiver,
                          UserRepository userRepository,
-                         IMailService mailService) {
+                         IMailService mailService, DonatelyController donatelyController) {
         this.webhookSigningSecret = webhookSigningSecret;
         this.mailAlertReceiver = mailAlertReceiver;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.donatelyController = donatelyController;
     }
 
     public Event retrieveEvent(String sigHeader, String payload) throws StripeException {
@@ -85,6 +89,7 @@ public class StripeService {
                     .append("$ from ")
                     .append(byStripeCustomerId.map(User::getUsername).orElse("CustomerId:"+charge.getCustomer()));
             mailService.sendHtmlMessage("METEOR : New donation", messageBuilder.toString(), mailAlertReceiver);
+            donatelyController.clearCache();
         } catch (MessagingException e) {
             LOGGER.error("Failed to send mail for new donation");
         }

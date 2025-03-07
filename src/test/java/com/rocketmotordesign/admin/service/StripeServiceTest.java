@@ -1,5 +1,6 @@
 package com.rocketmotordesign.admin.service;
 
+import com.rocketmotordesign.admin.controller.DonatelyController;
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.services.MailService;
@@ -30,6 +31,9 @@ class StripeServiceTest {
 
     @InjectMocks
     private StripeService stripeService;
+
+    @Mock
+    private DonatelyController donatelyController;
 
     @Mock
     private UserRepository userRepository;
@@ -67,10 +71,7 @@ class StripeServiceTest {
     @Test
     void shoulSendMailOnNewDonationFromCharge() throws MessagingException {
         //GIVEN
-        Charge charge = mock(Charge.class);
-
-        given(charge.getCustomer()).willReturn("cus_IyFWZ6cmcXsZEY");
-        given(charge.getAmount()).willReturn(2059L);
+        Charge charge = buildNewCharge("cus_IyFWZ6cmcXsZEY");
 
         given(userRepository.findByStripeCustomerId("cus_IyFWZ6cmcXsZEY"))
                 .willReturn(Optional.of(new User("customer1@test.com", "pwd")));
@@ -103,11 +104,8 @@ class StripeServiceTest {
     @Test
     void shoulAddLastDonationDateOnNewDonationFromCharge() throws MessagingException {
         //GIVEN
-        Charge charge = mock(Charge.class);
         LocalDateTime startOfTest = now();
-
-        given(charge.getCustomer()).willReturn("cus_IyFWZ6cmcXsZEY");
-        given(charge.getAmount()).willReturn(2059L);
+        Charge charge = buildNewCharge("cus_IyFWZ6cmcXsZEY");
 
         given(userRepository.findByStripeCustomerId("cus_IyFWZ6cmcXsZEY"))
                 .willReturn(Optional.of(new User("customer1@test.com", "pwd")));
@@ -129,13 +127,18 @@ class StripeServiceTest {
         assertThat(userArgumentCaptor.getValue().isActiveDonator(Duration.ofSeconds(10), now())).isTrue();
     }
 
+    private static Charge buildNewCharge(String cus_IyFWZ6cmcXsZEY) {
+        Charge charge = mock(Charge.class);
+
+        given(charge.getCustomer()).willReturn(cus_IyFWZ6cmcXsZEY);
+        given(charge.getAmount()).willReturn(2059L);
+        return charge;
+    }
+
     @Test
     void shoulNotAddLastDonationDateOnNewDonationFromChargeWhenUserNotFound() throws MessagingException {
         //GIVEN
-        Charge charge = mock(Charge.class);
-
-        given(charge.getCustomer()).willReturn("unknowCustomerId");
-        given(charge.getAmount()).willReturn(2059L);
+        Charge charge = buildNewCharge("unknowCustomerId");
         given(userRepository.findByStripeCustomerId("unknowCustomerId"))
                 .willReturn(empty());
 
@@ -149,4 +152,17 @@ class StripeServiceTest {
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository, never()).save(userArgumentCaptor.capture());
     }
+
+    @Test
+    void shouldClearDonatelyResponseCacheAfterNewDonation() {
+        //GIVEN
+        Charge charge = buildNewCharge("cus_IyFWZ6cmcXsZEY");
+
+        //WHEN
+        stripeService.handleNewDonation(charge);
+
+        //THEN
+        verify(donatelyController, times(1)).clearCache();
+    }
+
 }
