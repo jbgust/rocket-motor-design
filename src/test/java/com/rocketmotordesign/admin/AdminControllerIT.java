@@ -1,9 +1,11 @@
 package com.rocketmotordesign.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rocketmotordesign.admin.controller.AdminController;
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.services.MailService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -14,15 +16,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +40,9 @@ class AdminControllerIT {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AdminController adminController;
 
     @MockBean
     private MailService mailService;
@@ -86,6 +92,26 @@ class AdminControllerIT {
         ArgumentCaptor<String> receivers = ArgumentCaptor.forClass(String.class);
         verify(mailService, times(2))
                 .sendHtmlMessage(eq(mailRequest.getSubject()), eq(mailRequest.getHtmlContent()), receivers.capture());
+    }
+
+    @Test
+    void shouldNotTestAlert() throws Exception {
+        ResultActions resultActions = mvc.perform(get("/admin/tests/alert")
+                .contentType(APPLICATION_JSON)
+                .content(""));
+
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldTestAlert() {
+        ReflectionTestUtils.setField(adminController, "enableTestAlertes", true);
+
+        Assertions.assertThatThrownBy(() -> mvc.perform(get("/admin/tests/alert")
+                .contentType(APPLICATION_JSON)
+                .content("")))
+                .cause()
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private void createValidUser(String email, boolean newsletter) {
