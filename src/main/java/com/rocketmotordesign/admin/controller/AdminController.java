@@ -47,7 +47,7 @@ public class AdminController {
     @GetMapping("/tests/alert")
     public ResponseEntity<String> testAlert() {
         if(enableTestAlertes) {
-            throw new IllegalArgumentException("Test alerte Logback");
+            throw new NullPointerException("Test alerte Logback");
         }
         return ResponseEntity.ok("test alertes not enabled");
     }

@@ -5,7 +5,6 @@ import com.rocketmotordesign.admin.controller.AdminController;
 import com.rocketmotordesign.security.models.User;
 import com.rocketmotordesign.security.repository.UserRepository;
 import com.rocketmotordesign.security.services.MailService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -23,7 +22,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -104,14 +104,14 @@ class AdminControllerIT {
     }
 
     @Test
-    void shouldTestAlert() {
+    void shouldTestAlert() throws Exception {
         ReflectionTestUtils.setField(adminController, "enableTestAlertes", true);
 
-        Assertions.assertThatThrownBy(() -> mvc.perform(get("/admin/tests/alert")
+        ResultActions resultActions =  mvc.perform(get("/admin/tests/alert")
                 .contentType(APPLICATION_JSON)
-                .content("")))
-                .cause()
-                .isInstanceOf(IllegalArgumentException.class);
+                .content(""));
+
+        resultActions.andExpect(status().isBadRequest());
     }
 
     private void createValidUser(String email, boolean newsletter) {
