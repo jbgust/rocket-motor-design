@@ -36,7 +36,7 @@ public class RestResponseEntityExceptionHandler
 
     @ExceptionHandler(value = BanUserException.class)
     protected ResponseEntity handleBanUser(BanUserException exception) {
-        logger.warn("BanUserException", exception);
+        logger.info("BanUserException", exception);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
     }
 }
