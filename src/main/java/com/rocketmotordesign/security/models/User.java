@@ -69,6 +69,9 @@ public class User implements UserDetails {
 	@Column(name = "stripe_customer_id")
 	private String stripeCustomerId;
 
+	@Column(name = "ban")
+	private boolean ban = false;
+
 	public User() {
 	}
 
@@ -228,5 +231,13 @@ public class User implements UserDetails {
 
 	public void setStripeCustomerId(String stripeCustomerId) {
 		this.stripeCustomerId = stripeCustomerId;
+	}
+
+	public void setBan(boolean ban) {
+		this.ban = ban;
+	}
+
+	public boolean isBan() {
+		return ban;
 	}
 }

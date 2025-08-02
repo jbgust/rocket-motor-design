@@ -1,5 +1,6 @@
 package com.rocketmotordesign.config;
 
+import com.rocketmotordesign.security.services.BanUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,5 +32,11 @@ public class RestResponseEntityExceptionHandler
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @ExceptionHandler(value = BanUserException.class)
+    protected ResponseEntity handleBanUser(BanUserException exception) {
+        logger.warn("BanUserException", exception);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
     }
 }
